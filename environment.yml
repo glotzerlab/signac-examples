@@ -4,5 +4,5 @@ channels:
 dependencies:
 - numpy
 - matplotlib
-- glotzer::hoomd
-- glotzer::signac
+- hoomd=2.0.3
+- signac
