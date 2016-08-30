@@ -2,6 +2,7 @@ channels:
 - glotzer
 - defaults
 dependencies:
+- python=3
 - numpy
 - matplotlib
 - hoomd=2.0.3
