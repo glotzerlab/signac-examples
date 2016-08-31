@@ -4,6 +4,7 @@ channels:
 dependencies:
 - python=3
 - numpy
+- pandas
 - matplotlib
 - hoomd=2.0.3
 - signac
