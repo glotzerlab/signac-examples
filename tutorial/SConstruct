@@ -1,0 +1,17 @@
+import os
+import glob
+
+jupyter_nb = Builder(
+  action='jupyter nbconvert --to notebook --execute --output=$TARGET $SOURCE',
+  prefix='static/',
+  suffix='.ipynb',
+  src_suffix='.ipynb')
+
+env = Environment(
+  ENV = {'PATH': os.environ['PATH']},
+  BUILDERS={'jupyter_nb': jupyter_nb})
+
+NOTEBOOKS = glob.glob('*.ipynb')
+print(NOTEBOOKS)
+for notebook in sorted(NOTEBOOKS):
+  env.jupyter_nb(notebook)
