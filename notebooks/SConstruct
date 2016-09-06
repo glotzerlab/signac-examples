@@ -1,0 +1,61 @@
+import os
+import glob
+
+def _replace_pattern(fn_source, fn_target, old, new):
+    fn_tmp = fn_target + '.tmp'
+    with open(fn_tmp, 'w') as outfile:
+      with open(fn_source) as infile:
+        for line in infile:
+            outfile.write(line.replace(old, new))
+    os.rename(fn_tmp, fn_target)
+
+def _fix_paths(source, target, env):
+    assert len(source) == len(target)
+    cwd = os.getcwd().split('/')
+    root_index = cwd.index('signac-examples')
+    real_wd = os.path.join(* cwd[:root_index])
+    fake_wd = os.path.join('home', 'johndoe')
+    print('replacing', real_wd, fake_wd)
+    for src, tgt in zip(source, target):
+        _replace_pattern(str(src), str(tgt), '.ipynb', '.html')
+        _replace_pattern(str(tgt), str(tgt), real_wd, fake_wd)
+
+def jupyter_html_(source, target, env, for_signature):
+  "Work-around for jupyter bug: https://github.com/jupyter/nbconvert/issues/293"
+  out = os.path.abspath(str(target[0]))
+  return 'jupyter nbconvert --to html --output={} {}'.format(out, source[0])
+
+def jupyter_nb_(source, target, env, for_signature):
+  "Work-around for jupyter bug: https://github.com/jupyter/nbconvert/issues/293"
+  out = os.path.abspath(str(target[0]))
+  return 'jupyter nbconvert --to notebook --output={} --execute {}'.format(out, source[0])
+
+
+jupyter_nb = Builder(
+  generator=jupyter_nb_,
+  prefix='static/',
+  suffix='.ipynb',
+  src_suffix='.ipynb')
+
+jupyter_html = Builder(
+  generator=jupyter_html_,
+  suffix='in.html',
+  src_suffix='.ipynb')
+
+fix_html_paths = Builder(
+  action=_fix_paths,
+  #prefix='html/',
+  src_suffix='in.html',
+  suffix='.html')
+
+env = Environment(
+  ENV = {'PATH': os.environ['PATH']},
+  BUILDERS={
+      'jupyter_nb': jupyter_nb,
+      'jupyter_html': jupyter_html,
+      'fix_html_paths': fix_html_paths,
+  })
+
+NOTEBOOKS = glob.glob('*.ipynb')
+for nb in sorted(NOTEBOOKS):
+  env.fix_html_paths(env.jupyter_html(env.jupyter_nb(nb)))

@@ -1,3 +1,5 @@
 workspace
 .ipynb_checkpoints
 projects
+.sconsign.dblite
+*.in.html
