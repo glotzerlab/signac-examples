@@ -28,7 +28,7 @@ def jupyter_html_(source, target, env, for_signature):
 def jupyter_nb_(source, target, env, for_signature):
   "Work-around for jupyter bug: https://github.com/jupyter/nbconvert/issues/293"
   out = os.path.abspath(str(target[0]))
-  return 'jupyter nbconvert --ExecuteProcessor.timeout=600 --to notebook --output={} --execute {}'.format(out, source[0])
+  return 'jupyter nbconvert --ExecutePreProcessor.timeout=600 --to notebook --output={} --execute {}'.format(out, source[0])
 
 
 jupyter_nb = Builder(
