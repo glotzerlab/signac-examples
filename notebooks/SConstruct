@@ -1,24 +1,29 @@
 import os
 import glob
 
-def _replace_pattern(fn_source, fn_target, old, new):
-    fn_tmp = fn_target + '.tmp'
-    with open(fn_tmp, 'w') as outfile:
-      with open(fn_source) as infile:
-        for line in infile:
-            outfile.write(line.replace(old, new))
-    os.rename(fn_tmp, fn_target)
+def _replace_patterns(fn_source, fn_target, patterns):
+    with open(fn_source) as infile:
+        with open(fn_target, 'w') as outfile:
+            for line in infile:
+                for old, new in patterns:
+                  line = line.replace(old, new)
+                outfile.write(line)
 
 def _fix_paths(source, target, env):
     assert len(source) == len(target)
-    cwd = os.getcwd().split('/')
-    root_index = cwd.index('signac-examples')
-    real_wd = os.path.join(* cwd[:root_index])
-    fake_wd = os.path.join('home', 'johndoe')
-    print('replacing', real_wd, fake_wd)
     for src, tgt in zip(source, target):
-        _replace_pattern(str(src), str(tgt), '.ipynb', '.html')
-        _replace_pattern(str(tgt), str(tgt), real_wd, fake_wd)
+        _replace_patterns(str(src), str(tgt), [('.ipynb', '.html')])
+
+
+def _obfuscate_paths(source, target, env):
+    assert len(source) == len(target)
+    for src, tgt in zip(source, target):
+        cwd = os.path.abspath(str(src)).split('/')
+        root_index = cwd.index('signac-examples')
+        real_wd = os.path.join(* cwd[:root_index])
+        fake_wd = os.path.join('home', 'johndoe')
+        _replace_patterns(str(src), str(tgt), [(real_wd, fake_wd)])
+
 
 def jupyter_html_(source, target, env, for_signature):
   "Work-around for jupyter bug: https://github.com/jupyter/nbconvert/issues/293"
@@ -34,13 +39,18 @@ def jupyter_nb_(source, target, env, for_signature):
 jupyter_nb = Builder(
   generator=jupyter_nb_,
   prefix='static/',
-  suffix='.ipynb',
+  suffix='in.ipynb',
   src_suffix='.ipynb')
 
 jupyter_html = Builder(
   generator=jupyter_html_,
   suffix='in.html',
   src_suffix='.ipynb')
+
+obfuscate_paths = Builder(
+  action=_obfuscate_paths,
+  src_suffix='in.ipynb',
+  suffix='.ipynb')
 
 fix_html_paths = Builder(
   action=_fix_paths,
@@ -54,8 +64,9 @@ env = Environment(
       'jupyter_nb': jupyter_nb,
       'jupyter_html': jupyter_html,
       'fix_html_paths': fix_html_paths,
+      'obfuscate_paths': obfuscate_paths,
   })
 
 NOTEBOOKS = glob.glob('*.ipynb')
 for nb in sorted(NOTEBOOKS):
-  env.fix_html_paths(env.jupyter_html(env.jupyter_nb(nb)))
+  env.fix_html_paths(env.jupyter_html(env.obfuscate_paths(env.jupyter_nb(nb))))
