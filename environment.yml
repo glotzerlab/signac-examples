@@ -6,6 +6,6 @@ dependencies:
 - numpy
 - pandas
 - matplotlib
-- hoomd=2.0.3
+- hoomd=2.1.1
 - signac
 - signac-flow
