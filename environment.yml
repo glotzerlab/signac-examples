@@ -9,4 +9,4 @@ dependencies:
 - matplotlib
 - hoomd=2.1.1
 - signac
-- signac-flow
+- signac-flow=0.2.1
