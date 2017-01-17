@@ -3,6 +3,7 @@ channels:
 - conda-forge
 - defaults
 dependencies:
+- notebook=4.2.2
 - python=3
 - numpy
 - pandas
