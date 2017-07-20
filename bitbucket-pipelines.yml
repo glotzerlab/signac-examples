@@ -1,0 +1,21 @@
+# This is a sample build configuration for Python.
+# Only use spaces to indent your .yml configuration.
+# -----
+# You can specify a custom docker image from Dockerhub as your build environment.
+image: continuumio/miniconda3
+
+pipelines:
+  default:
+    - step:
+        script:
+          - conda --version
+          - python --version
+          - conda config --add channels glotzer
+          - conda config --add channels conda-forge
+          - conda create -n py36 --yes python=3.6 signac signac-flow mistune
+          - source activate py36
+          - git clone git@bitbucket.org:glotzer/signac-utils.git
+          - cd signac-utils
+          - python setup.py install
+          - cd ../signac-examples/projects
+          - ./run-tests.sh
