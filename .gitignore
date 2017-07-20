@@ -1,5 +1,7 @@
 workspace
 .ipynb_checkpoints
-projects
+notebooks/projects
 .sconsign.dblite
 *.in.html
+notebooks/static
+.DS_Store
