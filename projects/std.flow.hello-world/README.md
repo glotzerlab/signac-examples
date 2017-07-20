@@ -6,6 +6,7 @@ It features a *hello* operation, which prints `Hello {job._id}` to screen and wr
 ## Usage
 
 ```
+signac init MyProject
 signac job --create '{"a": 42}'
 python project.py run
 python project.py status --detailed
