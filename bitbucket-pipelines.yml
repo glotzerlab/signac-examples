@@ -17,5 +17,5 @@ pipelines:
           - git clone https://bitbucket.org/glotzer/signac-utils.git
           - cd signac-utils
           - python setup.py install
-          - cd ../signac-examples/projects
+          - cd ../projects
           - ./run-tests.sh
