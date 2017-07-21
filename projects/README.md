@@ -40,6 +40,10 @@ The absolute bare minimum of scripts required to setup a **signac-flow** workflo
 
 A minimal example for a **signac-flow** workflow with one *hello-world* data space operation.
 
+### [std.hoomd.lj-minimal](std.hoomd.lj-minimal)
+
+Minimal example for the generation of a phase diagram for a Lennard-Jones fluid with **signac** and **HOOMD-blue**.
+
 ## Copyright Notice
 
 **All code provided as part of this example collection (projects/*) is released into the public domain.**
