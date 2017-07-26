@@ -22,7 +22,8 @@ Project names are divided into namespaces to avoid name clashes.
 These are namespaces used:
 
   * *std*: *Standard* examples that only require the **signac** core package.
-  * *std.flow*: These *standard* examples require **signac-flow**.
+  * *flow*: These examples require **signac-flow**.
+  * *hoomd*: These examples require **HOOMD-blue**.
 
 *If you intend to create your own library of example projects, consider to place them in a namespace clearly related to your organization.*
 
@@ -43,6 +44,11 @@ A minimal example for a **signac-flow** workflow with one *hello-world* data spa
 ### [std.hoomd.lj-minimal](std.hoomd.lj-minimal)
 
 Minimal example for the generation of a phase diagram for a Lennard-Jones fluid with **signac** and **HOOMD-blue**.
+
+### [std.flow.hoomd.lj](std.flow.hoomd.lj)
+
+The example project features the generation of a p-V phase diagram of a simulated Lennard-Jones (LJ) fluid and an ideal gas estimate.
+The LJ fluid is sampled via molecular dynamics using the [HOOMD-blue particle simulation toolkit](https://glotzerlab.engin.umich.edu/hoomd-blue/).
 
 ## Copyright Notice
 
