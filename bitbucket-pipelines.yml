@@ -18,6 +18,7 @@ pipelines:
             - source activate py36
             - apt-get update
             - apt-get --yes install quantum-espresso
+            - which pw.x
       - step:
           name: Run tests
           script:
