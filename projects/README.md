@@ -75,6 +75,14 @@ The LJ fluid is sampled via molecular dynamics using the [HOOMD-blue particle si
 
 The example project shows how to setup and execute a DFT calaculation with Quantum-Espresso and signac.
 
+### [std.flow.gmx-lysozyme-in-water](std.flow.gmx-lysozyme-in-water)
+
+An example on how to integrate signac with GROMAC, following the tutorial by Justin A. Lmekul.
+
+### [std.flow.gmx-mtools](std.flow.gmx-mtools/)
+
+An example on how to integrate signac with GROMACS and mtools.
+
 ## Copyright Notice
 
 **All code provided as part of this example collection (projects/*) is released into the public domain unless otherwise stated!**
