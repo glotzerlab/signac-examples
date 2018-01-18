@@ -8,6 +8,7 @@ pipelines:
   branches:
     staging:
       - step:
+          name: Setup test environment
           script:
             - conda --version
             - python --version
@@ -17,6 +18,9 @@ pipelines:
             - source activate py36
             - apt-get update
             - apt-get --yes install quantum-espresso
+      - step:
+          name: Run tests
+          script:
             - cd projects
             - ./run-tests.sh --output
     master:
