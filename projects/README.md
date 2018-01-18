@@ -33,6 +33,7 @@ These are namespaces used:
   * *flow*: These examples require **signac-flow**.
   * *hoomd*: These examples require **HOOMD-blue**.
   * *qe*: These examples require **Quantum-Espresso**.
+  * *gmx*: The examples requires **GROMACS**.
 
 *If you intend to create your own library of example projects, consider to place them in a namespace clearly related to your organization.*
 
