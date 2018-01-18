@@ -17,7 +17,7 @@ ionized_file = fn_base + '_solv_ions.gro'
 ionization_config = 'ions.tpr'
 
 # Run file prefixes and names
-em_op = 'em'
+em_op = 'minim'
 nvt_op = 'nvt'
 npt_op = 'npt'
 production_op = 'md'

@@ -14,8 +14,8 @@ project = signac.init_project('std.flow.gromacs-example-project')
 
 # Download MDP files from tutorial website
 os.makedirs('mdp_files', exist_ok=True)
-for fn in ('em.mdp', 'ions.mdp', 'md.mdp', 'npt.mdp', 'nvt.mdp'):
-    subprocess.check_output(["curl", URL + fn, "-o", project.fn("mdp_files/" + fn)])
+for fn in ('minim.mdp', 'ions.mdp', 'md.mdp', 'npt.mdp', 'nvt.mdp'):
+    subprocess.check_output(["curl", MDP_URL + fn, "-o", project.fn("mdp_files/" + fn)])
 
 # Initialize data space for one protein
 for protein in ["1AKI"]:
