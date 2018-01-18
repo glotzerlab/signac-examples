@@ -71,7 +71,6 @@ The LJ fluid is sampled via molecular dynamics using the [HOOMD-blue particle si
 
 ## Copyright Notice
 
-**All code provided as part of this example collection (projects/*) is released into the public domain.**
+**All code provided as part of this example collection (projects/*) is released into the public domain unless otherwise stated!**
 
 The full copy right notice can be found in [LICENSE.txt](LICENSE.txt).
-
