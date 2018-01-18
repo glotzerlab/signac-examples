@@ -1,0 +1,6 @@
+signac>=0.8
+signac-flow>=0.5
+hoomd>=2.1.5
+numpy
+jupyter
+matplotlib
