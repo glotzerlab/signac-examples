@@ -19,7 +19,7 @@ This is a simple example on how to setup a **signac-flow** project for Density-f
 ```
 python init.py
 python project.py status -d
-python project.py vc_relax
-python project.py scf
+python project.py run vc_relax
+python project.py run scf
 ```
 
