@@ -1,0 +1,47 @@
+&control
+   prefix = '{prefix}'
+   calculation = '{method}' 
+   restart_mode = 'from_scratch'
+   wf_collect = .true.
+   tstress = .true.
+   tprnfor = .true.
+   outdir = '{outdir}'
+   wfcdir = '{wfcdir}'
+   pseudo_dir = '{pseudo_dir}'
+   verbosity = 'high'
+/
+&system
+   ibrav = 1 
+   celldm(1) = {lattice_parameter}
+   nat = 8 
+   ntyp = 1
+   nbnd = {number_of_bands}
+   ecutwfc = {ecut} 
+/
+ &electrons
+    diagonalization = 'cg'
+    mixing_mode     = 'plain'
+    mixing_beta     = 0.7
+    conv_thr        = 1.0d-8
+    diago_full_acc  = .true.
+ /
+&ions
+/
+&cell
+   cell_dofree = 'volume'
+/
+ATOMIC_SPECIES
+  Si 28.085 {potential} 
+
+ATOMIC_POSITIONS crystal
+  Si	0.00	0.50	0.00
+  Si	0.00	0.00	0.50
+  Si	0.25	0.25	0.25
+  Si	0.25	0.75	0.75
+  Si	0.50	0.00	0.00
+  Si	0.50	0.50	0.50
+  Si	0.75	0.75	0.25
+  Si	0.75	0.25	0.75
+
+K_POINTS automatic
+8 8 8 1 1 1
