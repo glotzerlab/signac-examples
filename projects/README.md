@@ -85,6 +85,6 @@ An example on how to integrate signac with GROMACS and mtools.
 
 ## Copyright Notice
 
-**All code provided as part of this example collection (projects/*) is released into the public domain unless otherwise stated!**
+**ALL CODE PROVIDED AS PART OF THIS EXAMPLE COLLECTION (projects/*) IS RELEASED INTO THE PUBLIC DOMAIN UNLESS OTHERWISE STATED!**
 
 The full copy right notice can be found in [LICENSE.txt](LICENSE.txt).
