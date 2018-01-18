@@ -32,6 +32,7 @@ These are namespaces used:
   * *std*: *Standard* examples that only require the **signac** core package.
   * *flow*: These examples require **signac-flow**.
   * *hoomd*: These examples require **HOOMD-blue**.
+  * *qe*: These examples require **Quantum-Espresso**.
 
 *If you intend to create your own library of example projects, consider to place them in a namespace clearly related to your organization.*
 
@@ -68,6 +69,10 @@ The example project features the generation of a p-V phase diagram of a simulate
 The LJ fluid is sampled via molecular dynamics using the [HOOMD-blue particle simulation toolkit](https://glotzerlab.engin.umich.edu/hoomd-blue/).
 
     flow-clone https://bitbucket.org/glotzer/signac-examples.git#projects/std.flow.hoomd.lj
+
+### [std.flow.qe-minimal](std.flow.qe-minimal/)
+
+The example project shows how to setup and execute a DFT calaculation with Quantum-Espresso and signac.
 
 ## Copyright Notice
 
