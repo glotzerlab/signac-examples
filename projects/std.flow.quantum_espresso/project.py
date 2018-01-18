@@ -16,7 +16,7 @@ class Project(FlowProject):
     def __init__(self, *args, **kwargs):
         super(Project, self).__init__(*args, **kwargs)
         self.add_operation(
-             name='vc-relax',
+             name='vc_relax',
              cmd='python operations.py vc_relax {job._id}',
              post=[self.converged])
         self.add_operation(
