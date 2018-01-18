@@ -6,7 +6,7 @@ from project import pname, nname, ionization_config, ionized_file, gmx_exec
 def ionize(job):
     """Exploit the pexpect module to run."""
     with job:
-        cmd = "{gmx} genion -s {io_config} -o {ionized_gro} "
+        cmd = "{gmx} genion -s {io_config} -o {ionized_gro} " \
             "-p -pname {pname} -nname {nname} -neutral".format(
                 gmx=gmx_exec,
                 io_config=ionization_config, ionized_gro=ionized_file,
