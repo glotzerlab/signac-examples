@@ -15,6 +15,8 @@ pipelines:
             - conda config --add channels conda-forge
             - conda create -n py36 --yes python=3.6 signac signac-flow signac-utils
             - source activate py36
+            - apt-get update
+            - apt-get --yes install quantum-espresso
             - cd projects
             - ./run-tests.sh
     master:
@@ -26,5 +28,7 @@ pipelines:
             - conda config --add channels conda-forge
             - conda create -n py36 --yes python=3.6 signac signac-flow signac-utils
             - source activate py36
+            - apt-get update
+            - apt-get --yes install quantum-espresso
             - cd projects
             - ./run-tests.sh
