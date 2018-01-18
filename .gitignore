@@ -5,3 +5,4 @@ notebooks/projects
 *.in.html
 notebooks/static
 .DS_Store
+signac.rc
