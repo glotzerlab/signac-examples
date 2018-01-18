@@ -3,7 +3,7 @@ import signac
 import subprocess
 
 # Make sure to update the path to your Quantum Espresso installation!
-PWX = '/usr/local/qe-6.1/bin/pw.x'
+PWX = 'pw.x'
 
 
 def create_infile(job, method, ecut):
