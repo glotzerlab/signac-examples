@@ -18,7 +18,7 @@ pipelines:
             - apt-get update
             - apt-get --yes install quantum-espresso
             - cd projects
-            - ./run-tests.sh
+            - ./run-tests.sh --output
     master:
       - step:
           script:
