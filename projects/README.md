@@ -82,9 +82,10 @@ An example on how to integrate signac with GROMAC, following the tutorial by Jus
 ### [std.flow.gmx-mtools](std.flow.gmx-mtools/)
 
 An example on how to integrate signac with GROMACS and mtools.
+**This example is licensed under the MIT-License!**
 
 ## Copyright Notice
 
-**ALL CODE PROVIDED AS PART OF THIS EXAMPLE COLLECTION (projects/*) IS RELEASED INTO THE PUBLIC DOMAIN UNLESS OTHERWISE STATED!**
+**UNLESS OTHERWISE STATED, ALL CODE PROVIDED AS PART OF THIS EXAMPLE COLLECTION (projects/*) IS RELEASED INTO THE PUBLIC DOMAIN!**
 
 The full copy right notice can be found in [LICENSE.txt](LICENSE.txt).
