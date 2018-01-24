@@ -1,0 +1,7 @@
+numpy
+matplotlib
+signac
+signac-flow
+mtools
+mdtraj
+mbuild

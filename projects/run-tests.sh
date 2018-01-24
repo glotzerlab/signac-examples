@@ -10,5 +10,5 @@ for project in `ls -d */`; do
         cat $requirements
         conda install --yes --use-index-cache --file $requirements
     fi
-    flow-test $project -vv --timeout=600
+    flow-test $project -vv --timeout=600 $@
 done

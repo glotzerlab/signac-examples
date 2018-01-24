@@ -8,6 +8,7 @@ pipelines:
   branches:
     staging:
       - step:
+          name: Setup test environment and run tests
           script:
             - conda --version
             - python --version
@@ -15,8 +16,11 @@ pipelines:
             - conda config --add channels conda-forge
             - conda create -n py36 --yes python=3.6 signac signac-flow signac-utils
             - source activate py36
+            - apt-get update
+            - apt-get --yes install quantum-espresso
+            - which pw.x
             - cd projects
-            - ./run-tests.sh
+            - ./run-tests.sh --output
     master:
       - step:
           script:
@@ -26,5 +30,7 @@ pipelines:
             - conda config --add channels conda-forge
             - conda create -n py36 --yes python=3.6 signac signac-flow signac-utils
             - source activate py36
+            - apt-get update
+            - apt-get --yes install quantum-espresso
             - cd projects
             - ./run-tests.sh
