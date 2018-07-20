@@ -3,9 +3,7 @@ from flow import FlowProject
 
 
 class Project(FlowProject):
-
-    def __init__(self, *args, **kwargs):
-        super(Project, self).__init__(*args, **kwargs)
+    pass
 
 
 if __name__ == '__main__':

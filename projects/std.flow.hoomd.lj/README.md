@@ -13,16 +13,13 @@ python src/init.py 42
 ```
 The number 42 is the random seed used for initialization, feel free to replace it with a different number or a text string, which will be converted into a numeric random seed.
 
-All project-related data space operations are defined within the `src/operations.py` module.
-These operations can also be executed, for example with `python src/operations.py initialize`.
-
-The project's workflow is defined within the `src/project.py` module.
-We can checkout the project's status, e.g., with:
+The project's workflow and data space operations are defined within the `src/project.py` module.
+We can check the project's status, e.g., with:
 ```
 python src/project.py status --detailed --parameters p
 ```
 We use the ``--detailed`` flag to show the labels explicitly for each job.
-The ``--parameters`` (``-p``) pargument specifies state point parameters that should be shown in the status overview.
+The ``--parameters`` (``-p``) argument specifies state point parameters that should be shown in the status overview.
 In this case we specify to show the `p` variable, which stands for pressure.
 
 The status will also show all pending operations (initialize/estimate-volume/sample).
