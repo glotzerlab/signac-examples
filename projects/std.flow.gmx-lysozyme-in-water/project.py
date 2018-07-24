@@ -124,23 +124,6 @@ def finished(job):
 """Definition of helper functions for defining operations"""
 
 
-def _grompp_str(op_name, gro_name, checkpoint_file=None):
-    """Helper function, returns grompp command string for operation """
-    mdp_file = signac.get_project().fn('mdp_files/{op}.mdp'.format(op=op_name))
-    cmd = '{gmx} grompp -f {mdp_file} -c {gro_file} {checkpoint} -o {op}.tpr -p'.format(
-        gmx=gmx_exec, mdp_file=mdp_file, op=op_name, gro_file=gro_name,
-        checkpoint='' if checkpoint_file is None else ('-t ' + checkpoint_file))
-    return cmd
-
-
-def _mdrun_str(op_name, np=1, nt=None, verbose=False):
-    """Helper function, returns mdrun command string for operation """
-    num_threads = 1 if nt is None else nt
-    num_nodes = np // num_threads
-    return 'OMP_NUM_THREADS={num_threads} {mpi_exec} -n {np} {gmx} mdrun -ntomp {num_threads} {verbose} -deffnm {op}'.format(
-        np=num_nodes, mpi_exec=mpi_exec, gmx=gmx_exec, num_threads=num_threads, op=op_name, verbose='-v' if verbose else '')
-
-
 def workspace_command(cmd):
     """Simple command to always go to the workspace directory"""
     return ' && '.join([
@@ -149,6 +132,23 @@ def workspace_command(cmd):
         'cd ..',
     ])
 
+
+def _grompp_str(op_name, gro_name, checkpoint_file=None):
+    """Helper function, returns grompp command string for operation """
+    mdp_file = signac.get_project().fn('mdp_files/{op}.mdp'.format(op=op_name))
+    cmd = '{gmx} grompp -f {mdp_file} -c {gro_file} {checkpoint} -o {op}.tpr -p'.format(
+        gmx=gmx_exec, mdp_file=mdp_file, op=op_name, gro_file=gro_name,
+        checkpoint='' if checkpoint_file is None else ('-t ' + checkpoint_file))
+    return workspace_command(cmd)
+
+
+def _mdrun_str(op_name, np=1, nt=None, verbose=False):
+    """Helper function, returns mdrun command string for operation """
+    num_threads = 1 if nt is None else nt
+    num_nodes = np // num_threads
+    cmd = 'OMP_NUM_THREADS={num_threads} {mpi_exec} -n {np} {gmx} mdrun -ntomp {num_threads} {verbose} -deffnm {op}'.format(
+          np=num_nodes, mpi_exec=mpi_exec, gmx=gmx_exec, num_threads=num_threads, op=op_name, verbose='-v' if verbose else '')
+    return workspace_command(cmd)
 
 # First three steps are simple configuration
 @MyProject.operation
@@ -240,7 +240,7 @@ def grompp_minim(job):
 @MyProject.post(minimized)
 @flow.cmd
 def minim(job):
-    return _md_str('minim', ionized_file)
+    return _mdrun_str('minim')
 
 
 # Equilibration: NVT then NPT
@@ -258,7 +258,7 @@ def grompp_nvt(job):
 @flow.cmd
 @flow.directives(np=16)
 def nvt(job):
-    return _md_str('nvt', em_file)
+    return _mdrun_str('nvt')
 
 
 @MyProject.operation
@@ -275,7 +275,7 @@ def grompp_npt(job):
 @flow.cmd
 @flow.directives(np=16)
 def npt(job):
-    return _md_str('npt', nvt_file)
+    return _mdrun_str('npt')
 
 
 # Final run
@@ -293,7 +293,7 @@ def grompp_md(job):
 @flow.cmd
 @flow.directives(np=16)
 def md(job):
-    return _md_str('md', npt_file)
+    return _mdrun_str('md')
 
 
 if __name__ == '__main__':
