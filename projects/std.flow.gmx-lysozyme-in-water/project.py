@@ -203,7 +203,7 @@ def solvate(job):
 @MyProject.post(ionize_prepared)
 @flow.cmd
 def grompp_add_ions(job):
-    return _grompp_str('ions', solvated_file),
+    return _grompp_str('ions', solvated_file)
 
 
 @MyProject.operation

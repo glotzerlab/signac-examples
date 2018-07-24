@@ -59,7 +59,7 @@ The example project shows how to setup and execute a DFT calaculation with Quant
 
 ### [std.flow.gmx-lysozyme-in-water](std.flow.gmx-lysozyme-in-water/)
 
-An example on how to integrate signac with GROMAC, following the tutorial by Justin A. Lmekul.
+An example on how to integrate signac with GROMACS, following the tutorial by Justin A. Lmekul.
 
 ### [std.flow.gmx-mtools](std.flow.gmx-mtools/)
 
