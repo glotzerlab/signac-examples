@@ -8,7 +8,7 @@ import pexpect  # Used to automate interaction with GROMCAS interface.
 gmx_exec = "gmx_mpi"  # Assumes mpi build
 mpi_exec = "mpirun"
 
-"""Define file level constants"""
+"""Define file level constants."""
 
 # Configuration file names
 pdb_file = 'protein.pdb'
@@ -53,75 +53,25 @@ class MyProject(FlowProject):
     pass
 
 
-"""Define labels"""
+"""Define labels, which in this case we use to indicate major checkpoints in the workflow."""
 
 
 @MyProject.label
-def converted_to_gmx(job):
-    return job.isfile(gro_file)
-
-
-@MyProject.label
-def boxed(job):
-    return job.isfile(boxed_file)
-
-
-@MyProject.label
-def solvated(job):
-    return job.isfile(solvated_file)
-
-
-@MyProject.label
-def ionize_prepared(job):
-    return job.isfile(ionization_config)
-
-
-@MyProject.label
-def ionized(job):
+def prepared_for_simulation(job):
+    """Indicates when the various preparation steps
+    have been completed and the actual MD simulation
+    steps can begin."""
     return job.isfile(ionized_file)
 
 
 @MyProject.label
-def em_prepared(job):
-    return job.isfile(em_op + '.tpr')
-
-
-@MyProject.label
-def minimized(job):
-    return job.isfile(em_file)
-
-
-@MyProject.label
-def nvt_prepared(job):
-    return job.isfile(nvt_op + '.tpr')
-
-
-@MyProject.label
-def nvt_equilibrated(job):
-    return job.isfile(nvt_file)
-
-
-@MyProject.label
-def npt_prepared(job):
-    return job.isfile(npt_op + '.tpr')
-
-
-@MyProject.label
-def npt_equilibrated(job):
-    return job.isfile(npt_file)
-
-
-@MyProject.label
-def production_prepared(job):
-    return job.isfile(production_op + '.tpr')
-
-
-@MyProject.label
 def finished(job):
+    """Indicates that the entire workflow has completed
+    for this operation."""
     return job.isfile(production_file)
 
 
-"""Definition of helper functions for defining operations"""
+"""Definition of helper functions for defining operations."""
 
 
 def workspace_command(cmd):
@@ -134,7 +84,7 @@ def workspace_command(cmd):
 
 
 def _grompp_str(op_name, gro_name, checkpoint_file=None):
-    """Helper function, returns grompp command string for operation """
+    """Helper function, returns grompp command string for operation."""
     mdp_file = signac.get_project().fn('mdp_files/{op}.mdp'.format(op=op_name))
     cmd = '{gmx} grompp -f {mdp_file} -c {gro_file} {checkpoint} -o {op}.tpr -p'.format(
         gmx=gmx_exec, mdp_file=mdp_file, op=op_name, gro_file=gro_name,
@@ -143,7 +93,7 @@ def _grompp_str(op_name, gro_name, checkpoint_file=None):
 
 
 def _mdrun_str(op_name, np=1, nt=None, verbose=False):
-    """Helper function, returns mdrun command string for operation """
+    """Helper function, returns mdrun command string for operation."""
     num_threads = 1 if nt is None else nt
     num_nodes = np // num_threads
     cmd = 'OMP_NUM_THREADS={num_threads} {mpi_exec} -n {np} {gmx} mdrun -ntomp {num_threads} {verbose} -deffnm {op}'.format(
@@ -152,7 +102,7 @@ def _mdrun_str(op_name, np=1, nt=None, verbose=False):
 
 # First three steps are simple configuration
 @MyProject.operation
-@MyProject.post(converted_to_gmx)
+@MyProject.post.isfile(gro_file)
 @flow.cmd
 def pdb2gmx(job):
     return workspace_command(
@@ -163,8 +113,8 @@ def pdb2gmx(job):
 
 
 @MyProject.operation
-@MyProject.pre(converted_to_gmx)
-@MyProject.post(boxed)
+@MyProject.pre.after(pdb2gmx)
+@MyProject.post.isfile(boxed_file)
 @flow.cmd
 def editconf(job):
     return workspace_command(
@@ -175,8 +125,8 @@ def editconf(job):
 
 
 @MyProject.operation
-@MyProject.pre(boxed)
-@MyProject.post(solvated)
+@MyProject.pre.isfile(boxed_file)
+@MyProject.post.isfile(solvated_file)
 @flow.cmd
 def solvate(job):
     return workspace_command(
@@ -199,16 +149,16 @@ def solvate(job):
 # automate responding to requested std input
 
 @MyProject.operation
-@MyProject.pre(solvated)
-@MyProject.post(ionize_prepared)
+@MyProject.pre.isfile(solvated_file)
+@MyProject.post.isfile(ionization_config)
 @flow.cmd
 def grompp_add_ions(job):
     return _grompp_str('ions', solvated_file)
 
 
 @MyProject.operation
-@MyProject.pre(ionize_prepared)
-@MyProject.post(ionized)
+@MyProject.pre.after(grompp_add_ions)
+@MyProject.post(prepared_for_simulation)
 def ionize(job):
     """Exploit the pexpect module to run."""
     with job:
@@ -228,16 +178,16 @@ def ionize(job):
 
 # Minimization
 @MyProject.operation
-@MyProject.pre(ionized)
-@MyProject.post(em_prepared)
+@MyProject.pre(prepared_for_simulation)
+@MyProject.post.isfile(em_op + '.tpr')
 @flow.cmd
 def grompp_minim(job):
     return _grompp_str('minim', ionized_file)
 
 
 @MyProject.operation
-@MyProject.pre(em_prepared)
-@MyProject.post(minimized)
+@MyProject.pre.after(grompp_minim)
+@MyProject.post.isfile(em_file)
 @flow.cmd
 def minim(job):
     return _mdrun_str('minim')
@@ -245,16 +195,16 @@ def minim(job):
 
 # Equilibration: NVT then NPT
 @MyProject.operation
-@MyProject.pre(minimized)
-@MyProject.post(nvt_prepared)
+@MyProject.pre.after(minim)
+@MyProject.post.isfile(nvt_op + '.tpr')
 @flow.cmd
 def grompp_nvt(job):
     return _grompp_str('nvt', em_file)
 
 
 @MyProject.operation
-@MyProject.pre(nvt_prepared)
-@MyProject.post(nvt_equilibrated)
+@MyProject.pre.after(grompp_nvt)
+@MyProject.post.isfile(nvt_file)
 @flow.cmd
 @flow.directives(np=16)
 def nvt(job):
@@ -262,16 +212,16 @@ def nvt(job):
 
 
 @MyProject.operation
-@MyProject.pre(nvt_equilibrated)
-@MyProject.post(npt_prepared)
+@MyProject.pre.after(nvt)
+@MyProject.post.isfile(npt_op + '.tpr')
 @flow.cmd
 def grompp_npt(job):
     return _grompp_str('npt', nvt_file)
 
 
 @MyProject.operation
-@MyProject.pre(npt_prepared)
-@MyProject.post(npt_equilibrated)
+@MyProject.pre.isfile(npt_op + '.tpr')
+@MyProject.post.isfile(npt_file)
 @flow.cmd
 @flow.directives(np=16)
 def npt(job):
@@ -280,15 +230,15 @@ def npt(job):
 
 # Final run
 @MyProject.operation
-@MyProject.pre(npt_equilibrated)
-@MyProject.post(production_prepared)
+@MyProject.pre.isfile(npt_file)
+@MyProject.post.isfile(production_op + '.tpr')
 @flow.cmd
 def grompp_md(job):
     return _grompp_str('md', npt_file)
 
 
 @MyProject.operation
-@MyProject.pre(production_prepared)
+@MyProject.pre.after(grompp_md)
 @MyProject.post(finished)
 @flow.cmd
 @flow.directives(np=16)
