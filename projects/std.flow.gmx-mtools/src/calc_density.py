@@ -1,3 +1,4 @@
+"""Calculates the density of a system over the length of a trajectory"""
 import os
 
 from mtools.post_process import calc_density
@@ -9,11 +10,6 @@ import matplotlib.pyplot as plt
 
 import numpy as np
 import mdtraj as md
-
-"""
-Calculates the density of a system over the length of a trajectory
-
-"""
 
 
 project = signac.get_project()

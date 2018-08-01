@@ -93,12 +93,5 @@ def sample(job):
     return gromacs_command(name='sample', gro='equil', sys='init')
 
 
-"""
-def write_script_header(self, script, **kwargs):
-    super().write_script_header(script, **kwargs)
-    script.writeline('module load gromacs/5.1.4')
-"""
-
-
 if __name__ == '__main__':
     MyProject().main()

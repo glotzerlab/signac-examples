@@ -3,7 +3,7 @@ import flow
 from flow import FlowProject
 # import flow.environments  # uncomment to use default environments
 
-import pexpect  # Used to automate interaction with GROMCAS interface.
+import pexpect  # Used to automate interaction with GROMACS interface.
 
 gmx_exec = "gmx_mpi"  # Assumes mpi build
 mpi_exec = "mpirun"
