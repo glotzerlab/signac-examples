@@ -1,7 +1,7 @@
 """Define the project's workflow logic."""
 from flow import FlowProject
 from flow import staticlabel
-import environment  # Custom environment definition
+# import flow.environments  # uncomment to use default environments
 
 import mbuild as mb
 from mbuild.examples import Alkane
