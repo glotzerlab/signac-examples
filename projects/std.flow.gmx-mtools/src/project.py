@@ -1,8 +1,10 @@
 """Define the project's workflow logic."""
 from flow import FlowProject
 from flow import staticlabel
-import environment  # Custom environment definition
+# import flow.environments  # uncomment to use default environments
 
+import mbuild as mb
+from mbuild.examples import Alkane
 
 def _grompp_str(root, op_name, gro_name, sys_name):
     """Helper function, returns grompp command string for operation """
@@ -17,57 +19,78 @@ def _mdrun_str(op_name):
 
 
 class MyProject(FlowProject):
+    pass
 
-    @staticlabel()
-    def initialized(job):
-        return job.isfile('init.top')
 
-    @staticlabel()
-    def minimized(job):
-        return job.isfile('em.gro')
+@MyProject.label
+def initialized(job):
+    return job.isfile('init.top')
 
-    @staticlabel()
-    def equilibrated(job):
-        return job.isfile('equil.gro')
 
-    @staticlabel()
-    def sampled(job):
-        return job.isfile('sample.gro')
+@MyProject.label
+def minimized(job):
+    return job.isfile('em.gro')
 
-    def __init__(self, *args, **kwargs):
-        super(MyProject, self).__init__(*args, **kwargs)
 
-        def add_gromacs_op(name, gro, sys, **kwargs):
-            self.add_operation(
-                name=name,
-                cmd="cd {{job.ws}} ; {} && {}".format(
-                    _grompp_str(self.root_directory(), name, gro, sys),
-                    _mdrun_str(name)),
-                **kwargs)
+@MyProject.label
+def equilibrated(job):
+    return job.isfile('equil.gro')
 
-        self.add_operation(
-            name='initialize',
-            cmd='python src/operations.py initialize {job._id}',
-            post=[self.initialized])
 
-        add_gromacs_op(
-            name='em', gro='init', sys='init',
-            pre=[self.initialized],
-            post=[self.minimized])
+@MyProject.label
+def sampled(job):
+    return job.isfile('sample.gro')
 
-        add_gromacs_op(
-            name='equil', gro='em', sys='init',
-            pre=[self.minimized],
-            post=[self.equilibrated])
 
-        add_gromacs_op(
-            name='sample', gro='equil', sys='init',
-            pre=[self.equilibrated],
-            post=[self.sampled])
+def gromacs_command(name, gro, sys):
+    """Simplify GROMACS operations"""
+    return "cd {{job.ws}} ; {} && {}".format(
+        _grompp_str(self.root_directory(), name, gro, sys),
+        _mdrun_str(name))
 
-    def write_script_header(self, script, **kwargs):
-        super().write_script_header(script, **kwargs)
-        script.writeline('module load gromacs/5.1.4')
+
+@MyProject.operation
+@MyProject.post(initialized)
+@flow.cmd
+def initialize(job):
+    "Initialize the simulation"
+    with job:
+        alkane = Alkane(job.statepoint()['C_n'])
+        n_alkane = 200
+        # A cleaner packing approach would involve pull #372
+        system_box = mb.Box([4, 4, 4])
+        system = mb.fill_box(compound=alkane,
+                             n_compounds=n_alkane,
+                             box=system_box)
+        system.save('init.gro',
+                    overwrite=True)
+        system.save('init.top',
+                    forcefield_name='oplsaa',
+                    overwrite=True)
+
+
+@MyProject.operation
+@MyProject.pre(initialized)
+@MyProject.post(minimized)
+@flow.cmd
+def em(job):
+    return gromacs_command(name='em', gro='init', sys='init')
+
+
+@MyProject.operation
+@MyProject.pre(minimized)
+@MyProject.post(equilibrated)
+@flow.cmd
+def equil(job):
+    return gromacs_command(name='equil', gro='em', sys='init')
+
+
+@MyProject.operation
+@MyProject.pre(equilibrated)
+@MyProject.post(sampled)
+@flow.cmd
+def sample(job):
+    return gromacs_command(name='sample', gro='equil', sys='init')
 
 
 if __name__ == '__main__':

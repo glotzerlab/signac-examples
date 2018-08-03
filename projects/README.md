@@ -27,7 +27,7 @@ These are namespaces used:
   * *qe*: These examples require **Quantum-Espresso**.
   * *gmx*: The examples requires **GROMACS**.
 
-*If you intend to create your own library of example projects, consider to place them in a namespace clearly related to your organization.*
+*If you intend to create your own library of example projects, consider placing them in a namespace clearly related to your organization.*
 
 ## Project Overview
 
@@ -59,7 +59,7 @@ The example project shows how to setup and execute a DFT calaculation with Quant
 
 ### [std.flow.gmx-lysozyme-in-water](std.flow.gmx-lysozyme-in-water/)
 
-An example on how to integrate signac with GROMAC, following the tutorial by Justin A. Lmekul.
+An example on how to integrate signac with GROMACS, following the tutorial by Justin A. Lmekul.
 
 ### [std.flow.gmx-mtools](std.flow.gmx-mtools/)
 
@@ -70,4 +70,4 @@ An example on how to integrate signac with GROMACS and mtools.
 
 **UNLESS OTHERWISE STATED, ALL CODE PROVIDED AS PART OF THIS EXAMPLE COLLECTION (projects/*) IS RELEASED INTO THE PUBLIC DOMAIN!**
 
-The full copy right notice can be found in [LICENSE.txt](LICENSE.txt).
+The full copyright notice can be found in [LICENSE.txt](LICENSE.txt).

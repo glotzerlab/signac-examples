@@ -1,5 +1,5 @@
 signac>=0.8
-signac-flow>=0.5
+signac-flow>=0.6
 hoomd>=2.1.5
 numpy
 jupyter
