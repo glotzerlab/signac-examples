@@ -2,23 +2,40 @@
 
 This is a hello world example for an optimization flow project.
 It features the optimization of three mathematical functions, which are
-stand-ins for more expensive operations.
+stand-ins for more expensive simulations.
 
 # Implementation
 
-The optimization problem is implemented as a meta-project, which has the
-optimization function itself, the random seed and the initial guess variable
-as state point parameters.
-
-The actual optimization data is stored in a separate project, which is either
-a sub-space within each optimization job, or a shared space between all
-optimization jobs (controlled by the `USE_SHARED_SIMULATION_DATA_SPACE` variable).
+The optimization project is implemented with one *master* job for each optimization, and a bunch of *slave* jobs that acutally executes the simulation.
+The two kinds of jobs are distinguished with the **master** state point parameter.
 
 # Usage
 
+## Local execution
+
 ```
 python init.py
-python project.py status --detailed -p func
 python project.py run --num-passes=100
 ```
 You can also set `--num-passes=-1` for unlimited number of executions.
+
+
+## Submit to scheduler
+
+The project comes with a special template that resubmits operations before and after the execution of each operation.
+To submit the workflow to a scheduler, just execute:
+```
+python init.py
+python project.py submit
+```
+
+## Status
+
+If you want to check the status of the optimization, use the following command:
+```
+python project.py status --detailed -p func -f master true
+```
+To check the status of each simulation, use
+```
+python project.py status --detailed -p func -f master false
+```
