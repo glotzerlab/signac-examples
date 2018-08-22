@@ -1,27 +1,12 @@
 #!/usr/bin/env python
-from contextlib import contextmanager
+from functools import wraps
+
 from flow import FlowProject
 
-
-# Set this variable to True to use a single space for all "simulations".
-# By default, each simulation data space will be placed within the
-# workspace of the corresponding optimization job.
-USE_SHARED_SIMULATION_DATA_SPACE = False
 
 # Use this variable to control the maximum number of generations that
 # are generated for each optimization job.
 MAX_NUM_GENERATIONS = 200
-
-
-@contextmanager
-def lock(job):
-    job.doc.locked = True
-    yield
-    job.doc.locked = False
-
-
-def locked(job):
-    return job.doc.get('locked', False)
 
 
 class SimulationProject(FlowProject):
@@ -34,47 +19,50 @@ def simulated(job):
 
 
 @SimulationProject.operation
-@SimulationProject.pre(lambda job: not locked(job))
+@SimulationProject.pre(lambda job: 'max_cost' not in job.doc)
 @SimulationProject.post(simulated)
 def simulate(job):
     import math
     from time import sleep
-    with lock(job):
-        sleep(0.5)    # Artifical computational cost!!
-        func = eval('lambda x: ' + job.sp.func, dict(sqrt=math.sqrt))
-        job.doc.y = func(job.sp.x)
+    sleep(0.5)    # Artifical computational cost!!
+    func = eval('lambda x: ' + job.sp.func, dict(sqrt=math.sqrt))
+    job.doc.y = func(job.sp.x)
 
 
 def calc_cost(job):
     return abs(job.doc.y)
 
 
-if USE_SHARED_SIMULATION_DATA_SPACE:
-    SIMULATION_SUB_PROJECT = SimulationProject.init_project(
-        name='Simulate',
-        root='simulations')
-
-
-class OptimizationProject(FlowProject):
+class OptimizationProject(SimulationProject):
     pass
 
+    @staticmethod
+    def is_master(job):
+        return 'max_cost' in job.doc
 
-def get_simulation_sub_project(job):
-    if USE_SHARED_SIMULATION_DATA_SPACE:
-        return SIMULATION_SUB_PROJECT
-    else:
-        return SimulationProject.init_project(name='Simulate', root=job.fn('simulations'))
+    @classmethod
+    def label(cls, func, *args, **kwargs):
+
+        @wraps(func)
+        def _inner_label_func(job):
+            if cls.is_master(job):
+                return func(job)
+        return FlowProject.label(_inner_label_func, *args, **kwargs)
+
+    @classmethod
+    def operation(cls, func, *args, **kwargs):
+        return cls.pre(lambda job: cls.is_master(job))(FlowProject.operation(func, *args, **kwargs))
 
 
 def get_simulation_sub_jobs(job, simulated=None):
-    filter = {'func': job.sp.func} if USE_SHARED_SIMULATION_DATA_SPACE else None
-    if simulated is None:
-        doc_filter = None
-    elif simulated is True or simulated is False:
-        doc_filter = {'y': {'$exists': simulated}}
-    else:
+    "Determine all simulation jobs, belonging to this master-job."
+    filter = {'func': job.sp.func}
+    doc_filter = {'max_cost': {'$exists': False}}
+    if simulated is True or simulated is False:
+        doc_filter['y'] = {'$exists': simulated}
+    elif simulated is not None:
         raise ValueError(simulated)
-    return get_simulation_sub_project(job).find_jobs(filter, doc_filter)
+    return job._project.find_jobs(filter, doc_filter)
 
 
 @OptimizationProject.label
@@ -116,16 +104,19 @@ def exhausted(job):
 
 @OptimizationProject.label
 def converged(job):
-    try:
-        min_cost = min(map(calc_cost,
-                           get_simulation_sub_jobs(job, simulated=True)))
-        return min_cost < job.doc.max_cost
-    except ValueError:  # no jobs
-        return False
+    if 'max_cost' in job.doc:
+        try:
+            min_cost = min(map(calc_cost,
+                               get_simulation_sub_jobs(job, simulated=True)))
+            return min_cost < job.doc.max_cost
+        except ValueError:  # no jobs
+            return False
 
 
+@OptimizationProject.label
 def all_simulated(job):
-    return len(get_simulation_sub_jobs(job, simulated=False)) == 0
+    if 'max_cost' in job.doc:
+        return len(get_simulation_sub_jobs(job, simulated=False)) == 0
 
 
 @OptimizationProject.operation
@@ -136,10 +127,10 @@ def all_simulated(job):
 def spawn_new_simulations(job, n=4):
     import random
     random.seed(job.doc.seeds[-1])
-    simulate_project = get_simulation_sub_project(job)
+    project = job._project
     for i in range(n):
         x = random.uniform(0, 4)
-        simulate_project.open_job(dict(func=job.sp.func, x=x)).init()
+        project.open_job(dict(func=job.sp.func, x=x)).init()
     for i in range(5):
         next_seed = random.randint(0, 10000)
         if next_seed not in job.doc.seeds:
@@ -147,13 +138,6 @@ def spawn_new_simulations(job, n=4):
             break
     else:
         raise RuntimeError("Unable to determine next unique random seed.")
-
-
-@OptimizationProject.operation
-@OptimizationProject.post(all_simulated)
-def run_simulations(job):
-    get_simulation_sub_project(job).run(
-        np=-1, progress=True)  # run on all available processors
 
 
 if __name__ == '__main__':
