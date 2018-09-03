@@ -6,7 +6,7 @@ stand-ins for more expensive simulations.
 
 # Implementation
 
-The optimization project is implemented with one *master* job for each optimization, and a bunch of *slave* jobs that acutally executes the simulation.
+The optimization project is implemented with one *master* job for each optimization, and a bunch of *slave* jobs that actually executes the simulation.
 The two kinds of jobs are distinguished with the **master** state point parameter.
 
 # Usage

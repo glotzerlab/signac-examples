@@ -1,10 +1,17 @@
 #!/usr/bin/env python
+import math
+import random
+
 from flow import FlowProject
 
 
 # Use this variable to control the maximum number of generations that
 # are generated for each optimization job.
 MAX_NUM_GENERATIONS = 200
+
+
+def _convert_to_tuple(l):
+    return tuple(tuple(_) if isinstance(_, list) else _ for _ in l)
 
 
 def calc_cost(job):
@@ -20,6 +27,18 @@ class OptimizationProject(FlowProject):
     pass
 
 
+def get_simulation_sub_jobs(master_job, simulated=None):
+    "Determine all simulation jobs, belonging to this master-job."
+    filter = {'func': master_job.sp.func, 'master': False}
+    if simulated is True or simulated is False:
+        doc_filter = {'y': {'$exists': simulated}}
+    elif simulated is None:
+        doc_filter = None
+    else:
+        raise ValueError(simulated)
+    return master_job._project.find_jobs(filter, doc_filter)
+
+
 @OptimizationProject.label
 def simulated(job):
     if job.sp.master:
@@ -32,23 +51,10 @@ def simulated(job):
 @OptimizationProject.pre(lambda job: not is_master(job))
 @OptimizationProject.post(simulated)
 def simulate(job):
-    import math
     from time import sleep
     sleep(0.5)    # Artifical computational cost!!
     func = eval('lambda x: ' + job.sp.func, dict(sqrt=math.sqrt))
     job.doc.y = func(job.sp.x)
-
-
-def get_simulation_sub_jobs(master_job, simulated=None):
-    "Determine all simulation jobs, belonging to this master-job."
-    filter = {'func': master_job.sp.func, 'master': False}
-    if simulated is True or simulated is False:
-        doc_filter = {'y': {'$exists': simulated}}
-    elif simulated is None:
-        doc_filter = None
-    else:
-        raise ValueError(simulated)
-    return master_job._project.find_jobs(filter, doc_filter)
 
 
 @OptimizationProject.label
@@ -103,22 +109,20 @@ def converged(job):
 @OptimizationProject.pre(lambda job: not exhausted(job))
 @OptimizationProject.post(converged)
 def spawn_new_simulations(job, n=4):
-    import random
-    print('spawn_new', job)
-    random.seed(job.doc.seeds[-1])
+    try:
+        # Load the stored random generator state...
+        random.setstate(_convert_to_tuple(job.doc.rng))
+    except AttributeError:
+        # ... or initialize if no state was previously stored.
+        random.seed(job.sp.seed)
+
     project = job._project
     for i in range(n):
         x = random.uniform(0, 4)
         project.open_job(dict(func=job.sp.func, x=x, master=False)).init()
 
-    # Extend the series of random seeds.
-    for i in range(5):
-        next_seed = random.randint(0, 10000)
-        if next_seed not in job.doc.seeds:
-            job.doc.seeds = job.doc.seeds + [next_seed]
-            break
-    else:
-        raise RuntimeError("Unable to determine next unique random seed.")
+    # Store state of random generator.
+    job.doc.rng = random.getstate()
 
 
 if __name__ == '__main__':
