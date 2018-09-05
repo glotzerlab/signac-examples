@@ -1,0 +1,2 @@
+signac>=0.9.2
+signac-flow>=0.6.3
