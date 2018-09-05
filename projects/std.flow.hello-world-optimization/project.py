@@ -28,7 +28,7 @@ class OptimizationProject(FlowProject):
 
 
 def get_simulation_sub_jobs(master_job, simulated=None):
-    "Determine all simulation jobs, belonging to this master-job."
+    "Retrieve all simulation jobs belonging to this master-job."
     filter = {'func': master_job.sp.func, 'master': False}
     if simulated is True or simulated is False:
         doc_filter = {'y': {'$exists': simulated}}
@@ -52,7 +52,7 @@ def simulated(job):
 @OptimizationProject.post(simulated)
 def simulate(job):
     from time import sleep
-    sleep(0.5)    # Artifical computational cost!!
+    sleep(0.5)    # Artificial computational cost!!
     func = eval('lambda x: ' + job.sp.func, dict(sqrt=math.sqrt))
     job.doc.y = func(job.sp.x)
 
