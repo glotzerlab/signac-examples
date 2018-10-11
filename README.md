@@ -9,7 +9,7 @@ They demonstrate how to implement a basic computational workflow using the [sign
 The framework assists users in managing simple to complext data spaces for example by simplifying provenance tracking and meta data management.
 
 Use [nbviewer](http://nbviewer.jupyter.org) to view a [static version](http://nbviewer.jupyter.org/github/csadorf/signac-examples/blob/master/index.ipynb) of these notebooks.
-Or start a [dynamic version](http://www.mybinder.org/repo/csadorf/signac-examples) with the service offered by [mybinder.org](http://www.mybinder.org).
+Or start a [dynamic version](https://mybinder.org/v2/gh/csadorf/signac-examples/master?filepath=notebooks%2Findex.ipynb) with the service offered by [mybinder.org](http://www.mybinder.org).
 
 To run the notebooks locally, clone the repository and then start jupyter:
 ```
