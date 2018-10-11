@@ -1,13 +1,12 @@
 channels:
-- glotzer
 - conda-forge
 - defaults
 dependencies:
-- notebook=4.2.2
+- notebook=4
 - python=3
-- numpy
+- numpy=1.12
 - pandas
-- matplotlib
-- hoomd=2.1.1
-- signac
-- signac-flow=0.2.1
+- matplotlib=3
+- hoomd=2
+- signac=0.9
+- signac-flow=0.6
