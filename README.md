@@ -14,7 +14,7 @@ Or start a [dynamic version](https://mybinder.org/v2/gh/csadorf/signac-examples/
 To run the notebooks locally, clone the repository and then start jupyter:
 ```
 #!bash
-$ git clone https://bitbucket.org/glotzer/signac-examples.git
+$ git clone https://github.com/glotzerlab/signac-examples.git
 $ cd signac-examples/notebooks
 $ jupyter
 ```
@@ -28,7 +28,7 @@ Simply clone or download this repository and copy all scripts into your signac p
 
 ```
 #!bash
-$ git clone https://bitbucket.org/glotzer/signac-examples.git
+$ git clone https://github.com/glotzerlab/signac-examples.git
 $ mkdir my_project
 $ cd my_project
 $ signac init MyProject
