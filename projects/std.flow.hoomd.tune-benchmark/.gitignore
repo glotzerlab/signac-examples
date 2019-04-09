@@ -1,0 +1,4 @@
+workspace/*
+signac.rc
+.ipynb_checkpoints/benchmark-and-tune-spheres-checkpoint.ipynb
+__pycache__
