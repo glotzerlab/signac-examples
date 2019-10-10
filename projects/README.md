@@ -40,6 +40,11 @@ Minimal example for the calculation and storage of a phase diagram for an *ideal
 This is a hello world example flow project.
 It features a *hello* operation, which prints `Hello {job._id}` to screen and writes the same string to a file.
 
+### [std.flow.hello-world-optimization](stf.flow.hello-world-optimization/)
+
+This is a minimal example for how to implement an iterative optimization project with signac-flow.
+This project dynamically spawns new jobs as a result of previous results.
+
 ### [std.flow.minimal](std.flow.minimal/)
 
 This is a minimal example for a signac-flow project.
