@@ -21,7 +21,6 @@ $ cp -r ../signac-examples/projects/flow.minimal/* ./
 Project names are divided into namespaces to avoid name clashes.
 These are namespaces used:
 
-  * *std*: *Standard* examples that only require the **signac** core package.
   * *flow*: These examples require **signac-flow**.
   * *hoomd*: These examples require **HOOMD-blue**.
   * *qe*: These examples require **Quantum-Espresso**.
@@ -31,42 +30,42 @@ These are namespaces used:
 
 ## Project Overview
 
-### [std.idg-minimal](std.idg-minimal/)
+### [idg-minimal](idg-minimal/)
 
 Minimal example for the calculation and storage of a phase diagram for an *ideal gas* with **signac**.
 
-### [std.flow.hello-world](std.flow.hello-world/)
+### [flow.hello-world](flow.hello-world/)
 
 This is a hello world example flow project.
 It features a *hello* operation, which prints `Hello {job._id}` to screen and writes the same string to a file.
 
-### [std.flow.hello-world-optimization](stf.flow.hello-world-optimization/)
+### [flow.hello-world-optimization](stf.flow.hello-world-optimization/)
 
 This is a minimal example for how to implement an iterative optimization project with signac-flow.
 This project dynamically spawns new jobs as a result of previous results.
 
-### [std.flow.minimal](std.flow.minimal/)
+### [flow.minimal](flow.minimal/)
 
 This is a minimal example for a signac-flow project.
 
-### [std.hoomd.lj-minimal](std.hoomd.lj-minimal/)
+### [hoomd.lj-minimal](hoomd.lj-minimal/)
 
 Minimal example for the generation of a phase diagram for a Lennard-Jones fluid with **signac** and **HOOMD-blue**.
 
-### [std.flow.hoomd.lj](std.flow.hoomd.lj/)
+### [flow.hoomd.lj](flow.hoomd.lj/)
 
 The example project features the generation of a p-V phase diagram of a simulated Lennard-Jones (LJ) fluid and an ideal gas estimate.
 The LJ fluid is sampled via molecular dynamics using the [HOOMD-blue particle simulation toolkit](https://glotzerlab.engin.umich.edu/hoomd-blue/).
 
-### [std.flow.qe-minimal](std.flow.qe-minimal/)
+### [flow.qe-minimal](flow.qe-minimal/)
 
 The example project shows how to setup and execute a DFT calaculation with Quantum-Espresso and signac.
 
-### [std.flow.gmx-lysozyme-in-water](std.flow.gmx-lysozyme-in-water/)
+### [flow.gmx-lysozyme-in-water](flow.gmx-lysozyme-in-water/)
 
 An example on how to integrate signac with GROMACS, following the tutorial by Justin A. Lmekul.
 
-### [std.flow.gmx-mtools](std.flow.gmx-mtools/)
+### [flow.gmx-mtools](flow.gmx-mtools/)
 
 An example on how to integrate signac with GROMACS and mtools.
 **This example is licensed under the MIT-License!**

@@ -10,7 +10,7 @@ MDP_URL = "http://www.bevanlab.biochem.vt.edu/Pages/Personal/justin/gmx-tutorial
 
 
 # Initialize signac project
-project = signac.init_project('std.flow.gromacs-example-project')
+project = signac.init_project('flow.gromacs-example-project')
 
 # Download MDP files from tutorial website
 os.makedirs('mdp_files', exist_ok=True)
