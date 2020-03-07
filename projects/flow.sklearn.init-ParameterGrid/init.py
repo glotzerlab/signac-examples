@@ -1,7 +1,8 @@
 """This example performs grid search, saving the results of each evaluated
 parameter set into a signac data space.
 
-Adapted from: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html
+See also:
+https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html
 """
 import joblib
 import signac

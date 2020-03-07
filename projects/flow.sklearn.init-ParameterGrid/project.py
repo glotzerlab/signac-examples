@@ -28,7 +28,8 @@ def fit_estimator(job):
 @Project.pre.after(fit_estimator)
 @Project.post.isfile('confusion_matrix.png')
 def plot_confusion_matrix(job):
-    # Adapted from https://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html
+    # See also:
+    # https://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html
     import matplotlib
     import matplotlib.pyplot as plt
     from sklearn.metrics import plot_confusion_matrix
