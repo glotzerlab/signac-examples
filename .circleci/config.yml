@@ -70,7 +70,7 @@ jobs:
             conda --version
             python --version
             conda config --add channels conda-forge
-            conda create -n py38 --yes python=3.8 signac signac-flow signac-utils
+            conda create -n py38 --yes python=3.8 signac signac-flow 
             source activate py38apt-get update
             apt-get --yes install quantum-espresso
             which pw.x
@@ -89,7 +89,7 @@ jobs:
             conda --version
             python --version
             conda config --add channels conda-forge
-            conda create -n py38 --yes python=3.8 signac signac-flow signac-utils
+            conda create -n py38 --yes python=3.8 signac signac-flow 
             source activate py38apt-get update
             apt-get --yes install quantum-espresso
             cd projects
