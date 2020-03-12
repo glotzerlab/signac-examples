@@ -1,0 +1,107 @@
+# CircleCI configuration file
+#
+# Check https://circleci.com/docs/2.0/language-python/ for more details
+#
+version: 2.1
+
+orbs:
+  win: circleci/windows@2.2.0  # Enables Windows executors
+
+jobs:
+  style-check:
+    docker:
+      - image: circleci/python:3.8
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - run:
+        name: style-check
+          command: |
+            pip install --progress-bar off --user -U flake8==3.7.9
+            python -m flake8 --show-source .
+
+
+  linux-python-38: &linux-template
+    docker:
+      - image: circleci/python:3.8
+
+    environment:
+      PYTHON: python
+
+    working_directory: ~/repo
+
+    steps:
+
+      - checkout
+      - run:
+          name: install dependencies
+          command: |
+            export PATH=$PATH:$HOME/.local/bin
+            ${PYTHON} -m pip install --progress-bar off -U virtualenv --user
+            mkdir -p ./venv
+            virtualenv ./venv --clear
+            . venv/bin/activate
+            if [[ "$CIRCLE_JOB" != *"pypy"* ]]; then
+              sudo apt update -qq && sudo apt install -y -qq libhdf5-dev
+            fi
+            ${PYTHON} -m pip install --progress-bar off -U pip==18
+            ${PYTHON} -m pip install --progress-bar off -U codecov
+            ${PYTHON} -m pip install --progress-bar off -U -e . -r requirements-dev.txt
+
+      - run:
+          name: run tests
+          command: |
+            . venv/bin/activate
+            ${PYTHON} -m coverage run -m pytest tests/ -v
+            ${PYTHON} -m coverage report -i
+            codecov
+
+  staging:
+    docker:
+      - image: circleci/python:3.8
+
+    steps:
+      - checkout
+      - run:
+          name: staging_script
+          command: |
+            conda --version
+            python --version
+            conda config --add channels conda-forge
+            conda create -n py38 --yes python=3.8 signac signac-flow signac-utils
+            source activate py38apt-get update
+            apt-get --yes install quantum-espresso
+            which pw.x
+            cd projects
+            ./run-tests.sh --output
+
+  master:
+    docker:
+      - image: circleci/python:3.8
+
+    steps:
+      - checkout
+      - run:
+          name: staging_script
+          command: |
+            conda --version
+            python --version
+            conda config --add channels conda-forge
+            conda create -n py38 --yes python=3.8 signac signac-flow signac-utils
+            source activate py38apt-get update
+            apt-get --yes install quantum-espresso
+            cd projects
+            ./run-tests.sh            
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - style-check
+      - linux-python-38:
+          requires:
+            - style-check
+      - staging
+      - master
