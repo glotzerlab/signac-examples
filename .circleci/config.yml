@@ -8,21 +8,7 @@ orbs:
   win: circleci/windows@2.2.0  # Enables Windows executors
 
 jobs:
-  style-check:
-    docker:
-      - image: circleci/python:3.8
-
-    working_directory: ~/repo
-
-    steps:
-      - checkout
-      - run:
-        name: style-check
-          command: |
-            pip install --progress-bar off --user -U flake8==3.7.9
-            python -m flake8 --show-source .
-
-
+  
   linux-python-38: &linux-template
     docker:
       - image: circleci/python:3.8
@@ -99,9 +85,6 @@ workflows:
   version: 2
   test:
     jobs:
-      - style-check
-      - linux-python-38:
-          requires:
-            - style-check
+      - linux-python-38
       - staging
       - master
