@@ -23,7 +23,6 @@ jobs:
           command: |
             export PATH=$PATH:$HOME/.local/bin
             pip install conda
-            pip install conda-forge
             conda --version
             python --version
             conda config --add channels conda-forge
