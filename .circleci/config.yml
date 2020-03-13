@@ -54,7 +54,8 @@ jobs:
             python --version
             conda config --add channels conda-forge
             conda create -n py38 --yes python=3.8 signac signac-flow 
-            source activate py38apt-get update
+            source activate py38
+            apt-get update
             apt-get --yes install quantum-espresso
             which pw.x
             cd projects
