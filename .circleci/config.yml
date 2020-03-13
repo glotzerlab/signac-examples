@@ -22,6 +22,10 @@ jobs:
           name: install dependencies
           command: |
             export PATH=$PATH:$HOME/.local/bin
+            ${PYTHON} -m pip install --progress-bar off -U virtualenv --user
+            mkdir -p ./venv
+            virtualenv ./venv --clear
+            . venv/bin/activate
             conda --version
             python --version
             conda config --add channels conda-forge
@@ -34,6 +38,7 @@ jobs:
       - run:
           name: run tests
           command: |
+            . venv/bin/activate
             cd projects
             ./run-tests.sh --output           
 
