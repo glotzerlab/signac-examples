@@ -22,10 +22,8 @@ jobs:
           name: install dependencies
           command: |
             export PATH=$PATH:$HOME/.local/bin
-            ${PYTHON} -m pip install --progress-bar off -U virtualenv --user
-            mkdir -p ./venv
-            virtualenv ./venv --clear
-            . venv/bin/activate
+            pip install conda
+            pip install conda-forge
             conda --version
             python --version
             conda config --add channels conda-forge
