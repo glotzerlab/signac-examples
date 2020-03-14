@@ -21,6 +21,16 @@ jobs:
       - run:
           name: install dependencies
           command: |
+            wget https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh
+            bash miniconda.sh -b -p "$HOME"/miniconda
+            source miniconda/etc/profile.d/conda.sh
+            conda activate base
+            conda config --set always_yes yes --set auto_update_conda false
+            conda update conda
+            conda create -n test python=$PYTHON_VERSION
+            conda activate test
+            conda install -n test --file requirements.txt
+            conda install -n test anaconda-project flake8 pillow mock pytest pytest-cov
             export PATH=$PATH:$HOME/.local/bin
             pip install conda
             conda --version
