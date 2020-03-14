@@ -35,9 +35,10 @@ jobs:
             pip install conda
             conda --version
             python --version
+            conda search conda --channel conda-forge
             conda config --add channels conda-forge
-            conda create -n py38 --yes python=3.8 signac signac-flow 
-            source activate py38
+            conda install conda
+            conda install python
             apt-get update
             apt-get --yes install quantum-espresso
             which pw.x
