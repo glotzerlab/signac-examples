@@ -43,6 +43,7 @@ jobs:
           name: run tests
           command: |
             cd projects
+            chmod +x run-tests.sh
             ./run-tests.sh --output        
 
 workflows:
