@@ -43,7 +43,7 @@ jobs:
           name: run tests
           command: |
             cd projects
-            ./run-tests.sh --output           
+            ./run-tests.sh --output        
 
 workflows:
   version: 2
