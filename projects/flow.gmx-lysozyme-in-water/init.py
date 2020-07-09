@@ -6,7 +6,7 @@ import subprocess
 import signac
 
 PDB_URL = "https://files.rcsb.org/download/"
-MDP_URL = "http://www.bevanlab.biochem.vt.edu/Pages/Personal/justin/gmx-tutorials/lysozyme/Files/"
+MDP_URL = "http://www.mdtutorials.com/gmx/lysozyme/Files/"
 
 
 # Initialize signac project
