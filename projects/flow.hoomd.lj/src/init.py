@@ -31,7 +31,9 @@ def main():
                 run_steps=5000)
 
         # open the job and initialize
-        project.open_job(statepoint).init()
+        job = project.open_job(statepoint)
+        print(f'initializing state point with id {job.get_id()} and p = {job.sp.p}')
+        job.init()
 
 
 if __name__ == '__main__':

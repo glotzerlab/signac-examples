@@ -14,10 +14,6 @@ class MyProject(FlowProject):
 
 # Definition of project-related labels (classification)
 @MyProject.label
-def initialized(job):
-    return job.isfile('init.gsd')
-
-@MyProject.label
 def estimated(job):
     return 'volume_estimate' in job.document
 
@@ -32,7 +28,7 @@ def sampled(job):
 
 # Adding project operations
 @MyProject.operation
-@MyProject.post(initialized)
+@MyProject.post.isfile('init.gsd')
 def initialize(job):
     "Initialize the simulation configuration."
     import hoomd
@@ -49,7 +45,7 @@ def initialize(job):
 
 
 @MyProject.operation
-@MyProject.pre(initialized)
+@MyProject.pre.isfile('init.gsd')
 @MyProject.post(sampled)
 def sample(job):
     "Sample operation."
