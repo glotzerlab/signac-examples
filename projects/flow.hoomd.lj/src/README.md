@@ -5,7 +5,7 @@
     - If you look in these directories, you'll see `signac_statepoint.json`. This is a json file that contains the statepoint parameters for that job.
     - NOTE: The job's `id` is generated specifically for the dict containing the statepoint parameters, so do not directly change the directory name or `signac_statepoint.json` directly.
 
-2. All of the operations we will be performing on our data is stored in `project.py`.
+2. All of the operations we will be performing on our data is stored in `project.py`. An operation is a function with `job` as its only argument that signac-flow recognizes as a part of your workflow.
     - You can tell which methods are operations because they will have the `@MyProject.operation` decorator, which tells signac that this method is to be treated as an operation.
     - `operation`s typically have pre- and post- conditions. This is how signac knows when the operation should be run. For example, the `initialize()` function has no pre-condition because it must be run first, but has `@MyProject.post.isfile('init.gsd')` as a post-condition. This post-condition means that the operation will *not* be run if `init.gsd` exists.
 
