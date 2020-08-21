@@ -17,4 +17,4 @@
 
 4. For more information on how you can analyze this data, take a look at the `visualize_data.ipynb` jupyter notebook in this directory.
 
-NOTE: If you want to run this tutorial from scratch, just `rm -rf workspace/`
+NOTE: If you want to run this tutorial from scratch, just run `rm -rf workspace/` to delete the workspace.
