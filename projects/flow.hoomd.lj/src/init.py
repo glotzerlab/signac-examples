@@ -9,6 +9,7 @@ import numpy as np
 
 def main():
     project = signac.init_project('Ideal-Gas-Example-Project')
+    # sweep over 10 pressures evenly spaced between 0.5 and 5.0
     for p in np.linspace(0.5, 5.0, 10):
         statepoint = dict(
                 # system size
@@ -27,11 +28,14 @@ def main():
                 tau=1.0,
                 # barostat coupling constant
                 tauP=1.0,
-                
-                run_steps=5000)
+                )
 
         # open the job and initialize
         job = project.open_job(statepoint)
+
+        # define run steps in the job document so that run_steps
+        # can be changed without modifying the statepoint
+        job.doc['run_steps'] = 5000
         print(f'initializing state point with id {job.get_id()} and p = {job.sp.p}')
         job.init()
 
