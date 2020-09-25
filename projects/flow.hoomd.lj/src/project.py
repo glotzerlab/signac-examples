@@ -23,7 +23,7 @@ def started(job):
 
 @MyProject.label
 def sampled(job):
-    return job.document.get('sample_step', 0) >= job.sp.run_steps
+    return job.document.get('sample_step', 0) >= job.doc.run_steps
 
 
 # Adding project operations
@@ -67,7 +67,7 @@ def sample(job):
                              P=job.sp.p, tauP=job.sp.tauP)
             hoomd.analyze.log('dump.log', ['volume'], 100, phase=0)
             try:
-                hoomd.run_upto(job.sp.run_steps)
+                hoomd.run_upto(job.doc.run_steps)
             except hoomd.WalltimeLimitReached:
                 logging.warning("Reached walltime limit.")
             finally:
