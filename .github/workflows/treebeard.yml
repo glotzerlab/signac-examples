@@ -1,0 +1,14 @@
+# Uses https://github.com/treebeardtech/treebeard
+# Run all notebooks on every push and weekly
+on:
+  push:
+  schedule:
+    - cron: "0 0 * * 0" # weekly
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    name: Run treebeard
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: treebeardtech/treebeard@master
