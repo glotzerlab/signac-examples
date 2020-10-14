@@ -3,7 +3,7 @@
 set -e
 
 for PROJECT in `ls -d */`; do
-    if [ -e "${PROJECT}/.skipci"]; then
+    if [ -e "${PROJECT}/.skipci" ]; then
         echo "Skipping ${PROJECT} tests."
         continue
     fi
