@@ -30,7 +30,7 @@ references:
         # Create the environment
         conda create -n signac-examples python=${PYTHON_VERSION}
         conda activate signac-examples
-        conda install --file environment.yml
+        conda env update --file environment.yml
         # Install testing requirements
         conda install pytest nbval
         # Possibly need flake8, pillow, mock, pytest, pytest-cov based on previous script?
