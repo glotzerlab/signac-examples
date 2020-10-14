@@ -1,0 +1,5 @@
+h5py
+joblib
+matplotlib
+scikit-learn
+signac-dashboard
