@@ -3,12 +3,12 @@
 set -e
 
 for project in `ls -d */`; do
-    requirements=$project/requirements.txt
+    REQUIREMENTS_FILE=$project/requirements.txt
     echo "Run test for $project."
-    if [ -e $requirements ]
-    then
-        cat $requirements
-        conda install --yes --use-index-cache --file $requirements
+    if [ -e ${REQUIREMENTS_FILE} ]; then
+        echo "Installing requirements:"
+        cat ${REQUIREMENTS_FILE}
+        conda install --yes --use-index-cache --file ${REQUIREMENTS_FILE}
     fi
-    flow-test $project -vv --timeout=600 $@
+    ./flow-test $project -vv --timeout=600 $@
 done
