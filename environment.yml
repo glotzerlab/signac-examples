@@ -2,6 +2,7 @@ channels:
   - conda-forge
 dependencies:
   - hoomd=2
+  - jupyter
   - matplotlib=3
   - notebook>=4
   - numpy>=1.12
