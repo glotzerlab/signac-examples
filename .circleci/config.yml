@@ -5,13 +5,13 @@
 version: 2.1
 
 jobs:
-  
+
   linux-python-38: &linux-template
     docker:
       - image: continuumio/miniconda3
 
     environment:
-      PYTHON: python
+      PYTHON_VERSION: 3.8
 
     working_directory: ~/repo
 
@@ -19,7 +19,7 @@ jobs:
 
       - checkout
       - run:
-          name: install dependencies
+          name: Install dependencies
           command: |
             wget https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh
             bash miniconda.sh -b -p "$HOME"/miniconda
@@ -44,11 +44,10 @@ jobs:
           command: |
             cd projects
             chmod +x run-tests.sh
-            ./run-tests.sh --output        
+            ./run-tests.sh --output
 
 workflows:
   version: 2
   test:
     jobs:
       - linux-python-38
-
