@@ -9,5 +9,5 @@ for seed in (0,):
         "(x - 2.0)**3",  # solution: x = 2.0
         "sqrt(x) - sqrt(3.0)",  # solution: x = 3.0
     ):
-        job = project.open_job({"func": func, "x0": 0, "seed": seed, "master": True})
+        job = project.open_job({"func": func, "x0": 0, "seed": seed, "primary": True})
         job.document.setdefault("max_cost", 1e-2)  # convergence criterion
