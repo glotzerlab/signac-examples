@@ -32,8 +32,7 @@ def create_infile(job, method, ecut):
                     lattice_parameter=job.sp.lattice_parameter,
                     number_of_bands=job.sp.number_of_bands,
                     outdir=job.fn("out"),
-                    pseudo_dir=os.path.join(
-                        project.root_directory(), "pseudo"),
+                    pseudo_dir=os.path.join(project.root_directory(), "pseudo"),
                     method=method,
                     potential=job.sp.potential,
                     ecut=ecut,

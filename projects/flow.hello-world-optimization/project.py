@@ -103,7 +103,9 @@ def converged(job):
 
 
 @OptimizationProject.operation
-@OptimizationProject.pre(is_primary)  # execute this operation only on the "primary" job.
+@OptimizationProject.pre(
+    is_primary
+)  # execute this operation only on the "primary" job.
 @OptimizationProject.pre(simulated)
 @OptimizationProject.pre(lambda job: not exhausted(job))
 @OptimizationProject.post(converged)
