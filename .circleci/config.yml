@@ -16,7 +16,7 @@ references:
   load_cache: &load_cache
     restore_cache:
       keys:
-        - python-env-v1-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "environment.yml" }}
+        - python-env-v2-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "environment.yml" }}
 
   init_conda: &init_conda
     run:
@@ -42,7 +42,7 @@ references:
 
   store_cache: &store_cache
     save_cache:
-      key: python-env-v1-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "environment.yml" }}
+      key: python-env-v2-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "environment.yml" }}
       paths:
         - "/opt/conda/envs/signac-examples"
 
