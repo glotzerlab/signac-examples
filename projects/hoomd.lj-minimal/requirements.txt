@@ -1,2 +1,2 @@
-signac>=0.8
+signac>=1.0.0
 hoomd>=2.1.5
