@@ -2,6 +2,7 @@
 
 set -e
 
+python --version
 for PROJECT in `ls -d */`; do
     if [ -e "${PROJECT}/.skipci" ]; then
         echo "Skipping tests for project ${PROJECT}."
@@ -14,5 +15,5 @@ for PROJECT in `ls -d */`; do
         cat ${REQUIREMENTS_FILE}
         conda install --yes --use-index-cache --file ${REQUIREMENTS_FILE}
     fi
-    ./flow-test ${PROJECT} -vv --timeout=600 $@
+    python flow-test.py ${PROJECT} -vv --timeout=600 $@
 done
