@@ -59,7 +59,6 @@ references:
       name: Run project tests
       command: |
         cd projects
-        chmod +x run-tests.sh
         ./run-tests.sh --output
 
   test_notebooks: &test_notebooks
