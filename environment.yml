@@ -3,7 +3,7 @@ channels:
 dependencies:
   - hoomd=2
   - jupyter
-  - matplotlib-base=3
+  - matplotlib=3
   - mistune
   - notebook>=4
   - numpy>=1.12
