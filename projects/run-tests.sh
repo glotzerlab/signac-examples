@@ -4,7 +4,7 @@ set -e
 
 for PROJECT in `ls -d */`; do
     if [ -e "${PROJECT}/.skipci" ]; then
-        echo "Skipping ${PROJECT} tests."
+        echo "Skipping tests for project ${PROJECT}."
         continue
     fi
     REQUIREMENTS_FILE="${PROJECT}/requirements.txt"
