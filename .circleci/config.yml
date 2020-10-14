@@ -19,7 +19,6 @@ references:
       command: |
         conda config --add channels conda-forge
         conda config --set always_yes true
-        conda config --set quiet true
         conda init bash
         conda update conda
 
