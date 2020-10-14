@@ -13,7 +13,7 @@ for PROJECT in `ls -d */`; do
     if [ -e ${REQUIREMENTS_FILE} ]; then
         echo "Installing requirements:"
         cat ${REQUIREMENTS_FILE}
-        conda install --yes --use-index-cache --file ${REQUIREMENTS_FILE}
+        conda install --yes --file ${REQUIREMENTS_FILE}
     fi
     python flow-test.py ${PROJECT} -vv --timeout=600 $@
 done
