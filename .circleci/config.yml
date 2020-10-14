@@ -42,7 +42,6 @@ references:
       name: Install latest version of signac & signac-flow
       command: |
         conda activate signac-examples
-        cd ~/ci/
         conda uninstall signac signac-flow
         pip install git+ssh://git@github.com/glotzerlab/signac.git
         pip install git+ssh://git@github.com/glotzerlab/signac-flow.git
