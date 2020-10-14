@@ -32,7 +32,7 @@ references:
       name: Load conda environment
       command: |
         # Create the environment if it doesn't exist
-        if [ ! -d "conda-env" ]; then
+        if [ ! -d "/opt/conda/envs/signac-examples" ]; then
           conda create -n signac-examples python=${PYTHON_VERSION}
           conda activate signac-examples
           conda env update --file environment.yml
@@ -44,7 +44,7 @@ references:
     save_cache:
       key: python-env-v1-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "environment.yml" }}
       paths:
-        - "conda-env"
+        - "/opt/conda/envs/signac-examples"
 
 
   install_latest: &install_latest
@@ -74,20 +74,20 @@ references:
   test_notebooks: &test_notebooks
     steps:
       - *load_code
-      #- *load_cache
+      - *load_cache
       - *init_conda
       - *create_environment
-      #- *store_cache
+      - *store_cache
       #- *install_latest
       - *test_notebook_execution
 
   test_projects: &test_projects
     steps:
       - *load_code
-      #- *load_cache
+      - *load_cache
       - *init_conda
       - *create_environment
-      #- *store_cache
+      - *store_cache
       #- *install_latest
       - *test_project_execution
 
