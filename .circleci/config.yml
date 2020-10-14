@@ -61,7 +61,7 @@ references:
       name: Run notebook execution tests
       command: |
         conda activate signac-examples
-        python -m pytest -v --nbval --nbval-lax
+        python -m pytest -v --nbval --nbval-lax notebooks/
 
   test_project_execution: &test_project_execution
     run:
