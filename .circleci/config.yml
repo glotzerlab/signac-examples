@@ -33,9 +33,6 @@ references:
         conda env update --file environment.yml
         # Install testing requirements
         conda install pytest nbval
-        # Possibly need flake8, pillow, mock, pytest, pytest-cov based on previous script?
-        # export PATH=$PATH:$HOME/.local/bin
-        # apt-get --yes install quantum-espresso
 
   install_latest: &install_latest
     run:
