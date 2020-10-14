@@ -4,50 +4,99 @@
 #
 version: 2.1
 
-jobs:
-
-  linux-python-38: &linux-template
+references:
+  container_miniconda: &container_miniconda
     docker:
       - image: continuumio/miniconda3
+    working_directory: ~/ci/signac-examples
 
-    environment:
-      PYTHON_VERSION: 3.8
+  load_code: &load_code
+    checkout
 
-    working_directory: ~/repo
+  update_conda: &update_conda
+    run:
+      name: Update and initialize conda
+      command: |
+        conda config --add channels conda-forge
+        conda config --set always_yes true
+        conda config --set quiet true
+        conda init bash
+        conda update conda
 
+  load_environment: &load_environment
+    run:
+      name: Load conda environment
+      command: |
+        # Create the environment
+        conda create -n signac-examples python=${PYTHON_VERSION}
+        conda activate signac-examples
+        conda install --file environment.yml
+        # Install testing requirements
+        conda install pytest nbval
+        # Possibly need flake8, pillow, mock, pytest, pytest-cov based on previous script?
+        # export PATH=$PATH:$HOME/.local/bin
+        # apt-get --yes install quantum-espresso
+
+  install_latest: &install_latest
+    run:
+      name: Install latest version of signac & signac-flow
+      command: |
+        conda activate signac-examples
+        cd ~/ci/
+        conda uninstall signac signac-flow
+        pip install git+ssh://git@github.com/glotzerlab/signac.git
+        pip install git+ssh://git@github.com/glotzerlab/signac-flow.git
+
+  test_notebook_execution: &test_notebook_execution
+    run:
+      name: Run notebook execution tests
+      command: |
+        conda activate signac-examples
+        cd ~/ci/signac-examples/
+        python -m pytest -v --nbval --nbval-lax
+
+  test_project_execution: &test_project_execution
+    run:
+      name: Run project tests
+      command: |
+        cd projects
+        chmod +x run-tests.sh
+        ./run-tests.sh --output
+
+  test_notebooks: &test_notebooks
     steps:
+      - *load_code
+      - *update_conda
+      - *load_environment
+      - *install_latest
+      - *test_notebook_execution
 
-      - checkout
-      - run:
-          name: Install dependencies
-          command: |
-            wget https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh
-            bash miniconda.sh -b -p "$HOME"/miniconda
-            source /root/miniconda/etc/profile.d/conda.sh
-            conda activate base
-            conda config --set always_yes yes --set auto_update_conda false
-            conda update conda
-            conda create -n test python=$PYTHON_VERSION
-            conda activate test
-            conda install -n test anaconda-project flake8 pillow mock pytest pytest-cov
-            export PATH=$PATH:$HOME/.local/bin
-            conda --version
-            python --version
-            conda search conda --channel conda-forge
-            conda config --add channels conda-forge
-            apt-get update
-            apt-get --yes install quantum-espresso
-            which pw.x
+  test_projects: &test_projects
+    steps:
+      - *load_code
+      - *update_conda
+      - *load_environment
+      - *install_latest
+      - *test_project_execution
 
-      - run:
-          name: run tests
-          command: |
-            cd projects
-            chmod +x run-tests.sh
-            ./run-tests.sh --output
+jobs:
+  test_projects_linux-python-38:
+    <<: *container_miniconda
+    environment:
+      BASH_ENV: "~/.bashrc"
+      PYTHON_VERSION: 3.8
+    <<: *test_projects
+
+  test_notebooks_linux-python-38:
+    <<: *container_miniconda
+    environment:
+      BASH_ENV: "~/.bashrc"
+      PYTHON_VERSION: 3.8
+    <<: *test_notebooks
 
 workflows:
   version: 2
   test:
     jobs:
-      - linux-python-38
+      - test_projects_linux-python-38
+      - test_notebooks_linux-python-38
