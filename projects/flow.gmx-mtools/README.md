@@ -51,6 +51,6 @@ Analyze system (here, simple timeseries plots of density)
 python analysis/calc_density.py
 ```
 
-Look at the PDF file located in the ```workspace``` directory. It should look something like this:
+Look at the PDF file located in the `workspace` directory. It should look something like this:
 
 ![image](https://user-images.githubusercontent.com/7935382/28077533-a8a43f84-6627-11e7-9370-1206160d185d.png)

@@ -16,9 +16,9 @@ appropriate physics correctly.
 
 # Usage
 
-````
+```
 python init.py
 python project.py status -d
 python project.py run
 # And repeat
-````
+```

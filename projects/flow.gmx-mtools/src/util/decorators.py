@@ -7,4 +7,5 @@ def job_chdir(func):
         os.chdir(job.workspace())
         func(job, *args)
         os.chdir(cwd)
+
     return func_wrapper
