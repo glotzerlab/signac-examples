@@ -2,8 +2,6 @@
 from flow import FlowProject
 from flow import staticlabel
 
-# import flow.environments  # uncomment to use default environments
-
 import mbuild as mb
 from mbuild.examples import Alkane
 

@@ -15,7 +15,7 @@ import mdtraj as md
 
 project = signac.get_project()
 
-for job in project.find_jobs():
+for job in project:
     top_file = os.path.join(job.workspace(), "sample.gro")
     trj_file = os.path.join(job.workspace(), "sample.trr")
     data_file = os.path.join(job.workspace(), "rho.txt")
@@ -35,7 +35,7 @@ for job in project.find_jobs():
         fig.savefig(img_file)
 
 fig, ax = plt.subplots()
-for job in project.find_jobs():
+for job in project:
     data_file = os.path.join(job.workspace(), "rho.txt")
     if os.path.isfile(data_file):
         data = np.loadtxt(data_file)
