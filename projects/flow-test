@@ -23,7 +23,7 @@ def _find_descr(blocks):
 
 
 def _find_test_code(blocks):
-    "ALl code blocks within a 'using' or 'testing' section."
+    "All code blocks within a 'using' or 'testing' section."
     found = False
     for block in blocks:
         if found and block["type"] == "code":
@@ -118,7 +118,7 @@ if __name__ == "__main__":
         "--timeout",
         type=int,
         default=60,
-        help="Specify a timeout in seconds after which a test " "automatically fails.",
+        help="Specify a timeout in seconds after which a test automatically fails.",
     )
     args = parser.parse_args()
 
