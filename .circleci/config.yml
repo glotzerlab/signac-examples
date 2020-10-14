@@ -74,20 +74,20 @@ references:
   test_notebooks: &test_notebooks
     steps:
       - *load_code
-      - *load_cache
+      #- *load_cache
       - *init_conda
       - *create_environment
-      - *store_cache
+      #- *store_cache
       #- *install_latest
       - *test_notebook_execution
 
   test_projects: &test_projects
     steps:
       - *load_code
-      - *load_cache
+      #- *load_cache
       - *init_conda
       - *create_environment
-      - *store_cache
+      #- *store_cache
       #- *install_latest
       - *test_project_execution
 
