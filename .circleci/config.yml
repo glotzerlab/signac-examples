@@ -24,6 +24,7 @@ references:
       command: |
         conda config --add channels conda-forge
         conda config --set always_yes true
+        conda config --set changeps1 false
         conda init bash
 
   create_environment: &create_environment
