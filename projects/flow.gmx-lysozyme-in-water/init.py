@@ -6,7 +6,7 @@ import subprocess
 import signac
 
 PDB_URL = "https://files.rcsb.org/download/"
-MDP_URL = "http://www.bevanlab.biochem.vt.edu/Pages/Personal/justin/gmx-tutorials/lysozyme/Files/"
+MDP_URL = "http://www.mdtutorials.com/gmx/lysozyme/Files/"
 
 
 # Initialize signac project
@@ -15,7 +15,8 @@ project = signac.init_project("flow.gromacs-example-project")
 # Download MDP files from tutorial website
 os.makedirs("mdp_files", exist_ok=True)
 for fn in ("minim.mdp", "ions.mdp", "md.mdp", "npt.mdp", "nvt.mdp"):
-    subprocess.check_output(["curl", MDP_URL + fn, "-o", project.fn("mdp_files/" + fn)])
+    subprocess.check_output(
+        ["curl", MDP_URL + fn, "-o", project.fn("mdp_files/" + fn)])
 
 # Initialize data space for one protein
 for protein in ["1AKI"]:
