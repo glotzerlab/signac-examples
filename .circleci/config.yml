@@ -18,14 +18,13 @@ references:
       keys:
         - python-env-v1-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "environment.yml" }}
 
-  update_conda: &update_conda
+  init_conda: &init_conda
     run:
-      name: Update and initialize conda
+      name: Initialize conda
       command: |
         conda config --add channels conda-forge
         conda config --set always_yes true
         conda init bash
-        conda update conda
 
   create_environment: &create_environment
     run:
@@ -69,13 +68,13 @@ references:
       command: |
         conda activate ./conda-env
         cd projects
-        ./run-tests.sh --output
+        . run-tests.sh --output
 
   test_notebooks: &test_notebooks
     steps:
       - *load_code
       - *load_cache
-      - *update_conda
+      - *init_conda
       - *create_environment
       - *store_cache
       #- *install_latest
@@ -85,7 +84,7 @@ references:
     steps:
       - *load_code
       - *load_cache
-      - *update_conda
+      - *init_conda
       - *create_environment
       - *store_cache
       #- *install_latest
