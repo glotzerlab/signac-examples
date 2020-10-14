@@ -10,8 +10,6 @@ The two kinds of jobs are distinguished by the **primary** state point parameter
 
 # Usage
 
-## Local execution
-
 ```
 python init.py
 python project.py run --num-passes=100
@@ -20,7 +18,7 @@ python project.py run --num-passes=100
 You can also set `--num-passes=-1` for an unlimited number of execution passes.
 
 
-## Submit to scheduler
+## Submitting to a scheduler
 
 The project comes with a special template that resubmits operations before and after the execution of each operation.
 To submit the workflow to a scheduler, execute:
