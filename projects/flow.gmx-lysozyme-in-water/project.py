@@ -6,7 +6,7 @@ from flow import FlowProject
 
 import pexpect  # Used to automate interaction with GROMACS interface.
 
-gmx_exec = "gmx_mpi"  # Assumes mpi build
+gmx_exec = "gmx"  # or use gmx_mpi if available
 mpi_exec = "mpirun"
 
 """Define file level constants."""
