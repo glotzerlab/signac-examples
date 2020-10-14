@@ -13,6 +13,11 @@ references:
   load_code: &load_code
     checkout
 
+  load_cache: &load_cache
+    restore_cache:
+      keys:
+        - python-env-v1-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "environment.yml" }}
+
   update_conda: &update_conda
     run:
       name: Update and initialize conda
@@ -22,22 +27,31 @@ references:
         conda init bash
         conda update conda
 
-  load_environment: &load_environment
+  create_environment: &create_environment
     run:
       name: Load conda environment
       command: |
-        # Create the environment
-        conda create -n signac-examples python=${PYTHON_VERSION}
-        conda activate signac-examples
-        conda env update --file environment.yml
-        # Install testing requirements
-        conda install pytest nbval
+        # Create the environment if it doesn't exist
+        if [ ! -d "conda-env" ]; then
+          conda create --prefix conda-env python=${PYTHON_VERSION}
+          conda activate ./conda-env
+          conda env update --file environment.yml
+          # Install testing requirements
+          conda install pytest nbval
+        fi
+
+  store_cache: &store_cache
+    save_cache:
+      key: python-env-v1-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "environment.yml" }}
+      paths:
+        - "conda-env"
+
 
   install_latest: &install_latest
     run:
       name: Install latest version of signac & signac-flow
       command: |
-        conda activate signac-examples
+        conda activate ./conda-env
         conda uninstall signac signac-flow
         pip install git+ssh://git@github.com/glotzerlab/signac.git
         pip install git+ssh://git@github.com/glotzerlab/signac-flow.git
@@ -46,30 +60,34 @@ references:
     run:
       name: Run notebook execution tests
       command: |
-        conda activate signac-examples
-        cd ~/ci/signac-examples/
+        conda activate ./conda-env
         python -m pytest -v --nbval --nbval-lax
 
   test_project_execution: &test_project_execution
     run:
       name: Run project tests
       command: |
+        conda activate ./conda-env
         cd projects
         ./run-tests.sh --output
 
   test_notebooks: &test_notebooks
     steps:
       - *load_code
+      - *load_cache
       - *update_conda
-      - *load_environment
+      - *create_environment
+      - *store_cache
       #- *install_latest
       - *test_notebook_execution
 
   test_projects: &test_projects
     steps:
       - *load_code
+      - *load_cache
       - *update_conda
-      - *load_environment
+      - *create_environment
+      - *store_cache
       #- *install_latest
       - *test_project_execution
 
