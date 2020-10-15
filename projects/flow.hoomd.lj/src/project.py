@@ -27,12 +27,12 @@ def started(job):
 
 @MyProject.label
 def sampled(job):
-    return job.document.get('sample_step', 0) >= job.doc.run_steps
+    return job.document.get("sample_step", 0) >= job.doc.run_steps
 
 
 # Adding project operations
 @MyProject.operation
-@MyProject.post.isfile('init.gsd')
+@MyProject.post.isfile("init.gsd")
 def initialize(job):
     "Initialize the simulation configuration."
     import hoomd
@@ -50,7 +50,7 @@ def initialize(job):
 
 
 @MyProject.operation
-@MyProject.pre.isfile('init.gsd')
+@MyProject.pre.isfile("init.gsd")
 @MyProject.post(sampled)
 def sample(job):
     "Sample operation."
@@ -89,8 +89,8 @@ def estimate(job):
     "Ideal-gas estimate operation."
     sp = job.statepoint()
     # Calculate volume using ideal gas law
-    V = sp['N'] * sp['kT'] / sp['p']
-    job.document['volume_estimate'] = V
+    V = sp["N"] * sp["kT"] / sp["p"]
+    job.document["volume_estimate"] = V
 
 
 if __name__ == "__main__":
