@@ -14,15 +14,13 @@ def main():
         statepoint = dict(
                 # system size
                 N=512,
-
                 # Lennard-Jones potential parameters
                 sigma=1.0,
                 epsilon=1.0,
                 r_cut=2.5,
-
                 # thermal energy
                 kT=1.0,
-                # presure
+                # pressure
                 p=p,
                 # thermostat coupling constant
                 tau=1.0,

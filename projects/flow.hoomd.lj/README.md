@@ -26,7 +26,6 @@ The LJ fluid is sampled via molecular dynamics using the [HOOMD-blue particle si
 
 NOTE: If you want to run this tutorial from scratch, just run `rm -rf workspace/` to delete the workspace.
 
-
 # Modules
 
 The following list is a brief overview of the modules and scripts to be found within the project template.
@@ -34,7 +33,7 @@ The following list is a brief overview of the modules and scripts to be found wi
 Modules, that are usually modified by the user:
 
  * ``init.py`` - **Init**ialize the project and parameter space.
- * ``project.py`` - Configuration, execution, and submission of the **project** work flow. Definition and execution of python-based data space **operations**.
+ * ``project.py`` - Configuration, execution, and submission of the **project** workflow. Definition and execution of python-based data space **operations**.
 
 Other modules:
 

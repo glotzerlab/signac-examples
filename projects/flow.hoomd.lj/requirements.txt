@@ -1,6 +1,6 @@
-signac>=0.8
-signac-flow>=0.6
 hoomd>=2.1.5
-numpy
 jupyter
 matplotlib
+numpy
+signac-flow>=0.10.0
+signac>=1.0.0

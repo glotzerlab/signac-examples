@@ -10,15 +10,15 @@ appropriate physics correctly.
 
 # Tested with
 
-  * signac 0.9.2
-  * signac-flow 0.5.5
-  * GROMACS: version 5.1.4
+  * signac 1.5.0
+  * signac-flow 0.11.0
+  * GROMACS: version 2020.4
 
 # Usage
 
-````
+```
 python init.py
 python project.py status -d
 python project.py run
 # And repeat
-````
+```

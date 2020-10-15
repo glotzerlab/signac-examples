@@ -1,0 +1,114 @@
+# CircleCI configuration file
+#
+# Check https://circleci.com/docs/2.0/language-python/ for more details
+#
+version: 2.1
+
+references:
+  container_miniconda: &container_miniconda
+    docker:
+      - image: continuumio/miniconda3
+    working_directory: ~/ci/signac-examples
+
+  load_code: &load_code
+    checkout
+
+  load_cache: &load_cache
+    restore_cache:
+      keys:
+        - python-env-v2-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "environment.yml" }}
+
+  init_conda: &init_conda
+    run:
+      name: Initialize conda
+      command: |
+        conda config --add channels conda-forge
+        conda config --set always_yes true
+        conda config --set changeps1 false
+        conda init bash
+
+  create_environment: &create_environment
+    run:
+      name: Load conda environment
+      command: |
+        # Create the environment if it doesn't exist
+        if [ ! -d "/opt/conda/envs/signac-examples" ]; then
+          conda create -n signac-examples python=${PYTHON_VERSION}
+          conda activate signac-examples
+          conda env update --file environment.yml
+          # Install testing requirements
+          conda install pytest nbval
+        fi
+
+  store_cache: &store_cache
+    save_cache:
+      key: python-env-v2-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "environment.yml" }}
+      paths:
+        - "/opt/conda/envs/signac-examples"
+
+
+  install_latest: &install_latest
+    run:
+      name: Install latest version of signac & signac-flow
+      command: |
+        conda activate signac-examples
+        conda uninstall signac signac-flow
+        pip install git+ssh://git@github.com/glotzerlab/signac.git
+        pip install git+ssh://git@github.com/glotzerlab/signac-flow.git
+
+  test_notebook_execution: &test_notebook_execution
+    run:
+      name: Run notebook execution tests
+      command: |
+        conda activate signac-examples
+        python -m pytest -v --nbval --nbval-lax notebooks/
+
+  test_project_execution: &test_project_execution
+    run:
+      name: Run project tests
+      command: |
+        conda activate signac-examples
+        cd projects
+        . run-tests.sh --output
+
+  test_notebooks: &test_notebooks
+    steps:
+      - *load_code
+      - *load_cache
+      - *init_conda
+      - *create_environment
+      - *store_cache
+      #- *install_latest
+      - *test_notebook_execution
+
+  test_projects: &test_projects
+    steps:
+      - *load_code
+      - *load_cache
+      - *init_conda
+      - *create_environment
+      - *store_cache
+      #- *install_latest
+      - *test_project_execution
+
+jobs:
+  test_projects_linux-python-38:
+    <<: *container_miniconda
+    environment:
+      BASH_ENV: "~/.bashrc"
+      PYTHON_VERSION: 3.8
+    <<: *test_projects
+
+  test_notebooks_linux-python-38:
+    <<: *container_miniconda
+    environment:
+      BASH_ENV: "~/.bashrc"
+      PYTHON_VERSION: 3.8
+    <<: *test_notebooks
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test_projects_linux-python-38
+      - test_notebooks_linux-python-38
