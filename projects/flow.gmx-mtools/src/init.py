@@ -10,25 +10,27 @@ import signac
 
 
 def main(args):
-    project = signac.init_project('Alkanes')
+    project = signac.init_project("Alkanes")
     for seed in range(args.num_replicas):
         for C_n in [6, 8, 10]:
             statepoint = dict(
-                        # length of alkane
-                        C_n=C_n,
-                        # random seed
-                        seed=seed)
+                # length of alkane
+                C_n=C_n,
+                # random seed
+                seed=seed,
+            )
             project.open_job(statepoint).init()
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        description="Initialize the data space.")
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Initialize the data space.")
     parser.add_argument(
-        '-n', '--num-replicas',
+        "-n",
+        "--num-replicas",
         type=int,
         default=1,
-        help="Initialize multiple replications.")
+        help="Initialize multiple replications.",
+    )
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO)

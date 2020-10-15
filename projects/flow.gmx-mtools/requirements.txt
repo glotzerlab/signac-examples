@@ -1,7 +1,7 @@
-numpy
 matplotlib
-signac
-signac-flow>=0.6
-mtools
-mdtraj
 mbuild
+mdtraj
+mtools
+numpy
+signac-flow>=0.10.0
+signac>=1.0.0
