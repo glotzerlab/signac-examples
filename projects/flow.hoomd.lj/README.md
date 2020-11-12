@@ -9,7 +9,7 @@ The LJ fluid is sampled via molecular dynamics using the [HOOMD-blue particle si
 1. Initialize the project with
 
 ```
- `python src/init.py`
+ python src/init.py
 ```
 
 - This creates the `workspace/`, which holds all of our `jobs`. Each `job` has its own directory, named by the job's unique `id` (something like `87c7fccdea3531da704bbae95e95e914`).
@@ -21,14 +21,25 @@ The LJ fluid is sampled via molecular dynamics using the [HOOMD-blue particle si
     - `operation`s typically have pre- and post- conditions. This is how signac knows when the operation should be run. For example, the `initialize()` function has no pre-condition because it must be run first, but has `@MyProject.post.isfile('init.gsd')` as a post-condition. This post-condition means that the operation will *not* be run if `init.gsd` exists.
 
 3. Now run let's run the operations:
-    - Run
+    - First run a status check:
     ```
-    `python project.py status -d`
+    python project.py status -d
     ```
-    (`-d` specifies a "detailed view"). You will see a list of jobs and that `estimate` and `initialize` are eligible operations, as determined by those operations' pre- and post- conditions.
-    - Now run `python project.py run -o initialize`. This will run just the `initialize()` operations for *all* eligible jobs (which in this case is all of the jobs).
+    `-d` specifies a "detailed view". You will see a list of jobs and that `estimate` and `initialize` are eligible operations, as determined by those operations' pre- and post- conditions.
+
+    - Now initialize eligible jobs:
+    ```
+    python project.py run -o initialize
+    ```
+    This will run just the `initialize()` operations for *all* eligible jobs (which in this case is all of the jobs).
     - Run `python project.py status -d` again, and you'll see that now all the jobs are eligible for `estimate` and `sample`. You can also run `python project.py status -d -p p`. The ``-p`` argument specifies which parameters should be shown in the status view, and we pass in `p` to see which statepoint corresponds to which pressure.
-    - Run `python project.py run`, which will now run all eligible operations, and you'll see HOOMD be called. When you call `python project.py status -d` now, you'll see that no operations are eligible, and that the labels `estimated`, `sampled`, and `started` are now visible. These labels are defined in `project.py` with the `@MyProject.label` decorator.
+
+
+    - Now we can run the simulations:
+    ```
+    python project.py run
+    ```
+    which will now run all eligible operations, and you'll see HOOMD be called. When you call `python project.py status -d` now, you'll see that no operations are eligible, and that the labels `estimated`, `sampled`, and `started` are now visible. These labels are defined in `project.py` with the `@MyProject.label` decorator.
 
 4. For more information on how you can analyze this data, take a look at the `visualize_data.ipynb` jupyter notebook in this directory. Simply execute ``jupyter notebook`` within the project's root directory and open the `src/analysis.ipynb` notebook.
 
