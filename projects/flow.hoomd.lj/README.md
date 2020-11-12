@@ -23,13 +23,13 @@ The LJ fluid is sampled via molecular dynamics using the [HOOMD-blue particle si
 3. Now run let's run the operations:
     - First run a status check:
     ```
-    python project.py status -d
+    python src/project.py status -d
     ```
     `-d` specifies a "detailed view". You will see a list of jobs and that `estimate` and `initialize` are eligible operations, as determined by those operations' pre- and post- conditions.
 
     - Now initialize eligible jobs:
     ```
-    python project.py run -o initialize
+    python src/project.py run -o initialize
     ```
     This will run just the `initialize()` operations for *all* eligible jobs (which in this case is all of the jobs).
     - Run `python project.py status -d` again, and you'll see that now all the jobs are eligible for `estimate` and `sample`. You can also run `python project.py status -d -p p`. The ``-p`` argument specifies which parameters should be shown in the status view, and we pass in `p` to see which statepoint corresponds to which pressure.
@@ -37,7 +37,7 @@ The LJ fluid is sampled via molecular dynamics using the [HOOMD-blue particle si
 
     - Now we can run the simulations:
     ```
-    python project.py run
+    python src/project.py run
     ```
     which will now run all eligible operations, and you'll see HOOMD be called. When you call `python project.py status -d` now, you'll see that no operations are eligible, and that the labels `estimated`, `sampled`, and `started` are now visible. These labels are defined in `project.py` with the `@MyProject.label` decorator.
 
