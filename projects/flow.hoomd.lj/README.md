@@ -60,5 +60,3 @@ Modules, that are usually modified by the user:
 
  * ``init.py`` - **Init**ialize the project and parameter space.
  * ``project.py`` - Configuration, execution, and submission of the **project** workflow. Definition and execution of python-based data space **operations**.
-
-Other modules:
