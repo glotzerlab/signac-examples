@@ -14,13 +14,13 @@ The LJ fluid is sampled via molecular dynamics using the [HOOMD-blue particle si
 
 - This creates the `workspace/`, which holds all of our `jobs`. Each `job` has its own directory, named by the job's unique `id` (something like `87c7fccdea3531da704bbae95e95e914`).
 - If you look in these directories, you'll see `signac_statepoint.json`. This is a json file that contains the statepoint parameters for that job.
-- NOTE: The job's `id` is generated specifically for the dict containing the statepoint parameters, so do not directly change the directory name or `signac_statepoint.json` directly.
+- NOTE: The job's `id` is generated specifically for the dict containing the statepoint parameters, so do not edit the directory name or `signac_statepoint.json`.
 
-2. All of the operations we will be performing on our data is stored in `project.py`. An operation is a function with `job` as its only argument that signac-flow recognizes as a part of your workflow.
-    - You can tell which methods are operations because they will have the `@MyProject.operation` decorator, which tells signac that this method is to be treated as an operation.
-    - `operation`s typically have pre- and post- conditions. This is how signac knows when the operation should be run. For example, the `initialize()` function has no pre-condition because it must be run first, but has `@MyProject.post.isfile('init.gsd')` as a post-condition. This post-condition means that the operation will *not* be run if `init.gsd` exists.
+2. All of the operations we will be performing on our data are defined in `project.py`. An operation is a function with `job` as its only argument that signac-flow recognizes as a part of your workflow.
+    - You can tell which methods are operations because they will have the `@MyProject.operation` decorator, which tells signac-flow that this method is to be treated as an operation associated with `MyProject`.
+    - `operation`s typically have pre- and post- conditions. This is how signac-flow knows when the operation should be run. For example, the `initialize()` function has no pre-condition because it must be run first, but has `@MyProject.post.isfile('init.gsd')` as a post-condition. This post-condition means that the operation will *not* be run if `init.gsd` exists in the job directory.
 
-3. Now run let's run the operations:
+3. Now let's run the operations:
 
 - First run a status check:
 
@@ -36,8 +36,8 @@ The LJ fluid is sampled via molecular dynamics using the [HOOMD-blue particle si
     python src/project.py run -o initialize
     ```
 
-    This will run just the `initialize()` operations for *all* eligible jobs (which in this case is all of the jobs).
-    - Run `python project.py status -d` again, and you'll see that now all the jobs are eligible for `estimate` and `sample`. You can also run `python project.py status -d -p p`. The ``-p`` argument specifies which parameters should be shown in the status view, and we pass in `p` to see which statepoint corresponds to which pressure.
+    This will run just the `initialize()` operation for *all* eligible jobs (which in this case is all of the jobs).
+    - Run `python project.py status -d` again, and you'll see that now all the jobs are eligible for the operations `estimate` and `sample`. You can also run `python project.py status -d -p p`. The ``-p`` argument specifies which parameters should be shown in the status view, and we pass in `p` to see which statepoint corresponds to which pressure.
 
 - Now we can run the simulations:
 
@@ -47,7 +47,7 @@ The LJ fluid is sampled via molecular dynamics using the [HOOMD-blue particle si
 
     which will now run all eligible operations, and you'll see HOOMD be called. When you call `python project.py status -d` now, you'll see that no operations are eligible, and that the labels `estimated`, `sampled`, and `started` are now visible. These labels are defined in `project.py` with the `@MyProject.label` decorator.
 
-4. For more information on how you can analyze this data, imply execute ``jupyter notebook`` within the project's root directory and open the `src/analysis.ipynb` notebook.
+4. For more examples of how you can analyze this data, execute ``jupyter notebook`` within the project's root directory and open the `src/notebook.ipynb` notebook.
 
 **NOTE**: If you want to run this tutorial from scratch, just run `rm -rf workspace/` to delete the workspace.
 
