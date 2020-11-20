@@ -62,5 +62,3 @@ Modules, that are usually modified by the user:
  * ``project.py`` - Configuration, execution, and submission of the **project** workflow. Definition and execution of python-based data space **operations**.
 
 Other modules:
-
-  * ``environment.py`` - Custom **environment** definitions
