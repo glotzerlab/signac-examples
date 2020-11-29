@@ -16,11 +16,6 @@ class MyProject(FlowProject):
 
 # Definition of project-related labels (classification)
 @MyProject.label
-def initialized(job):
-    return job.isfile("init.gsd")
-
-
-@MyProject.label
 def estimated(job):
     return "volume_estimate" in job.document
 
@@ -32,14 +27,12 @@ def started(job):
 
 @MyProject.label
 def sampled(job):
-    return job.document.get("sample_step", 0) >= 5000
+    return job.document.get("sample_step", 0) >= job.doc.run_steps
 
 
 # Adding project operations
-
-
 @MyProject.operation
-@MyProject.post(initialized)
+@MyProject.post.isfile("init.gsd")
 def initialize(job):
     "Initialize the simulation configuration."
     import hoomd
@@ -49,6 +42,7 @@ def initialize(job):
         hoomd.context.initialize("")
     with job:
         with hoomd.context.SimulationContext():
+            # create a simple cubic lattice
             n = int(ceil(pow(job.sp.N, 1.0 / 3)))
             assert n ** 3 == job.sp.N
             hoomd.init.create_lattice(unitcell=hoomd.lattice.sc(a=1.0), n=n)
@@ -56,17 +50,7 @@ def initialize(job):
 
 
 @MyProject.operation
-@MyProject.post(estimated)
-def estimate(job):
-    "Ideal-gas estimate operation."
-    sp = job.statepoint()
-    # Calculate volume using ideal gas law
-    V = sp["N"] * sp["kT"] / sp["p"]
-    job.document["volume_estimate"] = V
-
-
-@MyProject.operation
-@MyProject.pre(initialized)
+@MyProject.pre.isfile("init.gsd")
 @MyProject.post(sampled)
 def sample(job):
     "Sample operation."
@@ -91,12 +75,22 @@ def sample(job):
             )
             hoomd.analyze.log("dump.log", ["volume"], 100, phase=0)
             try:
-                hoomd.run_upto(5000)
+                hoomd.run_upto(job.doc.run_steps)
             except hoomd.WalltimeLimitReached:
                 logging.warning("Reached walltime limit.")
             finally:
                 gsd_restart.write_restart()
                 job.document["sample_step"] = hoomd.get_step()
+
+
+@MyProject.operation
+@MyProject.post(estimated)
+def estimate(job):
+    "Ideal-gas estimate operation."
+    sp = job.statepoint()
+    # Calculate volume using ideal gas law
+    V = sp["N"] * sp["kT"] / sp["p"]
+    job.document["volume_estimate"] = V
 
 
 if __name__ == "__main__":
