@@ -1,4 +1,4 @@
-[![Binder](http://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/csadorf/signac-examples/master?filepath=notebooks%2Findex.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/glotzerlab/signac-examples/master?filepath=notebooks%2F)
 
 # signac - Tutorial and Examples
 
