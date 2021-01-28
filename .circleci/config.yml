@@ -129,6 +129,6 @@ workflows:
       - test_projects_linux-python-38:
           requires:
             - pre-checks
-            - test_notebooks_linux-python-38:
+      - test_notebooks_linux-python-38:
           requires:
             - pre-checks
