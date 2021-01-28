@@ -35,8 +35,9 @@ def sampled(job):
 @MyProject.post.isfile("init.gsd")
 def initialize(job):
     "Initialize the simulation configuration."
-    import hoomd
     from math import ceil
+
+    import hoomd
 
     if hoomd.context.exec_conf is None:
         hoomd.context.initialize("")
@@ -55,6 +56,7 @@ def initialize(job):
 def sample(job):
     "Sample operation."
     import logging
+
     import hoomd
     from hoomd import md
 

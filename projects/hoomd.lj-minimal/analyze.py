@@ -1,6 +1,5 @@
-import signac
 import numpy
-
+import signac
 
 project = signac.get_project()
 

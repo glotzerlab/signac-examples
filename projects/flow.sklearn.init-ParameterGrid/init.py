@@ -9,7 +9,6 @@ import signac
 from sklearn import datasets, svm
 from sklearn.model_selection import ParameterGrid, train_test_split
 
-
 if __name__ == "__main__":
     # Load sample data
     dataset = datasets.load_digits()

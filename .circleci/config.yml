@@ -92,6 +92,21 @@ references:
       - *test_project_execution
 
 jobs:
+  pre-checks:
+    docker:
+      - image: circleci/python:3.9
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: Install pre-check dependencies
+          command: |
+            pip install --progress-bar off --user -U -r requirements/requirements-precommit.txt
+      - run:
+          name: Run pre-checks
+          command: |
+            pre-commit run --all-files --show-diff-on-failure
+
   test_projects_linux-python-38:
     <<: *container_miniconda
     environment:

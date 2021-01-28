@@ -1,6 +1,6 @@
 &control
    prefix = '{prefix}'
-   calculation = '{method}' 
+   calculation = '{method}'
    restart_mode = 'from_scratch'
    wf_collect = .true.
    tstress = .true.
@@ -11,12 +11,12 @@
    verbosity = 'high'
 /
 &system
-   ibrav = 1 
+   ibrav = 1
    celldm(1) = {lattice_parameter}
-   nat = 8 
+   nat = 8
    ntyp = 1
    nbnd = {number_of_bands}
-   ecutwfc = {ecut} 
+   ecutwfc = {ecut}
 /
  &electrons
     diagonalization = 'cg'
@@ -31,7 +31,7 @@
    cell_dofree = 'volume'
 /
 ATOMIC_SPECIES
-  Si 28.085 {potential} 
+  Si 28.085 {potential}
 
 ATOMIC_POSITIONS crystal
   Si	0.00	0.50	0.00
