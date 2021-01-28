@@ -103,7 +103,10 @@ def _mdrun_str(op_name, np=1, nt=None, verbose=False):
     """Helper function, returns mdrun command string for operation."""
     num_threads = 1 if nt is None else nt
     num_nodes = np // num_threads
-    cmd = "OMP_NUM_THREADS={num_threads} {mpi_exec} -n {np} {gmx} mdrun -ntomp {num_threads} {verbose} -deffnm {op}".format(
+    cmd = (
+        "OMP_NUM_THREADS={num_threads} {mpi_exec} -n {np} {gmx} "
+        "mdrun -ntomp {num_threads} {verbose} -deffnm {op}"
+    ).format(
         np=num_nodes,
         mpi_exec=mpi_exec,
         gmx=gmx_exec,

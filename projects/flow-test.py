@@ -55,7 +55,7 @@ def _run_test(path, test_code, output, timeout):
                     stderr=subprocess.STDOUT,
                     stdout=output,
                 )
-        except subprocess.CalledProcessError as e:
+        except subprocess.CalledProcessError:
             raise RuntimeError(line, None)
         finally:
             os.chdir(cwd)

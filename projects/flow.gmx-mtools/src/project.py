@@ -1,6 +1,6 @@
 """Define the project's workflow logic."""
 import mbuild as mb
-from flow import FlowProject, staticlabel
+from flow import FlowProject
 from mbuild.examples import Alkane
 
 

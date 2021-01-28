@@ -25,7 +25,8 @@ def generate_project_overview(file):
             files = BlockLexer().parse(readme.read())
             file.write(_find_descr(files) + "\n")
             file.write(
-                f"\n    flow-clone https://bitbucket.org/glotzer/signac-examples.git#projects/{project_name}\n\n"
+                "\n    flow-clone https://github.com/glotzerlab/"
+                f"signac-examples.git#projects/{project_name}\n\n"
             )
 
 

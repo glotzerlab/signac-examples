@@ -9,8 +9,8 @@ from flow import FlowProject
 MAX_NUM_GENERATIONS = 200
 
 
-def _convert_to_tuple(l):
-    return tuple(tuple(_) if isinstance(_, list) else _ for _ in l)
+def _convert_to_tuple(sequence):
+    return tuple(tuple(_) if isinstance(_, list) else _ for _ in sequence)
 
 
 def calc_cost(job):
