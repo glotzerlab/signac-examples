@@ -1,15 +1,14 @@
 # Copyright (c) 2017 The Regents of the University of Michigan
 # All rights reserved.
 # This software is licensed under the BSD 3-Clause License.
-import os
-import sys
-import subprocess
 import logging
-from tempfile import TemporaryDirectory, NamedTemporaryFile
+import os
+import subprocess
+import sys
 from shutil import copytree
+from tempfile import NamedTemporaryFile, TemporaryDirectory
 
 from mistune import BlockLexer
-
 
 logger = logging.getLogger()
 
@@ -43,8 +42,7 @@ def _run_test(path, test_code, output, timeout):
     with TemporaryDirectory() as tmp:
         cwd = os.getcwd()
         try:
-            logger.debug(
-                "Copy project into temporary directory '{}'.".format(tmp))
+            logger.debug(f"Copy project into temporary directory '{tmp}'.")
             dst = copytree(path, os.path.join(tmp, "test"))
             os.chdir(dst)
             logger.debug("Start test.")
@@ -57,7 +55,7 @@ def _run_test(path, test_code, output, timeout):
                     stderr=subprocess.STDOUT,
                     stdout=output,
                 )
-        except subprocess.CalledProcessError as e:
+        except subprocess.CalledProcessError:
             raise RuntimeError(line, None)
         finally:
             os.chdir(cwd)
@@ -83,7 +81,7 @@ def run_tests(path, output, timeout):
 
 
 def main(args):
-    logger.info("Testing '{}'...".format(args.path))
+    logger.info(f"Testing '{args.path}'...")
     try:
         if args.output:
             run_tests(args.path, sys.stdout, args.timeout)
@@ -100,8 +98,7 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "path", help="The path of the example project to test.")
+    parser.add_argument("path", help="The path of the example project to test.")
     parser.add_argument(
         "-v", "--verbose", action="store_true", help="Increase logging verbosity."
     )
@@ -129,8 +126,7 @@ if __name__ == "__main__":
     if args.log:
         fh = logging.FileHandler(args.log)
         fh.setFormatter(
-            logging.Formatter(
-                "%(asctime)s - %(name)s:%(levelname)s:%(message)s")
+            logging.Formatter("%(asctime)s - %(name)s:%(levelname)s:%(message)s")
         )
         logger.addHandler(fh)
 
