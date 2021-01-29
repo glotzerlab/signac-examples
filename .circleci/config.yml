@@ -70,7 +70,7 @@ references:
     steps:
       - *load_code
       - restore_cache:
-        <<: *restore_keys
+          <<: *restore_keys
       - *init_conda
       - *create_environment
       - save_cache:
@@ -84,7 +84,7 @@ references:
     steps:
       - *load_code
       - restore_cache:
-        <<: *restore_keys
+          <<: *restore_keys
       - *init_conda
       - *create_environment
       - save_cache:
