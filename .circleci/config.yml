@@ -73,7 +73,6 @@ references:
         <<: *restore_keys
       - *init_conda
       - *create_environment
-      - *store_cache
       - save_cache:
           <<: *save_key
           paths:
