@@ -4,14 +4,13 @@ import random
 
 from flow import FlowProject
 
-
 # Use this variable to control the maximum number of generations that
 # are generated for each optimization job.
 MAX_NUM_GENERATIONS = 200
 
 
-def _convert_to_tuple(l):
-    return tuple(tuple(_) if isinstance(_, list) else _ for _ in l)
+def _convert_to_tuple(sequence):
+    return tuple(tuple(_) if isinstance(_, list) else _ for _ in sequence)
 
 
 def calc_cost(job):
@@ -69,7 +68,7 @@ def cost_label(job):
     if job.sp.primary:
         try:
             min_cost = min(map(calc_cost, get_simulation_sub_jobs(job, simulated=True)))
-            return "min-cost:{:0.3f}".format(min_cost)
+            return f"min-cost:{min_cost:0.3f}"
         except ValueError:  # no jobs
             return "min-cost:n/a"
 
@@ -79,7 +78,7 @@ def solution_label(job):
     if job.sp.primary:
         sim_jobs_simulated = get_simulation_sub_jobs(job, simulated=True)
         for sim_job in sorted(sim_jobs_simulated, key=calc_cost):
-            return "solution:x={:0.5f}".format(sim_job.sp.x)
+            return f"solution:x={sim_job.sp.x:0.5f}"
         return "solution:n/a"
 
 

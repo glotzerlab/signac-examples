@@ -1,6 +1,6 @@
-import signac
 import hoomd
 import hoomd.md
+import signac
 
 project = signac.init_project("hoomd-lennard-jones")
 

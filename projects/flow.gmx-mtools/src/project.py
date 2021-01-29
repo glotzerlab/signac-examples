@@ -1,9 +1,10 @@
 """Define the project's workflow logic."""
-from flow import FlowProject
-from flow import staticlabel
-
+import flow
 import mbuild as mb
-from mbuild.examples import Alkane
+import signac
+from flow import FlowProject
+
+project_root_directory = signac.get_project().root_directory()
 
 
 def _grompp_str(root, op_name, gro_name, sys_name):
@@ -18,6 +19,14 @@ def _grompp_str(root, op_name, gro_name, sys_name):
 def _mdrun_str(op_name):
     """Helper function, returns mdrun command string for operation """
     return "gmx mdrun -v -deffnm {0} -nt 12 -cpi {0}.cpt".format(op_name)
+
+
+def gromacs_command(name, gro, sys):
+    """Simplify GROMACS operations"""
+    return "cd {{job.ws}} ; {} && {}".format(
+        _grompp_str(project_root_directory, name, gro, sys),
+        _mdrun_str(name),
+    )
 
 
 class MyProject(FlowProject):
@@ -44,20 +53,13 @@ def sampled(job):
     return job.isfile("sample.gro")
 
 
-def gromacs_command(name, gro, sys):
-    """Simplify GROMACS operations"""
-    return "cd {{job.ws}} ; {} && {}".format(
-        _grompp_str(self.root_directory(), name, gro, sys), _mdrun_str(name)
-    )
-
-
 @MyProject.operation
 @MyProject.post(initialized)
 @flow.cmd
 def initialize(job):
-    "Initialize the simulation"
+    """Initialize the simulation."""
     with job:
-        alkane = Alkane(job.statepoint()["C_n"])
+        alkane = mb.recipes.Alkane(job.statepoint()["C_n"])
         n_alkane = 200
         # A cleaner packing approach would involve pull #372
         system_box = mb.Box([4, 4, 4])
@@ -91,4 +93,4 @@ def sample(job):
 
 
 if __name__ == "__main__":
-    MyProject().main()
+    MyProject.get_project(project_root_directory).main()
