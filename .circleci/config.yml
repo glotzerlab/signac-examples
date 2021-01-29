@@ -13,10 +13,12 @@ references:
   load_code: &load_code
     checkout
 
-  load_cache: &load_cache
-    restore_cache:
-      keys:
-        - python-env-v2-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "environment.yml" }}
+  restore_keys: &restore_keys
+    keys:
+      - python-env-v2-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "environment.yml" }}-{{ checksum "requirements/requirements-precommit.txt" }}-{{ checksum ".pre-commit-config.yaml" }}
+
+  save_key: &save_key
+    key: python-env-v2-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "environment.yml" }}-{{ checksum "requirements/requirements-precommit.txt" }}-{{ checksum ".pre-commit-config.yaml" }}
 
   init_conda: &init_conda
     run:
@@ -39,13 +41,6 @@ references:
           # Install testing requirements
           conda install pytest nbval
         fi
-
-  store_cache: &store_cache
-    save_cache:
-      key: python-env-v2-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "environment.yml" }}
-      paths:
-        - "/opt/conda/envs/signac-examples"
-
 
   install_latest: &install_latest
     run:
@@ -74,20 +69,29 @@ references:
   test_notebooks: &test_notebooks
     steps:
       - *load_code
-      - *load_cache
+      - restore_cache:
+        <<: *restore_keys
       - *init_conda
       - *create_environment
       - *store_cache
+      - save_cache:
+          <<: *save_key
+          paths:
+            - "/opt/conda/envs/signac-examples"
       #- *install_latest
       - *test_notebook_execution
 
   test_projects: &test_projects
     steps:
       - *load_code
-      - *load_cache
+      - restore_cache:
+        <<: *restore_keys
       - *init_conda
       - *create_environment
-      - *store_cache
+      - save_cache:
+          <<: *save_key
+          paths:
+            - "/opt/conda/envs/signac-examples"
       #- *install_latest
       - *test_project_execution
 
@@ -98,6 +102,8 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
+      - restore_cache:
+          <<: *restore_keys
       - run:
           name: Install pre-check dependencies
           command: |
@@ -105,7 +111,11 @@ jobs:
       - run:
           name: Run pre-checks
           command: |
-            pre-commit run --all-files --show-diff-on-failure
+            PRE_COMMIT_HOME=.pre-commit-cache pre-commit run --all-files --show-diff-on-failure
+      - save_cache:
+          <<: *save_key
+          paths:
+            - ".pre-commit-cache"
 
   test_projects_linux-python-38:
     <<: *container_miniconda
