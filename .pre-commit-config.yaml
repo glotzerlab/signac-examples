@@ -30,5 +30,14 @@ repos:
   - repo: https://github.com/nbQA-dev/nbQA
     rev: 0.5.7
     hooks:
-      - id: nbqa-black
       - id: nbqa-pyupgrade
+        args:
+          - --nbqa-mutate
+          - --py36-plus
+      - id: nbqa-isort
+        args:
+          - --nbqa-mutate
+      - id: nbqa-black
+        args:
+          - --nbqa-mutate
+      - id: nbqa-flake8
