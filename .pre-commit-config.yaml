@@ -40,4 +40,3 @@ repos:
       - id: nbqa-black
         args:
           - --nbqa-mutate
-      - id: nbqa-flake8
