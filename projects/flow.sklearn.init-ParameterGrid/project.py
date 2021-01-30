@@ -1,7 +1,6 @@
-from flow import FlowProject
 import joblib
 import signac
-
+from flow import FlowProject
 
 project = signac.get_project()
 

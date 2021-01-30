@@ -26,4 +26,3 @@ python project.py status --detailed
 python project.py run -o vc_relax
 python project.py run -o scf
 ```
-
