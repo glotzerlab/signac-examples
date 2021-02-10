@@ -17,6 +17,7 @@ To run the notebooks locally, clone the repository and then start Jupyter:
 git clone https://github.com/glotzerlab/signac-examples.git
 cd signac-examples/notebooks
 jupyter lab  # or jupyter notebook
+# Open `index.ipynb` in your Jupyter session
 ```
 
 Note that some notebooks have dependencies beyond Jupyter, signac, and signac-flow, like HOOMD-blue simulation tutorial. A full conda environment containing these dependencies can be installed with:
