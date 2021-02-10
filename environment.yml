@@ -2,12 +2,14 @@ channels:
   - conda-forge
 dependencies:
   - hoomd=2
-  - jupyter
-  - matplotlib=3
+  - ipywidgets>=7
+  - jupyterlab>=3
+  - matplotlib>=3
   - mistune
-  - notebook>=4
-  - numpy>=1.12
-  - pandas
+  - nbconvert>=6
+  - notebook>=6
+  - numpy>=1.16
+  - pandas>=1
   - python>=3
-  - signac-flow>=0.11
-  - signac>=1.5
+  - signac-flow>=0.12
+  - signac>=1.6
