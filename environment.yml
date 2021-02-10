@@ -10,6 +10,7 @@ dependencies:
   - notebook>=6
   - numpy>=1.16
   - pandas>=1
+  - pre-commit
   - python>=3
   - signac-flow>=0.12
   - signac>=1.6

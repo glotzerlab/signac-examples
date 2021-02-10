@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Requires many dependencies specified in environment.yml
+
 # Remove existing signac workspaces used by notebooks
 rm -r notebooks/projects
 
