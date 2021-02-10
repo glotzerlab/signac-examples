@@ -8,7 +8,7 @@ repos:
         exclude: 'setup.cfg'
       - id: debug-statements
   - repo: https://github.com/asottile/pyupgrade
-    rev: 'v2.7.4'
+    rev: 'v2.10.0'
     hooks:
       - id: pyupgrade
         args:
@@ -40,3 +40,15 @@ repos:
       - id: nbqa-black
         args:
           - --nbqa-mutate
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.3.9
+    hooks:
+      - id: nbstripout
+        args:
+          # Strip metadata but keep counts and outputs
+          - --keep-count
+          - --keep-output
+  - repo: https://github.com/bdice/nb-strip-paths
+    rev: b1203bb13ac55f2ba381530c17f7e56ff497f508
+    hooks:
+      - id: nb-strip-paths
