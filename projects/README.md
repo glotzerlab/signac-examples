@@ -7,13 +7,12 @@ This is a collection of project examples, designed to demonstrate possible signa
 Simply clone or download this repository and copy the scripts related to a specific example into your project root directory.
 Example:
 
-```
-#!bash
-$ git clone https://github.com/glotzerlab/signac-examples.git
-$ mkdir my_project
-$ cd my_project
-$ signac init MyProject
-$ cp -r ../signac-examples/projects/flow.minimal/* ./
+```bash
+git clone https://github.com/glotzerlab/signac-examples.git
+mkdir my_project
+cd my_project
+signac init MyProject
+cp -r ../signac-examples/projects/flow.minimal/* ./
 ```
 
 ## Namespaces
