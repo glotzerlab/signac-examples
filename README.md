@@ -1,4 +1,5 @@
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/glotzerlab/signac-examples/master?filepath=notebooks%2F)
+[![nbviewer](https://img.shields.io/badge/render-nbviewer-orange)](http://nbviewer.jupyter.org/github/glotzerlab/signac-examples/blob/master/notebooks/index.ipynb)
 
 # signac - Tutorial and Examples
 
@@ -9,7 +10,7 @@ They demonstrate how to implement a basic computational workflow using the [sign
 The framework assists users in managing simple to complext data spaces for example by simplifying provenance tracking and meta data management.
 
 Use [nbviewer](http://nbviewer.jupyter.org) to view a [static version](http://nbviewer.jupyter.org/github/glotzerlab/signac-examples/blob/master/notebooks/index.ipynb) of these notebooks.
-Or start a [dynamic version](https://mybinder.org/v2/gh/glotzerlab/signac-examples/master?filepath=notebooks%2Findex.ipynb) with the service offered by [mybinder.org](http://www.mybinder.org).
+Or start a [dynamic version](https://mybinder.org/v2/gh/glotzerlab/signac-examples/master?filepath=notebooks%2Findex.ipynb) with the service offered by [mybinder.org](https://mybinder.org/).
 
 To run the notebooks locally, clone the repository and then start Jupyter:
 
@@ -20,7 +21,7 @@ jupyter lab  # or jupyter notebook
 # Open `index.ipynb` in your Jupyter session
 ```
 
-Note that some notebooks have dependencies beyond Jupyter, signac, and signac-flow, like HOOMD-blue simulation tutorial. A full conda environment containing these dependencies can be installed with:
+Note that some notebooks have dependencies beyond Jupyter, signac, and signac-flow, like the HOOMD-blue simulation tutorial. A full conda environment containing these dependencies can be installed with:
 
 ```bash
 conda env create -f environment.yml --name signac-examples
