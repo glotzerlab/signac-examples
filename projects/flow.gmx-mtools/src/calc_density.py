@@ -1,17 +1,14 @@
 """Calculates the density of a system over the length of a trajectory"""
 import os
 
-from mtools.post_process import calc_density
-import signac
-
-import matplotlib as mpl
-
-mpl.use("Agg")
-import matplotlib.pyplot as plt
-
-import numpy as np
+import matplotlib
 import mdtraj as md
+import numpy as np
+import signac
+from mtools.post_process import calc_density
 
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt  # noqa : E402
 
 project = signac.get_project()
 

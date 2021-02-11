@@ -3,8 +3,8 @@
 
 Iterates over all defined state points and initializes
 the associated job workspace directories."""
-import logging
 import argparse
+import logging
 
 import signac
 

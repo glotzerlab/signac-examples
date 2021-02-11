@@ -3,8 +3,8 @@
 
 Iterates over all defined state points and initializes
 the associated job workspace directories."""
-import signac
 import numpy as np
+import signac
 
 
 def main():

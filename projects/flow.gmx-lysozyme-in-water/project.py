@@ -1,10 +1,10 @@
-import signac
 import flow
+import pexpect  # Used to automate interaction with GROMACS interface.
+import signac
 from flow import FlowProject
 
 # import flow.environments  # uncomment to use default environments
 
-import pexpect  # Used to automate interaction with GROMACS interface.
 
 gmx_exec = "gmx"  # or use gmx_mpi if available
 mpi_exec = "mpirun"
@@ -88,7 +88,7 @@ def workspace_command(cmd):
 
 def _grompp_str(op_name, gro_name, checkpoint_file=None):
     """Helper function, returns grompp command string for operation."""
-    mdp_file = signac.get_project().fn("mdp_files/{op}.mdp".format(op=op_name))
+    mdp_file = signac.get_project().fn(f"mdp_files/{op_name}.mdp")
     cmd = "{gmx} grompp -f {mdp_file} -c {gro_file} {checkpoint} -o {op}.tpr -p".format(
         gmx=gmx_exec,
         mdp_file=mdp_file,
@@ -103,7 +103,10 @@ def _mdrun_str(op_name, np=1, nt=None, verbose=False):
     """Helper function, returns mdrun command string for operation."""
     num_threads = 1 if nt is None else nt
     num_nodes = np // num_threads
-    cmd = "OMP_NUM_THREADS={num_threads} {mpi_exec} -n {np} {gmx} mdrun -ntomp {num_threads} {verbose} -deffnm {op}".format(
+    cmd = (
+        "OMP_NUM_THREADS={num_threads} {mpi_exec} -n {np} {gmx} "
+        "mdrun -ntomp {num_threads} {verbose} -deffnm {op}"
+    ).format(
         np=num_nodes,
         mpi_exec=mpi_exec,
         gmx=gmx_exec,

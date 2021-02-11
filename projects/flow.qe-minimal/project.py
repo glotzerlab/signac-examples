@@ -1,7 +1,8 @@
-from flow import FlowProject
 import os
-import signac
 import subprocess
+
+import signac
+from flow import FlowProject
 
 # Make sure to update the path to your Quantum Espresso installation!
 PWX = "pw.x"
@@ -24,7 +25,7 @@ def calculated(job):
 def create_infile(job, method, ecut):
     project = signac.get_project()
     with open(project.fn("vc-relax.in")) as template:
-        with open(job.fn("{}.in".format(method)), "w") as infile:
+        with open(job.fn(f"{method}.in"), "w") as infile:
             infile.write(
                 template.read().format(
                     prefix="calc",
@@ -46,7 +47,7 @@ def create_infile(job, method, ecut):
 def vc_relax(job):
     converged = False
     for e_cut in [160, 40, 60, 80, 100, 150, 200, 250, 300, 400, 500]:
-        print("Attempting ecut={}".format(e_cut))
+        print(f"Attempting ecut={e_cut}")
         infile = create_infile(job, "vc-relax", e_cut)
         cmd = "{} < {} > {}".format(PWX, infile, job.fn("vc-relax.out"))
         subprocess.check_call(cmd, shell=True)
