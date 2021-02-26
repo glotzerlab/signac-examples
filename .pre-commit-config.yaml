@@ -49,6 +49,6 @@ repos:
           - --keep-count
           - --keep-output
   - repo: https://github.com/bdice/nb-strip-paths
-    rev: v0.1.0
+    rev: 'v0.1.0'
     hooks:
       - id: nb-strip-paths
