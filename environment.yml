@@ -1,12 +1,16 @@
 channels:
-- conda-forge
-- defaults
+  - conda-forge
 dependencies:
-- notebook=4
-- python=3
-- numpy=1.12
-- pandas
-- matplotlib=3
-- hoomd=2
-- signac=0.9
-- signac-flow=0.6
+  - hoomd=2
+  - ipywidgets>=7
+  - jupyterlab>=3
+  - matplotlib>=3
+  - mistune
+  - nbconvert>=6
+  - notebook>=6
+  - numpy>=1.16
+  - pandas>=1
+  - pre-commit
+  - python>=3
+  - signac-flow>=0.12
+  - signac>=1.6

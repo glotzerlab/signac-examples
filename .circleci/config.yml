@@ -1,0 +1,143 @@
+# CircleCI configuration file
+#
+# Check https://circleci.com/docs/2.0/language-python/ for more details
+#
+version: 2.1
+
+references:
+  container_miniconda: &container_miniconda
+    docker:
+      - image: continuumio/miniconda3
+    working_directory: ~/ci/signac-examples
+
+  load_code: &load_code
+    checkout
+
+  restore_keys: &restore_keys
+    keys:
+      - python-env-v2-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "environment.yml" }}-{{ checksum "requirements/requirements-precommit.txt" }}-{{ checksum ".pre-commit-config.yaml" }}
+
+  save_key: &save_key
+    key: python-env-v2-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "environment.yml" }}-{{ checksum "requirements/requirements-precommit.txt" }}-{{ checksum ".pre-commit-config.yaml" }}
+
+  init_conda: &init_conda
+    run:
+      name: Initialize conda
+      command: |
+        conda config --add channels conda-forge
+        conda config --set always_yes true
+        conda config --set changeps1 false
+        conda init bash
+
+  create_environment: &create_environment
+    run:
+      name: Load conda environment
+      command: |
+        # Create the environment if it doesn't exist
+        if [ ! -d "/opt/conda/envs/signac-examples" ]; then
+          conda create -n signac-examples python=${PYTHON_VERSION}
+          conda activate signac-examples
+          conda env update --file environment.yml
+          # Install testing requirements
+          conda install pytest nbval
+        fi
+
+  install_latest: &install_latest
+    run:
+      name: Install latest version of signac & signac-flow
+      command: |
+        conda activate signac-examples
+        conda uninstall signac signac-flow
+        pip install git+ssh://git@github.com/glotzerlab/signac.git
+        pip install git+ssh://git@github.com/glotzerlab/signac-flow.git
+
+  test_notebook_execution: &test_notebook_execution
+    run:
+      name: Run notebook execution tests
+      command: |
+        conda activate signac-examples
+        python -m pytest -v --nbval --nbval-lax notebooks/
+
+  test_project_execution: &test_project_execution
+    run:
+      name: Run project tests
+      command: |
+        conda activate signac-examples
+        cd projects
+        . run-tests.sh --output
+
+  test_notebooks: &test_notebooks
+    steps:
+      - *load_code
+      - restore_cache:
+          <<: *restore_keys
+      - *init_conda
+      - *create_environment
+      - save_cache:
+          <<: *save_key
+          paths:
+            - "/opt/conda/envs/signac-examples"
+      #- *install_latest
+      - *test_notebook_execution
+
+  test_projects: &test_projects
+    steps:
+      - *load_code
+      - restore_cache:
+          <<: *restore_keys
+      - *init_conda
+      - *create_environment
+      - save_cache:
+          <<: *save_key
+          paths:
+            - "/opt/conda/envs/signac-examples"
+      #- *install_latest
+      - *test_project_execution
+
+jobs:
+  pre-checks:
+    docker:
+      - image: circleci/python:3.9
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          <<: *restore_keys
+      - run:
+          name: Install pre-check dependencies
+          command: |
+            pip install --progress-bar off --user -U -r requirements/requirements-precommit.txt
+      - run:
+          name: Run pre-checks
+          command: |
+            PRE_COMMIT_HOME=.pre-commit-cache pre-commit run --all-files --show-diff-on-failure
+      - save_cache:
+          <<: *save_key
+          paths:
+            - ".pre-commit-cache"
+
+  test_projects_linux-python-38:
+    <<: *container_miniconda
+    environment:
+      BASH_ENV: "~/.bashrc"
+      PYTHON_VERSION: 3.8
+    <<: *test_projects
+
+  test_notebooks_linux-python-38:
+    <<: *container_miniconda
+    environment:
+      BASH_ENV: "~/.bashrc"
+      PYTHON_VERSION: 3.8
+    <<: *test_notebooks
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - pre-checks
+      - test_projects_linux-python-38:
+          requires:
+            - pre-checks
+      - test_notebooks_linux-python-38:
+          requires:
+            - pre-checks
