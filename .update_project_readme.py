@@ -20,7 +20,7 @@ def generate_project_overview(file):
     ):
         dirname = os.path.dirname(fn)
         project_name = os.path.basename(dirname)
-        file.write("### [{}]({}/)\n\n".format(project_name, os.path.basename(dirname)))
+        file.write(f"### [{project_name}]({os.path.basename(dirname)}/)\n\n")
         with open(fn) as readme:
             files = BlockLexer().parse(readme.read())
             file.write(_find_descr(files) + "\n")
