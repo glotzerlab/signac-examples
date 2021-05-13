@@ -6,16 +6,16 @@ class Project(FlowProject):
 
 
 @Project.operation
-@directives(nranks=lambda *jobs: 2*len(jobs))
+@directives(nranks=lambda *jobs: 2 * len(jobs))
 @aggregator.groupsof(8)
 def do_mpi_task(*jobs):
     from mpi4py import MPI
+
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     size = comm.Get_size()
     num_jobs = len(jobs)
-    print(f"Launching MPI tasks for {len(jobs)} jobs. "
-          f"Rank {rank} of {size}.")
+    print(f"Launching MPI tasks for {len(jobs)} jobs. " f"Rank {rank} of {size}.")
 
     # Use MPI splitting to make new communicators
     communicator_size = size // num_jobs
