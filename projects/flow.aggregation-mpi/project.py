@@ -4,8 +4,10 @@ from flow import FlowProject, aggregator, directives
 class Project(FlowProject):
     pass
 
+
 RANKS_PER_JOB = 2
 JOBS_PER_AGGREGATE = 8
+
 
 @Project.operation
 @directives(nranks=lambda *jobs: RANKS_PER_JOB * len(jobs))
