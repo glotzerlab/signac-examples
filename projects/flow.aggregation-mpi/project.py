@@ -16,8 +16,8 @@ def do_mpi_task(*jobs):
     from mpi4py import MPI
 
     world_comm = MPI.COMM_WORLD
-    world_rank = comm.Get_rank()
-    world_size = comm.Get_size()
+    world_rank = world_comm.Get_rank()
+    world_size = world_comm.Get_size()
     num_jobs = len(jobs)
     if world_rank == 0:
         print(
