@@ -20,7 +20,9 @@ def do_mpi_task(*jobs):
     world_size = comm.Get_size()
     num_jobs = len(jobs)
     if world_rank == 0:
-        print(f"Launching MPI tasks for {len(jobs)} jobs. Rank {world_rank} of {world_size}.")
+        print(
+            f"Launching MPI tasks for {len(jobs)} jobs. Rank {world_rank} of {world_size}."
+        )
 
     # Use MPI splitting to make new communicators
     communicator_size = world_size // num_jobs
