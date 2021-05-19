@@ -40,6 +40,12 @@ def all_simulated(*jobs):
     return all(simulated(job) for job in jobs)
 
 
+# Define all groups
+# -----------------
+plot = Project.make_group("aggregate-plot")
+analyze_and_plot = Project.make_group("post-processing")
+
+
 @Project.post(simulated)
 @Project.operation
 def simulate(job):
@@ -57,6 +63,7 @@ def simulate(job):
     job.data.positions = position
 
 
+@analyze_and_plot
 @flow.aggregator.groupby("std")
 @Project.pre(all_simulated)
 @Project.post(aggregate_cond_true("msd_analyzed"))
@@ -90,6 +97,8 @@ def plot_mean_squared_distance(job):
     fig.savefig(job.fn("msd.png"))
 
 
+@analyze_and_plot
+@plot
 @flow.aggregator.groupby("std", select=lambda job: job.sp.replica <= 5)
 @Project.pre(all_simulated)
 @Project.post(aggregate_cond_true("plotted_walks"))
@@ -110,6 +119,8 @@ def plot_walk(*jobs):
         job.doc.plotted_walks = True
 
 
+@analyze_and_plot
+@plot
 @flow.aggregator.groupby("std")
 @Project.pre(all_simulated)
 @Project.post(aggregate_cond_true("plotted_histogram"))
