@@ -41,11 +41,15 @@ def simulated(job):
 def all_simulated(*jobs):
     return all(simulated(job) for job in jobs)
 
+# Create aggregator that combines all replicas with a single standard deviation
+std_aggregator = flow.aggregator.groupby("std")
+
 
 # Define all groups
 # -----------------
-plot = Project.make_group("aggregate-plot")
-analyze_and_plot = Project.make_group("post-processing")
+plot = Project.make_group("aggregate-plot", aggregator=std_aggregator)
+analyze_and_plot = Project.make_group(
+    "post-processing", aggregator=std_aggregator)
 
 
 @Project.post(simulated)
@@ -65,7 +69,7 @@ def simulate(job):
 
 
 @analyze_and_plot
-@flow.aggregator.groupby("std")
+@std_aggregator
 @Project.pre(all_simulated)
 @Project.post(aggregate_cond_true("msd_analyzed"))
 @Project.operation
@@ -100,7 +104,7 @@ def plot_mean_squared_distance(job):
 
 @analyze_and_plot
 @plot
-@flow.aggregator.groupby("std", select=lambda job: job.sp.replica <= 5)
+@std_aggregator
 @Project.pre(all_simulated)
 @Project.post(aggregate_cond_true("plotted_walks"))
 @Project.operation
@@ -121,7 +125,7 @@ def plot_walk(*jobs):
 
 @analyze_and_plot
 @plot
-@flow.aggregator.groupby("std")
+@std_aggregator
 @Project.pre(all_simulated)
 @Project.post(aggregate_cond_true("plotted_histogram"))
 @Project.operation
