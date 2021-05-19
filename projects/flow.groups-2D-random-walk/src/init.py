@@ -4,9 +4,9 @@
 Iterates over all defined state points and initializes
 the associated job workspace directories."""
 import logging
+
 import numpy as np
 import signac
-
 
 logger = logging.getLogger()
 # Lower level to prevent output
@@ -25,11 +25,7 @@ def main():
     project.doc.run_steps = RUN_N_STEPS
     for replica in range(NUMBER_REPLICAS):
         for std in STANDARD_DEVIATIONS:
-            statepoint = {
-                "mean": 0,
-                "std": std,
-                "replica": replica + 1
-            }
+            statepoint = {"mean": 0, "std": std, "replica": replica + 1}
 
             job = project.open_job(statepoint)
 

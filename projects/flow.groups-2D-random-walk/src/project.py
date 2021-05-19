@@ -20,6 +20,7 @@ def positions_generator(jobs):
 
 def aggregate_cond_true(doc_attr):
     """Create a condition which is true if all jobs have doc_attr as truthy."""
+
     def true_for_all_docs(*jobs):
         return all(job.doc.get(doc_attr, False) for job in jobs)
 
@@ -28,6 +29,7 @@ def aggregate_cond_true(doc_attr):
 
 class Project(flow.FlowProject):
     """Create a workflow for simulating 2D Gaussian random walks."""
+
     pass
 
 
@@ -54,8 +56,7 @@ def simulate(job):
     n_steps = job._project.doc.run_steps
     generator = np.random.default_rng(int(job.id, 16))
     # Generate all moves at once since they are independent
-    moves = generator.normal(
-        job.sp.mean, job.sp.std, (n_steps, 2))
+    moves = generator.normal(job.sp.mean, job.sp.std, (n_steps, 2))
     position = np.empty((n_steps + 1, 2), dtype=float)
     position[0, :] = [0, 0]
     # Store the results: cumsum aggregates all previous moves from the origin
@@ -107,8 +108,7 @@ def plot_walk(*jobs):
     """Plot the first 5 replicas random walks for each std."""
     fig, ax = plt.subplots()
     for position, job in zip(positions_generator(jobs), jobs):
-        ax.plot(
-            position[:, 0], position[:, 1], label=f"Replica {job.sp.replica}")
+        ax.plot(position[:, 0], position[:, 1], label=f"Replica {job.sp.replica}")
     ax.legend()
     ax.set_title(f"Random Walks with {jobs[0].sp.std} std")
     ax.set_xlabel("x")
@@ -127,14 +127,14 @@ def plot_walk(*jobs):
 @Project.operation
 def plot_histogram(*jobs):
     """Create a 2D histogram of the final positions of random walks per std."""
-    final_positions = np.array(
-        [position[-1] for position in positions_generator(jobs)])
+    final_positions = np.array([position[-1] for position in positions_generator(jobs)])
     histogram, x_bins, y_bins = np.histogram2d(
-        final_positions[:, 0], final_positions[:, 1])
+        final_positions[:, 0], final_positions[:, 1]
+    )
     fig, ax = plt.subplots()
     image = ax.imshow(
-        histogram, extent=[x_bins[0], x_bins[-1], y_bins[0], y_bins[-1]],
-        cmap="viridis")
+        histogram, extent=[x_bins[0], x_bins[-1], y_bins[0], y_bins[-1]], cmap="viridis"
+    )
     plt.colorbar(image)
     ax.set_title("Heatmap of Final Positions")
     ax.set_xlabel("x")
