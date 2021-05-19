@@ -1,0 +1,4 @@
+matplotlib
+numpy
+signac-flow>=0.15.0
+signac>=1.0.0
