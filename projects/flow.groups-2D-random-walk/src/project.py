@@ -41,7 +41,8 @@ std_aggregator = flow.aggregator.groupby("std")
 # -----------------
 plot = Project.make_group("aggregate-plot", group_aggregator=std_aggregator)
 analyze_and_plot = Project.make_group(
-    "post-processing", group_aggregator=std_aggregator)
+    "post-processing", group_aggregator=std_aggregator
+)
 
 
 @Project.post(simulated)
