@@ -53,8 +53,7 @@ def simulate(job):
     generator = np.random.default_rng(int(job.id, 16))
     # Generate all moves at once since they are independent
     moves = generator.normal(job.sp.mean, job.sp.std, (n_steps, 2))
-    position = np.empty((n_steps + 1, 2), dtype=float)
-    position[0, :] = [0, 0]
+    position = np.zeros((n_steps + 1, 2), dtype=float)
     # Store the results: cumsum aggregates all previous moves from the origin
     position[1:] = np.cumsum(moves, axis=0)
     job.data.positions = position
