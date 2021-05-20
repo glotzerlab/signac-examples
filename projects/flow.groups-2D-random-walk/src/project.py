@@ -4,7 +4,7 @@ import numpy as np
 
 
 # Helper functions
-def get_replica_index(jobs, replica):
+def get_replica(jobs, replica):
     try:
         job = next(filter(lambda job: job.sp.replica == replica, jobs))
     except StopIteration:
@@ -74,7 +74,7 @@ def analyze_mean_squared_distance(*jobs):
         msd += np.sum(position[:] * position[:], axis=1)
     msd /= len(jobs)
     # Store msd in only first replica (job.sp.replica == 1)
-    job_replica_zero = get_replica_index(jobs, replica=0)
+    job_replica_zero = get_replica(jobs, replica=0)
     job_replica_zero.data["msd"] = msd
     for job in jobs:
         job.doc.msd_analyzed = True
@@ -113,7 +113,7 @@ def plot_walk(*jobs):
     ax.set_xlabel("x")
     ax.set_ylabel("y")
     # Only save figure to the first replica
-    fig.savefig(get_first_replica(jobs).fn("random-walks.png"))
+    fig.savefig(get_replica(jobs, replica=0).fn("random-walks.png"))
     for job in jobs:
         job.doc.plotted_walks = True
 
@@ -138,7 +138,7 @@ def plot_histogram(*jobs):
     ax.set_title("Heatmap of Final Positions")
     ax.set_xlabel("x")
     ax.set_ylabel("y")
-    fig.savefig(get_first_replica(jobs).fn("histogram.png"))
+    fig.savefig(get_replica(jobs, replica=0).fn("histogram.png"))
     for job in jobs:
         job.doc.plotted_histogram = True
 
