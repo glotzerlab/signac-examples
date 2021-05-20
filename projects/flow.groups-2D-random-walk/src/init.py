@@ -24,7 +24,7 @@ def main():
     project.doc.run_steps = RUN_STEPS
     for replica in range(NUMBER_REPLICAS):
         for std in STANDARD_DEVIATIONS:
-            statepoint = {"mean": 0, "std": std, "replica": replica + 1}
+            statepoint = {"mean": 0, "std": std, "replica": replica}
 
             job = project.open_job(statepoint)
 

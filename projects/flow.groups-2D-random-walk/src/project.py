@@ -87,7 +87,7 @@ def analyze_mean_squared_distance(*jobs):
 
 
 @Project.pre.true("msd_analyzed")
-@Project.pre(lambda job: job.sp.replica == 1)
+@Project.pre(lambda job: job.sp.replica == 0)
 @Project.post.isfile("msd.png")
 @Project.operation
 def plot_mean_squared_distance(job):
