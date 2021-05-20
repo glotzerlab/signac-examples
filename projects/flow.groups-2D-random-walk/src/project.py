@@ -18,15 +18,6 @@ def positions_generator(jobs):
             yield job.data.positions
 
 
-def aggregate_cond_true(doc_attr):
-    """Create a condition which is true if all jobs have doc_attr as truthy."""
-
-    def true_for_all_docs(*jobs):
-        return all(job.doc.get(doc_attr, False) for job in jobs)
-
-    return true_for_all_docs
-
-
 class Project(flow.FlowProject):
     """Create a workflow for simulating 2D Gaussian random walks."""
 
@@ -71,7 +62,7 @@ def simulate(job):
 @analyze_and_plot
 @std_aggregator
 @Project.pre(all_simulated)
-@Project.post(aggregate_cond_true("msd_analyzed"))
+@Project.post.true("msd_analyzed")
 @Project.operation
 def analyze_mean_squared_distance(*jobs):
     """Compute and store the mean squared displacement for all std."""
@@ -107,7 +98,7 @@ def plot_mean_squared_distance(job):
 @plot
 @std_aggregator
 @Project.pre(all_simulated)
-@Project.post(aggregate_cond_true("plotted_walks"))
+@Project.post.true("plotted_walks")
 @Project.operation
 def plot_walk(*jobs):
     """Plot the first 5 replicas random walks for each std."""
@@ -128,7 +119,7 @@ def plot_walk(*jobs):
 @plot
 @std_aggregator
 @Project.pre(all_simulated)
-@Project.post(aggregate_cond_true("plotted_histogram"))
+@Project.post.true("plotted_histogram")
 @Project.operation
 def plot_histogram(*jobs):
     """Create a 2D histogram of the final positions of random walks per std."""
