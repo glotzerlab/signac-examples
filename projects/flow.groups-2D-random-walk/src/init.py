@@ -21,12 +21,12 @@ RUN_STEPS = 5_000
 
 def main():
     project = signac.init_project("2D Gaussian Random Walk")
-    project.doc.run_steps = RUN_STEPS
     for replica in range(NUMBER_REPLICAS):
         for std in STANDARD_DEVIATIONS:
             statepoint = {"mean": 0, "std": std, "replica": replica}
 
             job = project.open_job(statepoint)
+            job.doc.run_steps = RUN_STEPS
 
             logger.warn(f"Initializing job with state point: {statepoint}.")
             job.init()

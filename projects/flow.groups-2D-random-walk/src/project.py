@@ -49,7 +49,7 @@ analyze_and_plot = Project.make_group(
 def simulate(job):
     """Simulate a 2D random walk."""
     # use job id as random seed
-    n_steps = job._project.doc.run_steps
+    n_steps = job.doc.run_steps
     generator = np.random.default_rng(int(job.id, 16))
     # Generate all moves at once since they are independent
     moves = generator.normal(job.sp.mean, job.sp.std, (n_steps, 2))
