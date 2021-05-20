@@ -67,9 +67,11 @@ def simulate(job):
 @Project.operation
 def analyze_mean_squared_distance(*jobs):
     """Compute and store the mean squared displacement for all std."""
-    msd = np.zeros((jobs[0]._project.doc.run_steps + 1), dtype=float)
-    for position in positions_generator(jobs):
-        msd += np.sum(np.multiply(position, position), axis=1)
+    position_iterator = positions_generator(jobs)
+    position = next(position_iterator)
+    msd = np.sum(position[:] * position[:], axis=1)
+    for position in position_iterator:
+        msd += np.sum(position[:] * position[:], axis=1)
     msd /= len(jobs)
     # Store msd in only first replica (job.sp.replica == 1)
     job_replica_zero = get_replica_index(jobs, replica=0)
