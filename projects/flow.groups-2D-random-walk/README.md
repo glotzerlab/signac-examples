@@ -1,6 +1,6 @@
-A study on 2D Gaussian random walks using __groups__ and __aggregates__
+A study on 2D Gaussian random walks using **groups** and **aggregates**
 
-Here we use simulations of a 2D random walk to demonstrate the __groups__ and __aggregation__ features of __signac-flow__.
+Here we use simulations of a 2D random walk to demonstrate the **groups** and **aggregation** features of **signac-flow**.
 
 # Usage
 
