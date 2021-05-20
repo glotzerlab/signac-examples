@@ -4,11 +4,11 @@ import numpy as np
 
 
 # Helper functions
-def get_first_replica(jobs, first_index=1):
+def get_replica_index(jobs, replica):
     try:
-        job = next(filter(lambda job: job.sp.replica == first_index, jobs))
+        job = next(filter(lambda job: job.sp.replica == replica, jobs))
     except StopIteration:
-        raise RuntimeError("First replica not found.")
+        raise RuntimeError(f"No replica {replica} found.")
     return job
 
 
@@ -80,7 +80,8 @@ def analyze_mean_squared_distance(*jobs):
         msd += np.sum(np.multiply(position, position), axis=1)
     msd /= len(jobs)
     # Store msd in only first replica (job.sp.replica == 1)
-    get_first_replica(jobs).data["msd"] = msd
+    job_replica_zero = get_replica_index(jobs, replica=0)
+    job_replica_zero.data["msd"] = msd
     for job in jobs:
         job.doc.msd_analyzed = True
 
