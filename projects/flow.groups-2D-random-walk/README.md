@@ -1,6 +1,7 @@
 A study on 2D Gaussian random walks using **groups** and **aggregates**
 
 Here we use simulations of a 2D random walk to demonstrate the **groups** and **aggregation** features of **signac-flow**.
+In addition, this example tries to showcase a robust workflow similar to those of real research projects while keeping the actual computation at a low level.
 
 # Usage
 
@@ -16,15 +17,24 @@ Here we use simulations of a 2D random walk to demonstrate the **groups** and **
     python3 src/project.py run -o simulate
     ```
 
-3. From here we can use the `post-processing` group to run all the aggregate operations computing the mean squared displacement, and creating multiple plots.
+    Alternatively, we can use the base group to do some analysis as well with
+
+    ```
+    python3 src/project.py run -o base
+    ```
+
+    To see all the operations this previous command runs look at the `project.py` file.
+
+
+3. From here we can use the `post-processing` group to run all the aggregate operations (besides one) computing the mean squared displacement, and creating multiple plots.
 
     ```
     python3 src/project.py run -o post-processing
     ```
 
-4. Now we can run the final operation, `plot_mean_squared_distance` with
+4. Now we can run the final two operations, `plot_mean_squared_distance` and `plot_walks` with
     ```
-    python3 src/project.py run
+    python3 src/project.py run -o plot_mean_squared_distance plot_walks
     ```
 
 The current status of the project can be viewed using
