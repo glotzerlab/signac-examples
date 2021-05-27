@@ -60,7 +60,7 @@ def simulate(job):
 @OptimizationProject.label
 def num_jobs(job):
     if job.sp.primary:
-        return "#jobs={}".format(len(get_simulation_sub_jobs(job)))
+        return f"#jobs={len(get_simulation_sub_jobs(job))}"
 
 
 @OptimizationProject.label

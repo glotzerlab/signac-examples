@@ -15,10 +15,10 @@ references:
 
   restore_keys: &restore_keys
     keys:
-      - python-env-v2-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "environment.yml" }}-{{ checksum "requirements/requirements-precommit.txt" }}-{{ checksum ".pre-commit-config.yaml" }}
+      - python-env-v3-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "environment.yml" }}
 
   save_key: &save_key
-    key: python-env-v2-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "environment.yml" }}-{{ checksum "requirements/requirements-precommit.txt" }}-{{ checksum ".pre-commit-config.yaml" }}
+    key: python-env-v3-{{ arch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "environment.yml" }}
 
   init_conda: &init_conda
     run:
@@ -95,27 +95,6 @@ references:
       - *test_project_execution
 
 jobs:
-  pre-checks:
-    docker:
-      - image: circleci/python:3.9
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - restore_cache:
-          <<: *restore_keys
-      - run:
-          name: Install pre-check dependencies
-          command: |
-            pip install --progress-bar off --user -U -r requirements/requirements-precommit.txt
-      - run:
-          name: Run pre-checks
-          command: |
-            PRE_COMMIT_HOME=.pre-commit-cache pre-commit run --all-files --show-diff-on-failure
-      - save_cache:
-          <<: *save_key
-          paths:
-            - ".pre-commit-cache"
-
   test_projects_linux-python-38:
     <<: *container_miniconda
     environment:
@@ -134,10 +113,5 @@ workflows:
   version: 2
   test:
     jobs:
-      - pre-checks
-      - test_projects_linux-python-38:
-          requires:
-            - pre-checks
-      - test_notebooks_linux-python-38:
-          requires:
-            - pre-checks
+      - test_projects_linux-python-38
+      - test_notebooks_linux-python-38
