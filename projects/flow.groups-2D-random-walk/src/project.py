@@ -171,6 +171,7 @@ def plot_walk(*jobs):
     ax.set_ylabel("y")
     # Only save figure to the first replica
     fig.savefig(get_replica(jobs, replica=0).fn("random-walks.png"))
+    fig.close()
     for job in jobs:
         job.doc.plotted_walks = True
 
@@ -197,6 +198,7 @@ def plot_histogram(*jobs):
     ax.set_xlabel("x")
     ax.set_ylabel("y")
     fig.savefig(get_replica(jobs, replica=0).fn("histogram.png"))
+    fig.close()
     for job in jobs:
         job.doc.plotted_histogram = True
 
