@@ -40,7 +40,19 @@ In addition, this example tries to showcase a robust workflow similar to those o
 The current status of the project can be viewed using
 
 ```
-python src/project.py status -d
+python3 src/project.py status -d
+```
+
+If `signac_dashboard` is installed, a dashboard can be viewed with the following command,
+
+```
+python3 src/dashboard.py run
+```
+
+To run in the background without output use
+
+```
+python3 src/dashboard.py run & &> dashboard-server.log
 ```
 
 **NOTE**: If you want to run this tutorial from scratch, just run `rm -rf workspace/` to delete the workspace.
@@ -53,3 +65,4 @@ Modules, that are usually modified by the user:
 
  * `init.py` - **Init**ialize the project and parameter space.
  * `project.py` - Configuration, execution, and submission of the **project** workflow. Definition and execution of python-based data space **operations**.
+ * `dashboard.py` - Set up a local web-server for viewing the **project**.
