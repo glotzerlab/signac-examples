@@ -53,7 +53,7 @@ def simulate(job):
     n_steps = job.doc.run_steps
     generator = np.random.default_rng(int(job.id, 16))
     # Generate all moves at once since they are independent
-    moves = generator.normal(job.sp.mean, job.sp.std, (n_steps, 2))
+    moves = generator.normal(job.sp.mean, job.sp.standard_deviation, (n_steps, 2))
     position = np.zeros((n_steps + 1, 2), dtype=float)
     # Store the results: cumsum aggregates all previous moves from the origin
     position[1:] = np.cumsum(moves, axis=0)
@@ -90,7 +90,7 @@ def plot_mean_squared_distance(job):
         msd = job.data.msd[:]
     fig, ax = plt.subplots()
     ax.plot(msd)
-    ax.set_title(f"MSD for {job.sp.std} std")
+    ax.set_title(f"MSD for {job.sp.standard_deviation} std")
     ax.set_xlabel("x")
     ax.set_ylabel("MSD")
     # Only save figure to the first replica
@@ -109,7 +109,7 @@ def plot_walk(*jobs):
     for position, job in zip(positions_generator(jobs), jobs):
         ax.plot(position[:, 0], position[:, 1], label=f"Replica {job.sp.replica}")
     ax.legend()
-    ax.set_title(f"Random Walks with {jobs[0].sp.std} std")
+    ax.set_title(f"Random Walks with {jobs[0].sp.standard_deviation} std")
     ax.set_xlabel("x")
     ax.set_ylabel("y")
     # Only save figure to the first replica

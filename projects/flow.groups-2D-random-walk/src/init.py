@@ -9,8 +9,8 @@ import numpy as np
 import signac
 
 logger = logging.getLogger()
-# Lower level to prevent output
-logger.setLevel(logging.WARN)
+# Lower level to WARN or lower for output
+logger.setLevel(logging.ERROR)
 
 # The different standard deviations to use for generating moves in the random
 # walk
@@ -20,10 +20,11 @@ RUN_STEPS = 5_000
 
 
 def main():
+    """Initialize signac project."""
     project = signac.init_project("2D Gaussian Random Walk")
     for replica in range(NUMBER_REPLICAS):
         for std in STANDARD_DEVIATIONS:
-            statepoint = {"mean": 0, "std": std, "replica": replica}
+            statepoint = {"mean": 0, "standard_deviation": std, "replica": replica}
 
             job = project.open_job(statepoint)
             job.doc.run_steps = RUN_STEPS
