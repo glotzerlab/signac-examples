@@ -72,7 +72,8 @@ def compute_radius_of_gyration(job):
     avg_position = positions.mean(axis=0)
     deviation = positions - avg_position
     job.doc.radius_of_gyration = np.sqrt(
-        np.sum(deviation * deviation) / deviation.shape[0])
+        np.sum(deviation * deviation) / deviation.shape[0]
+    )
     job.doc.average_position = avg_position
 
 
@@ -127,7 +128,8 @@ std_aggregator = flow.aggregator.groupby("standard_deviation")
 
 # Define all aggregate groups
 agg_plot = RandomWalkProject.make_group(
-    "aggregate-plot", group_aggregator=std_aggregator)
+    "aggregate-plot", group_aggregator=std_aggregator
+)
 agg_analyze_and_plot = RandomWalkProject.make_group(
     "post-processing", group_aggregator=std_aggregator
 )
@@ -166,7 +168,8 @@ def plot_walk(*jobs):
         ax.plot(position[:, 0], position[:, 1], label=f"Replica {job.sp.replica}")
     ax.legend()
     ax.set_title(
-        f"Random Walks with {jobs[0].sp.standard_deviation} standard_deviation")
+        f"Random Walks with {jobs[0].sp.standard_deviation} standard_deviation"
+    )
     ax.set_xlabel("x")
     ax.set_ylabel("y")
     # Only save figure to the first replica
@@ -184,8 +187,9 @@ def plot_walk(*jobs):
 @RandomWalkProject.operation
 def plot_histogram(*jobs):
     """Create a 2D histogram of the final positions of random walks per std."""
-    final_positions = np.array([position[-1]
-                                for position in generate_stores(jobs, "positions")])
+    final_positions = np.array(
+        [position[-1] for position in generate_stores(jobs, "positions")]
+    )
     histogram, x_bins, y_bins = np.histogram2d(
         final_positions[:, 0], final_positions[:, 1]
     )
