@@ -120,7 +120,6 @@ def plot_msd(job):
     fig.close()
 
 
-
 # Create aggregator that combines all replicas with a single standard deviation
 std_aggregator = flow.aggregator.groupby("standard_deviation")
 
