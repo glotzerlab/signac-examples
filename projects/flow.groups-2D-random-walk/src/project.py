@@ -140,10 +140,8 @@ agg_analyze_and_plot = RandomWalkProject.make_group(
 @RandomWalkProject.operation
 def compute_mean_squared_distance(*jobs):
     """Compute and store the mean squared displacement for all std."""
-    squared_distance_iterator = generate_stores(jobs, "squared_distance")
-    squared_distance = next(squared_distance_iterator)
-    msd = np.copy(squared_distance)
-    for squared_distance in squared_distance_iterator:
+    msd = np.zeros(jobs[0].doc.run_steps + 1)
+    for squared_distance in generate_stores(jobs, "squared_distance"):
         msd += squared_distance
     msd /= len(jobs)
     # Store msd in only first replica (job.sp.replica == 0)
