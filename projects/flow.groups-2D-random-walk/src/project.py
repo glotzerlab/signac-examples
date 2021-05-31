@@ -56,7 +56,7 @@ def simulate(job):
     # Generate all moves at once since they are independent
     moves = generator.normal(job.sp.mean, job.sp.standard_deviation, (n_steps, 2))
     position = np.zeros((n_steps + 1, 2), dtype=float)
-    # Store the results: cumsum aggregates all previous moves from the origin
+    # Store the results: perform a cumulative sum of all moves starting from the origin
     position[1:] = np.cumsum(moves, axis=0)
     job.data.positions = position
 
@@ -82,7 +82,7 @@ def compute_radius_of_gyration(job):
 @RandomWalkProject.post.true("end_to_end")
 @RandomWalkProject.operation
 def compute_end_to_end_distance(job):
-    """Compute the radius of gyration for a random walk."""
+    """Compute the end to end distance for a random walk."""
     with job.data:
         positions = job.data["positions"]
         job.doc["end_to_end"] = np.linalg.norm(positions[-1] - positions[0])
@@ -112,7 +112,7 @@ def plot_msd(job):
         msd = job.data.msd[:]
     fig, ax = plt.subplots()
     ax.plot(msd)
-    ax.set_title(f"MSD for {job.sp.standard_deviation} std")
+    ax.set_title(f"MSD for standard deviation {job.sp.standard_deviation}")
     ax.set_xlabel("x")
     ax.set_ylabel("MSD")
     # Only save figure to the first replica
@@ -120,7 +120,6 @@ def plot_msd(job):
     fig.close()
 
 
-# Aggregate operations on individual standard deviations across replicas
 
 # Create aggregator that combines all replicas with a single standard deviation
 std_aggregator = flow.aggregator.groupby("standard_deviation")
@@ -148,7 +147,7 @@ def compute_mean_squared_distance(*jobs):
     for squared_distance in squared_distance_iterator:
         msd += squared_distance
     msd /= len(jobs)
-    # Store msd in only first replica (job.sp.replica == 1)
+    # Store msd in only first replica (job.sp.replica == 0)
     job_replica_zero = get_replica(jobs, replica=0)
     job_replica_zero.data["msd"] = msd
     for job in jobs:
@@ -168,7 +167,7 @@ def plot_walk(*jobs):
         ax.plot(position[:, 0], position[:, 1], label=f"Replica {job.sp.replica}")
     ax.legend()
     ax.set_title(
-        f"Random Walks with {jobs[0].sp.standard_deviation} standard_deviation"
+        f"Random Walks with Standard Deviation {jobs[0].sp.standard_deviation}"
     )
     ax.set_xlabel("x")
     ax.set_ylabel("y")

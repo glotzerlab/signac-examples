@@ -1,4 +1,4 @@
-A study on 2D Gaussian random walks using **groups** and **aggregates**
+A study on 2D Gaussian random walks using **groups** and **aggregation**.
 
 Here we use simulations of a 2D random walk to demonstrate the **groups** and **aggregation** features of **signac-flow**.
 In addition, this example tries to showcase a robust workflow similar to those of real research projects while keeping the actual computation at a low level.
@@ -23,16 +23,16 @@ In addition, this example tries to showcase a robust workflow similar to those o
     python3 src/project.py run -o base
     ```
 
-    To see all the operations this previous command runs look at the `project.py` file.
+    To see all the operations run by the `base` group, look at the `project.py` file.
 
 
-3. From here we can use the `post-processing` group to run all the aggregate operations (besides one) computing the mean squared displacement, and creating multiple plots.
+3. From here we can use the `post-processing` group to run aggregate operations that compute the mean squared displacement and create multiple plots.
 
     ```
     python3 src/project.py run -o post-processing
     ```
 
-4. Now we can run the final two operations, `plot_mean_squared_distance` and `plot_walks` with
+4. Now we can run the final two operations, `plot_mean_squared_distance` and `plot_walks`, with
     ```
     python3 src/project.py run -o plot_mean_squared_distance plot_walks
     ```
@@ -43,7 +43,7 @@ The current status of the project can be viewed using
 python3 src/project.py status -d
 ```
 
-If `signac_dashboard` is installed, a dashboard can be viewed with the following command,
+If signac-dashboard is installed, a dashboard can be launched and viewed in a browser with the following command:
 
 ```
 python3 src/dashboard.py run
@@ -61,8 +61,8 @@ python3 src/dashboard.py run & &> dashboard-server.log
 
 The following list is a brief overview of the modules and scripts to be found within the project template.
 
-Modules, that are usually modified by the user:
+Modules that are usually modified by the user:
 
  * `init.py` - **Init**ialize the project and parameter space.
- * `project.py` - Configuration, execution, and submission of the **project** workflow. Definition and execution of python-based data space **operations**.
- * `dashboard.py` - Set up a local web-server for viewing the **project**.
+ * `project.py` - Configuration, execution, and submission of the **project** workflow. Definition and execution of data space **operations** as Python functions.
+ * `dashboard.py` - Launch a local webserver for viewing the data of each job in the project.

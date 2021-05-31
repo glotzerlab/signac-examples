@@ -2,14 +2,15 @@
 """Initialize the project's data space.
 
 Iterates over all defined state points and initializes
-the associated job workspace directories."""
+the associated job workspace directories.
+"""
 import logging
 
 import numpy as np
 import signac
 
 logger = logging.getLogger()
-# Lower level to WARN or lower for output
+# Decrease logging level to WARN or lower for output
 logger.setLevel(logging.ERROR)
 
 # The different standard deviations to use for generating moves in the random
