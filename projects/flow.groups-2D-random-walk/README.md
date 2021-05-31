@@ -49,12 +49,6 @@ If signac-dashboard is installed, a dashboard can be launched and viewed in a br
 python3 src/dashboard.py run
 ```
 
-To run in the background without output use
-
-```
-python3 src/dashboard.py run & &> dashboard-server.log
-```
-
 **NOTE**: If you want to run this tutorial from scratch, just run `rm -rf workspace/` to delete the workspace.
 
 # Modules
