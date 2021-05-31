@@ -177,14 +177,9 @@ def plot_histogram(*jobs):
     final_positions = np.array(
         [position[-1] for position in generate_stores(jobs, "positions")]
     )
-    histogram, x_bins, y_bins = np.histogram2d(
-        final_positions[:, 0], final_positions[:, 1]
-    )
     fig, ax = plt.subplots()
-    image = ax.imshow(
-        histogram, extent=[x_bins[0], x_bins[-1], y_bins[0], y_bins[-1]], cmap="viridis"
-    )
-    plt.colorbar(image)
+    histogram = ax.hist2d(final_positions[:, 0], final_positions[:, 1])
+    plt.colorbar(histogram)
     ax.set_title("Heatmap of Final Positions")
     ax.set_xlabel("x")
     ax.set_ylabel("y")
