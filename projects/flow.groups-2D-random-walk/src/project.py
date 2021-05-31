@@ -45,10 +45,10 @@ def simulate(job):
     generator = np.random.default_rng(int(job.id, 16))
     # Generate all moves at once since they are independent
     moves = generator.normal(job.sp.mean, job.sp.standard_deviation, (n_steps, 2))
-    position = np.zeros((n_steps + 1, 2), dtype=float)
+    positions = np.zeros((n_steps + 1, 2), dtype=float)
     # Store the results: perform a cumulative sum of all moves starting from the origin
-    position[1:] = np.cumsum(moves, axis=0)
-    job.data.positions = position
+    positions[1:] = np.cumsum(moves, axis=0)
+    job.data["positions"] = positions
 
 
 @base
@@ -85,7 +85,7 @@ def compute_end_to_end_distance(job):
 def compute_squared_distance(job):
     """Compute the squared distance for a random walk."""
     with job.data:
-        positions = job.data.positions[:]
+        positions = job.data["positions"][:]
     job.data.squared_distance = np.sum(positions * positions, axis=1)
 
 
@@ -151,8 +151,8 @@ def compute_mean_squared_distance(*jobs):
 def plot_walk(*jobs):
     """Plot the first 5 replicas random walks for each standard_deviation."""
     fig, ax = plt.subplots()
-    for position, job in zip(generate_stores(jobs, "positions"), jobs):
-        ax.plot(position[:, 0], position[:, 1], label=f"Replica {job.sp.replica}")
+    for positions, job in zip(generate_stores(jobs, "positions"), jobs):
+        ax.plot(positions[:, 0], positions[:, 1], label=f"Replica {job.sp.replica}")
     ax.legend()
     ax.set_title(
         f"Random Walks with Standard Deviation {jobs[0].sp.standard_deviation}"
@@ -175,7 +175,7 @@ def plot_walk(*jobs):
 def plot_histogram(*jobs):
     """Create a 2D histogram of the final positions of random walks per std."""
     final_positions = np.array(
-        [position[-1] for position in generate_stores(jobs, "positions")]
+        [positions[-1] for positions in generate_stores(jobs, "positions")]
     )
     fig, ax = plt.subplots()
     histogram = ax.hist2d(final_positions[:, 0], final_positions[:, 1])
