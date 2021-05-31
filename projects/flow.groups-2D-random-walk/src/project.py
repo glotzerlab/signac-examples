@@ -5,16 +5,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-# Helper functions
-def get_replica(jobs, replica):
-    """Get a certain replica from a group of jobs."""
-    try:
-        job = next(filter(lambda job: job.sp.replica == replica, jobs))
-    except StopIteration:
-        raise RuntimeError(f"No replica {replica} found.")
-    return job
-
-
 def generate_stores(jobs, store_name):
     """Yield a data store for each job in jobs."""
     for job in jobs:
@@ -121,7 +111,7 @@ def plot_msd(job):
 
 
 # Create aggregator that combines all replicas with a single standard deviation
-std_aggregator = flow.aggregator.groupby("standard_deviation")
+std_aggregator = flow.aggregator.groupby("standard_deviation", sort_by="replica")
 
 
 # Define all aggregate groups
@@ -145,15 +135,16 @@ def compute_mean_squared_distance(*jobs):
         msd += squared_distance
     msd /= len(jobs)
     # Store msd in only first replica (job.sp.replica == 0)
-    job_replica_zero = get_replica(jobs, replica=0)
-    job_replica_zero.data["msd"] = msd
+    jobs[0].data["msd"] = msd
     for job in jobs:
         job.doc.msd_analyzed = True
 
 
 # Since this uses a separate aggragator to restrict aggregates to the first 5 replicas,
 # we cannot assign this operation to either agg_plot or agg_analyze_and_plot
-@flow.aggregator.groupby("standard_deviation", select=lambda job: job.sp.replica <= 4)
+@flow.aggregator.groupby(
+    "standard_deviation", select=lambda job: job.sp.replica <= 4, sort_by="replica"
+)
 @RandomWalkProject.pre(all_simulated)
 @RandomWalkProject.post.true("plotted_walks")
 @RandomWalkProject.operation
@@ -169,7 +160,7 @@ def plot_walk(*jobs):
     ax.set_xlabel("x")
     ax.set_ylabel("y")
     # Only save figure to the first replica
-    fig.savefig(get_replica(jobs, replica=0).fn("random-walks.png"))
+    fig.savefig(jobs[0].fn("random-walks.png"))
     fig.close()
     for job in jobs:
         job.doc.plotted_walks = True
@@ -197,7 +188,7 @@ def plot_histogram(*jobs):
     ax.set_title("Heatmap of Final Positions")
     ax.set_xlabel("x")
     ax.set_ylabel("y")
-    fig.savefig(get_replica(jobs, replica=0).fn("histogram.png"))
+    fig.savefig(jobs[0].fn("histogram.png"))
     fig.close()
     for job in jobs:
         job.doc.plotted_histogram = True
