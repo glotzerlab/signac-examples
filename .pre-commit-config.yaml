@@ -9,7 +9,12 @@ repos:
         exclude: 'setup.cfg'
       - id: trailing-whitespace
         exclude: 'setup.cfg'
+      - id: check-builtin-literals
+      - id: check-executables-have-shebangs
+      - id: check-json
+      - id: check-yaml
       - id: debug-statements
+      - id: requirements-txt-fixer
   - repo: https://github.com/asottile/pyupgrade
     rev: 'v2.19.1'
     hooks:
