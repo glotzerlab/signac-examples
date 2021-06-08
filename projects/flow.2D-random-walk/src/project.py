@@ -41,9 +41,8 @@ base = RandomWalkProject.make_group("base")
 @RandomWalkProject.operation
 def simulate(job):
     """Simulate a 2D random walk."""
-    # use job id as random seed
     n_steps = job.doc.run_steps
-    generator = np.random.default_rng(int(job.id, 16))
+    generator = np.random.default_rng(job.sp.seed)
     # Generate all moves at once since they are independent
     moves = generator.normal(job.sp.mean, job.sp.standard_deviation, (n_steps, 2))
     positions = np.zeros((n_steps + 1, 2), dtype=float)

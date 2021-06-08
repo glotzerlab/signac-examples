@@ -18,6 +18,7 @@ logger.setLevel(logging.ERROR)
 STANDARD_DEVIATIONS = np.linspace(start=0.1, stop=1, num=20)
 NUMBER_REPLICAS = 100
 RUN_STEPS = 5_000
+MAX_SEED = 2 ** 32 - 1
 
 
 def main():
@@ -25,7 +26,13 @@ def main():
     project = signac.init_project("2D Gaussian Random Walk")
     for replica in range(NUMBER_REPLICAS):
         for std in STANDARD_DEVIATIONS:
-            statepoint = {"mean": 0, "standard_deviation": std, "replica": replica}
+            seed = np.random.randint(MAX_SEED)
+            statepoint = {
+                "mean": 0,
+                "standard_deviation": std,
+                "replica": replica,
+                "seed": seed,
+            }
 
             job = project.open_job(statepoint)
             job.doc.run_steps = RUN_STEPS
