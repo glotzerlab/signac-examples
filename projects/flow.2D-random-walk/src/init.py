@@ -37,7 +37,7 @@ def main():
             job = project.open_job(statepoint)
             job.doc.run_steps = RUN_STEPS
 
-            logger.warn(f"Initializing job with state point: {statepoint}.")
+            logger.warning(f"Initializing job with state point: {statepoint}.")
             job.init()
 
 
