@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#!/usr/bin/env python3
 """Define the operations for the 2D Gaussian Random Walk project."""
 
 import flow
