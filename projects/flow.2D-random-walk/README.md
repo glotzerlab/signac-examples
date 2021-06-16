@@ -43,6 +43,10 @@ The current status of the project can be viewed using
 python3 src/project.py status -d
 ```
 
+<!-- This is a necessary heading to prevent this from being tested by CI which would lead to a
+process without an end -->
+## Dashboard
+
 If signac-dashboard is installed, a dashboard can be launched and viewed in a browser with the following command:
 
 ```
