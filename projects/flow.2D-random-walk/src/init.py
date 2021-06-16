@@ -23,9 +23,10 @@ MAX_SEED = 2 ** 32 - 1
 def main():
     """Initialize signac project."""
     project = signac.init_project("2D Gaussian Random Walk")
+    random_number_generator = np.random.default_rng()
     for replica in range(NUMBER_REPLICAS):
         for std in STANDARD_DEVIATIONS:
-            seed = np.random.randint(MAX_SEED)
+            seed = random_number_generator.randint(MAX_SEED)
             statepoint = {
                 "mean": 0,
                 "standard_deviation": std,
