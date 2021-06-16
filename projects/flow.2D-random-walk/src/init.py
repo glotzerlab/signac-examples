@@ -13,8 +13,7 @@ logger = logging.getLogger()
 # Decrease logging level to WARN or lower for output
 logger.setLevel(logging.ERROR)
 
-# The different standard deviations to use for generating moves in the random
-# walk
+# The standard deviations to use for generating random walk moves
 STANDARD_DEVIATIONS = np.linspace(start=0.1, stop=1, num=20)
 NUMBER_REPLICAS = 100
 RUN_STEPS = 5_000
