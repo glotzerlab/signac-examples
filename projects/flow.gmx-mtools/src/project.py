@@ -8,7 +8,7 @@ project_root_directory = signac.get_project().root_directory()
 
 
 def _grompp_str(root, op_name, gro_name, sys_name):
-    """Helper function, returns grompp command string for operation """
+    """Helper function, returns grompp command string for operation"""
     cmd = (
         "gmx grompp -f {root}/src/util/mdp_files/{op}.mdp -c {gro}.gro "
         "-p {sys}.top -o {op}.tpr"
@@ -17,7 +17,7 @@ def _grompp_str(root, op_name, gro_name, sys_name):
 
 
 def _mdrun_str(op_name):
-    """Helper function, returns mdrun command string for operation """
+    """Helper function, returns mdrun command string for operation"""
     return "gmx mdrun -v -deffnm {0} -nt 12 -cpi {0}.cpt".format(op_name)
 
 

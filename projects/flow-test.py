@@ -89,7 +89,7 @@ def main(args):
             with NamedTemporaryFile() as output:
                 run_tests(args.path, output, args.timeout)
     except RuntimeError as error:
-        logger.error("Error at line: {}".format(error.args[0]))
+        logger.error(f"Error at line: {error.args[0]}")
         raise RuntimeWarning("Test failed.")
     logger.info("OK")
 

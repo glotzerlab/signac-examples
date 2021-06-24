@@ -5,7 +5,7 @@ from signac_dashboard.modules import ImageViewer, StatepointList, TextDisplay
 
 class MLDashboard(Dashboard):
     def job_title(self, job):
-        return ", ".join([f"{k} = {v}" for k, v in job.sp.items()])
+        return ", ".join(f"{k} = {v}" for k, v in job.sp.items())
 
 
 def testing_accuracy(job):
