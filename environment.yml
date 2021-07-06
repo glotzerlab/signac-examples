@@ -12,5 +12,5 @@ dependencies:
   - pandas>=1
   - pre-commit
   - python>=3
-  - signac-flow>=0.12
+  - signac-flow>=0.15
   - signac>=1.6
