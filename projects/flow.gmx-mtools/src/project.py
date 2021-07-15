@@ -55,7 +55,6 @@ def sampled(job):
 
 @MyProject.operation
 @MyProject.post(initialized)
-@flow.cmd
 def initialize(job):
     """Initialize the simulation."""
     with job:
