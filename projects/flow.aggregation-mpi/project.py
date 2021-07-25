@@ -11,7 +11,7 @@ JOBS_PER_AGGREGATE = 8
 
 @Project.operation
 @directives(nranks=lambda *jobs: RANKS_PER_JOB * len(jobs))
-@aggregator.groupsof(JOBS_PER_AGGREGATE)
+@aggregator.groupsof(num=JOBS_PER_AGGREGATE)
 def do_mpi_task(*jobs):
     from mpi4py import MPI
 
