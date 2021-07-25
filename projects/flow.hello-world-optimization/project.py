@@ -111,8 +111,8 @@ def converged(job):
 def spawn_new_simulations(job, n=4):
     try:
         # Load the stored random generator state...
-        random.setstate(_convert_to_tuple(job.doc.rng))
-    except AttributeError:
+        random.setstate(_convert_to_tuple(job.document()["rng_state"]))
+    except KeyError:
         # ... or initialize if no state was previously stored.
         random.seed(job.sp.seed)
 
@@ -122,7 +122,7 @@ def spawn_new_simulations(job, n=4):
         project.open_job(dict(func=job.sp.func, x=x, primary=False)).init()
 
     # Store state of random generator.
-    job.doc.rng = random.getstate()
+    job.document["rng_state"] = random.getstate()
 
 
 if __name__ == "__main__":
