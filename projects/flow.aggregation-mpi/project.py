@@ -6,7 +6,20 @@ class Project(FlowProject):
 
 
 RANKS_PER_JOB = 2
-JOBS_PER_AGGREGATE = 8
+JOBS_PER_AGGREGATE = 2
+
+
+def mpi_task(job, comm):
+    """Does some work for a signac job with a given MPI communicator."""
+    size = comm.Get_size()
+    rank = comm.Get_rank()
+    # Broadcast the state point to all ranks
+    if rank == 0:
+        data = job.statepoint()
+    else:
+        data = None
+    data = comm.bcast(data, root=0)
+    print(f"In the mpi_task function, {rank=} of {size=} has {data=}.")
 
 
 @Project.operation
@@ -37,10 +50,11 @@ def do_mpi_task(*jobs):
     # Select the job from the aggregate to run in the split communicator.
     job = jobs[color]
 
-    print(f"{world_rank=}, {split_rank=}, {split_size=}, {job=}")
+    print(f"{world_rank=}, {split_rank=}, {split_size=}, {job.statepoint=}")
 
     # Now you can use the split communicator with your application!
-    # Call your function with job, split_comm
+    # Call your function with job, split_comm:
+    mpi_task(job, split_comm)
 
 
 if __name__ == "__main__":
