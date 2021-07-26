@@ -1,4 +1,4 @@
 matplotlib
 numpy
 signac>=1.0.0
-git+https://github.com/glotzerlab/signac-flow.git@master#egg=signac-flow
+signac-flow>=0.15.0
