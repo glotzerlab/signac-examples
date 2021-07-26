@@ -1,3 +1,4 @@
+h5py
 matplotlib
 numpy
 signac>=1.0.0
