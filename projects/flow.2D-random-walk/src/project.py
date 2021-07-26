@@ -107,6 +107,7 @@ def plot_mean_squared_displacement(job):
     ax.set_ylabel("MSD")
     # Only save figure to the first replica
     fig.savefig(job.fn("msd.png"))
+    plt.close()
 
 
 # Create aggregator that combines all replicas with a single standard deviation
@@ -160,6 +161,7 @@ def plot_walks(*jobs):
     ax.set_ylabel("y")
     # Only save figure to the first replica
     fig.savefig(jobs[0].fn("random-walks.png"))
+    plt.close()
     for job in jobs:
         job.doc.plotted_walks = True
 
@@ -184,6 +186,7 @@ def plot_histogram(*jobs):
     ax.set_xlabel("x")
     ax.set_ylabel("y")
     fig.savefig(jobs[0].fn("histogram.png"))
+    plt.close()
     for job in jobs:
         job.doc.plotted_histogram = True
 
