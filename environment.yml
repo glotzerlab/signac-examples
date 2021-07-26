@@ -1,6 +1,7 @@
 channels:
   - conda-forge
 dependencies:
+  - h5py
   - hoomd=2
   - ipywidgets>=7
   - jupyterlab>=3
