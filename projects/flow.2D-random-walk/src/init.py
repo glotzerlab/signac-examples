@@ -26,7 +26,7 @@ def main():
     random_number_generator = np.random.default_rng()
     for replica in range(NUMBER_REPLICAS):
         for std in STANDARD_DEVIATIONS:
-            seed = random_number_generator.randint(MAX_SEED)
+            seed = random_number_generator.integers(MAX_SEED)
             statepoint = {
                 "mean": 0,
                 "standard_deviation": std,
