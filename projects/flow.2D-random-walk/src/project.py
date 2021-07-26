@@ -61,10 +61,10 @@ def compute_radius_of_gyration(job):
         positions = job.data["positions"][:]
     avg_position = positions.mean(axis=0)
     deviation = positions - avg_position
-    job.doc.radius_of_gyration = np.sqrt(
-        np.sum(deviation * deviation) / deviation.shape[0]
+    job.doc.radius_of_gyration = float(
+        np.sqrt(np.sum(deviation * deviation) / deviation.shape[0])
     )
-    job.doc.average_position = avg_position
+    job.doc.average_position = avg_position.tolist()
 
 
 @base
@@ -75,7 +75,7 @@ def compute_end_to_end_distance(job):
     """Compute the end to end distance for a random walk."""
     with job.data:
         positions = job.data["positions"]
-        job.doc["end_to_end"] = np.linalg.norm(positions[-1] - positions[0])
+        job.doc["end_to_end"] = float(np.linalg.norm(positions[-1] - positions[0]))
 
 
 @base
