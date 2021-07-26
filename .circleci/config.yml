@@ -96,18 +96,16 @@ references:
 
 jobs:
   test_projects_linux-python-38:
-    <<: *container_miniconda
+    <<: [*container_miniconda, *test_projects]
     environment:
       BASH_ENV: "~/.bashrc"
       PYTHON_VERSION: 3.8
-    <<: *test_projects
 
   test_notebooks_linux-python-38:
-    <<: *container_miniconda
+    <<: [*container_miniconda, *test_notebooks]
     environment:
       BASH_ENV: "~/.bashrc"
       PYTHON_VERSION: 3.8
-    <<: *test_notebooks
 
 workflows:
   version: 2
