@@ -21,7 +21,7 @@ def main():
             # thermal energy
             kT=1.0,
             # pressure
-            p=p,
+            p=float(p),
             # thermostat coupling constant
             tau=1.0,
             # barostat coupling constant
@@ -34,7 +34,7 @@ def main():
         # define run steps in the job document so that run_steps
         # can be changed without modifying the statepoint
         job.doc["run_steps"] = 5000
-        print(f"initializing state point with id {job.get_id()} and p = {job.sp.p}")
+        print(f"initializing state point with id {job.id} and p = {job.sp.p}")
         job.init()
 
 
