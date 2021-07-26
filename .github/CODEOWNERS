@@ -1,2 +1,4 @@
 # Request one committer and one contributor per PR.
 * @glotzerlab/signac-committers @glotzerlab/signac-contributors
+# Request maintainers for changes in requirements
+.pre-commit-config.yaml @glotzerlab/signac-maintainers

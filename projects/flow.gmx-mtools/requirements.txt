@@ -3,5 +3,5 @@ mbuild
 mdtraj
 mtools
 numpy
-signac-flow>=0.10.0
 signac>=1.0.0
+signac-flow>=0.10.0
