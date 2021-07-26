@@ -29,9 +29,9 @@ def main():
             seed = random_number_generator.integers(MAX_SEED)
             statepoint = {
                 "mean": 0,
-                "standard_deviation": std,
+                "standard_deviation": float(std),
                 "replica": replica,
-                "seed": seed,
+                "seed": int(seed),
             }
 
             job = project.open_job(statepoint)
