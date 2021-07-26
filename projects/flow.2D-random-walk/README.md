@@ -40,7 +40,7 @@ In addition, this example tries to showcase a robust workflow similar to those o
 The current status of the project can be viewed using
 
 ```
-python3 src/project.py status -d
+python3 src/project.py status
 ```
 
 <!-- This is a necessary heading to prevent this from being tested by CI which would lead to a
