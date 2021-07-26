@@ -47,7 +47,7 @@ python3 src/project.py status
 process without an end -->
 ## Dashboard
 
-If signac-dashboard is installed, a dashboard can be launched and viewed in a browser with the following command:
+If **signac-dashboard** is installed, a dashboard can be launched and viewed in a browser with the following command:
 
 ```
 python3 src/dashboard.py run

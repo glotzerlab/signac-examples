@@ -147,7 +147,7 @@ def compute_mean_squared_displacement(*jobs):
 @RandomWalkProject.pre(all_simulated)
 @RandomWalkProject.post.true("plotted_walks")
 @RandomWalkProject.operation
-def plot_walk(*jobs):
+def plot_walks(*jobs):
     """Plot the first 5 replicas random walks for each standard_deviation."""
     fig, ax = plt.subplots()
     for positions, job in zip(generate_stores(jobs, "positions"), jobs):
