@@ -32,9 +32,9 @@ In addition, this example tries to showcase a robust workflow similar to those o
     python3 src/project.py run -o post-processing
     ```
 
-4. Now we can run the final two operations, `plot_mean_squared_distance` and `plot_walks`, with
+4. Now we can run the final two operations, `plot_mean_squared_displacement` and `plot_walks`, with
     ```
-    python3 src/project.py run -o plot_mean_squared_distance plot_walks
+    python3 src/project.py run -o plot_mean_squared_displacement plot_walks
     ```
 
 The current status of the project can be viewed using

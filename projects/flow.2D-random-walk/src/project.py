@@ -80,13 +80,13 @@ def compute_end_to_end_distance(job):
 
 @base
 @RandomWalkProject.pre.after(simulate)
-@RandomWalkProject.post(lambda job: "squared_distance" in job.data)
+@RandomWalkProject.post(lambda job: "squared_displacement" in job.data)
 @RandomWalkProject.operation
-def compute_squared_distance(job):
-    """Compute the squared distance for a random walk."""
+def compute_squared_displacement(job):
+    """Compute the squared displacement for a random walk."""
     with job.data:
         positions = job.data["positions"][:]
-    job.data.squared_distance = np.sum(positions * positions, axis=1)
+    job.data.squared_displacement = np.sum(positions * positions, axis=1)
 
 
 # This operation happens after computing the msd so it isn't in base.
@@ -96,8 +96,8 @@ def compute_squared_distance(job):
 @RandomWalkProject.pre(lambda job: job.sp.replica == 0)
 @RandomWalkProject.post.isfile("msd.png")
 @RandomWalkProject.operation
-def plot_msd(job):
-    """Plot the MSD for all std."""
+def plot_mean_squared_displacement(job):
+    """Plot the MSD for all standard deviations."""
     with job.data:
         msd = job.data.msd[:]
     fig, ax = plt.subplots()
@@ -128,11 +128,11 @@ agg_analyze_and_plot = RandomWalkProject.make_group(
 @RandomWalkProject.pre(all_simulated)
 @RandomWalkProject.post.true("msd_analyzed")
 @RandomWalkProject.operation
-def compute_mean_squared_distance(*jobs):
+def compute_mean_squared_displacement(*jobs):
     """Compute and store the mean squared displacement for all std."""
     msd = np.zeros(jobs[0].doc.run_steps + 1)
-    for squared_distance in generate_stores(jobs, "squared_distance"):
-        msd += squared_distance
+    for squared_displacement in generate_stores(jobs, "squared_displacement"):
+        msd += squared_displacement
     msd /= len(jobs)
     # Store msd in only first replica (job.sp.replica == 0)
     jobs[0].data["msd"] = msd
