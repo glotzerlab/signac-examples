@@ -178,13 +178,14 @@ def plot_histogram(*jobs):
         [positions[-1] for positions in generate_stores(jobs, "positions")]
     )
     fig, ax = plt.subplots()
-    histogram = ax.hist2d(final_positions[:, 0], final_positions[:, 1])
-    plt.colorbar(histogram)
+    histogram, xedges, yedges, image = ax.hist2d(
+        final_positions[:, 0], final_positions[:, 1]
+    )
+    plt.colorbar(image)
     ax.set_title("Heatmap of Final Positions")
     ax.set_xlabel("x")
     ax.set_ylabel("y")
     fig.savefig(jobs[0].fn("histogram.png"))
-    fig.close()
     for job in jobs:
         job.doc.plotted_histogram = True
 
