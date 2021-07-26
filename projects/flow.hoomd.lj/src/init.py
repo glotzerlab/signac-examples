@@ -21,7 +21,7 @@ def main():
             # thermal energy
             kT=1.0,
             # pressure
-            p=p,
+            p=float(p),
             # thermostat coupling constant
             tau=1.0,
             # barostat coupling constant

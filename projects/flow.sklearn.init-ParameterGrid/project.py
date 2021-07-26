@@ -38,7 +38,7 @@ def plot_confusion_matrix(job):
     estimator = joblib.load(job.fn("estimator_fit.joblib"))
 
     with project.data:
-        job.doc.score = estimator.score(project.data.X_test, project.data.y_test)
+        job.doc.score = float(estimator.score(project.data.X_test, project.data.y_test))
         disp = plot_confusion_matrix(
             estimator=estimator,
             X=project.data.X_test,
