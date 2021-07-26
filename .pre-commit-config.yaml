@@ -16,17 +16,17 @@ repos:
       - id: debug-statements
       - id: requirements-txt-fixer
   - repo: https://github.com/asottile/pyupgrade
-    rev: 'v2.19.1'
+    rev: 'v2.23.0'
     hooks:
       - id: pyupgrade
         args:
           - --py36-plus
   - repo: https://github.com/PyCQA/isort
-    rev: '5.8.0'
+    rev: '5.9.2'
     hooks:
       - id: isort
   - repo: https://github.com/psf/black
-    rev: '21.5b2'
+    rev: '21.7b0'
     hooks:
       - id: black
   - repo: https://github.com/PyCQA/flake8
@@ -36,7 +36,7 @@ repos:
         args:
           - --max-line-length=100
   - repo: https://github.com/nbQA-dev/nbQA
-    rev: 0.10.0
+    rev: 1.0.0
     hooks:
       - id: nbqa-pyupgrade
         args:
@@ -49,7 +49,7 @@ repos:
         args:
           - --nbqa-mutate
   - repo: https://github.com/kynan/nbstripout
-    rev: 0.4.0
+    rev: 0.5.0
     hooks:
       - id: nbstripout
         args:
