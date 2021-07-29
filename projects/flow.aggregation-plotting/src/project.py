@@ -1,5 +1,5 @@
-from flow import FlowProject, aggregator
 import matplotlib.pyplot as plt
+from flow import FlowProject, aggregator
 
 
 class Project(FlowProject):
