@@ -1,5 +1,9 @@
+# <img src="https://raw.githubusercontent.com/glotzerlab/signac/master/doc/images/palette-header.png" width="75" height="58"> Examples of the signac data management framework
+
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/glotzerlab/signac-examples/master?filepath=notebooks%2F)
 [![nbviewer](https://img.shields.io/badge/render-nbviewer-orange)](http://nbviewer.jupyter.org/github/glotzerlab/signac-examples/blob/master/notebooks/index.ipynb)
+[![Affiliated with NumFOCUS](https://img.shields.io/badge/NumFOCUS-affiliated%20project-orange.svg?style=flat&colorA=E1523D&colorB=007D8A)](https://numfocus.org/sponsored-projects/affiliated-projects)
+[![License](https://img.shields.io/github/license/glotzerlab/signac.svg)](https://github.com/glotzerlab/signac/blob/master/LICENSE.txt)
 
 # signac - Tutorial and Examples
 
