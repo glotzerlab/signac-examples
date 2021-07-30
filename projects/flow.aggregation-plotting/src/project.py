@@ -18,20 +18,21 @@ def get_pressure(crystal_name, density):
 @aggregator.groupby("crystal", sort_by="density")
 @Project.operation
 def plot_pressure_by_crystal(*jobs):
+    """Plot the pressure as a function of density for each group."""
     pressures = {}
     for job in jobs:
         crystal_name = job.sp.crystal
         density = job.sp.density
 
-        # Here, read the pressure from the job
+        # In a real workflow, this data would come from a simulation.
         pressure = get_pressure(crystal_name, density)
         pressures[density] = pressure
 
-        # job.fn can be used instead of "with job:"
+        # Write an output file for each job.
         with open(job.fn("output.txt"), "w") as output_file:
             output_file.write(f"Pressure: {pressure}, Density: {density}")
 
-    # Make the plot
+    # Make the plot.
     fig, ax = plt.subplots()
     plt.plot(pressures.keys(), pressures.values())
     plt.title(f"{crystal_name} Density vs. Pressure")
@@ -48,11 +49,11 @@ def plot_pressure_all(*jobs):
         crystal_name = job.sp.crystal
         density = job.sp.density
 
-        # Here, read the pressure from the job
+        # In a real workflow, this data would come from a simulation.
         pressure = get_pressure(crystal_name, density)
         crystal_pressures[crystal_name].append((density, pressure))
 
-    # Make the plot
+    # Make the plot.
     fig, ax = plt.subplots()
     for crystal_name, densities_and_pressures in crystal_pressures.items():
         densities = [v[0] for v in densities_and_pressures]
