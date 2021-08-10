@@ -1,8 +1,11 @@
 channels:
   - conda-forge
 dependencies:
+  - h5py
   - hoomd=2
   - ipywidgets>=7
+  - joblib
+  - jupyter
   - jupyterlab>=3
   - matplotlib>=3
   - mistune
@@ -12,5 +15,8 @@ dependencies:
   - pandas>=1
   - pre-commit
   - python>=3
+  - scikit-learn
+  - signac-dashboard>=0.2
   - signac-flow>=0.15
   - signac>=1.6
+  
