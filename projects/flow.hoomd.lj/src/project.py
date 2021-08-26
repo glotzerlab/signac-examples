@@ -7,8 +7,6 @@ status, execute operations and submit them to a cluster. See also:
 """
 from flow import FlowProject
 
-# import flow.environments # uncomment to use default environments
-
 
 class MyProject(FlowProject):
     pass

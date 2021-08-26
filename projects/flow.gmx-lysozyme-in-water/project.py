@@ -3,9 +3,6 @@ import pexpect  # Used to automate interaction with GROMACS interface.
 import signac
 from flow import FlowProject
 
-# import flow.environments  # uncomment to use default environments
-
-
 gmx_exec = "gmx"  # or use gmx_mpi if available
 mpi_exec = "mpirun"
 

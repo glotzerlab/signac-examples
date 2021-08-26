@@ -1,7 +1,5 @@
 from flow import FlowProject
 
-# import flow.environments  # uncomment to use default environments
-
 
 class Project(FlowProject):
     pass
