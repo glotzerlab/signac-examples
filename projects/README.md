@@ -47,10 +47,6 @@ This project dynamically spawns new jobs as a result of previous results.
 
 This is a minimal example for a signac-flow project.
 
-### [hoomd.lj-minimal](hoomd.lj-minimal/)
-
-Minimal example for the generation of a phase diagram for a Lennard-Jones fluid with **signac** and **HOOMD-blue**.
-
 ### [flow.hoomd.lj](flow.hoomd.lj/)
 
 The example project features the generation of a p-V phase diagram of a simulated Lennard-Jones (LJ) fluid and an ideal gas estimate.
