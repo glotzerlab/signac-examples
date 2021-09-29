@@ -19,4 +19,3 @@ dependencies:
   - signac-dashboard>=0.2
   - signac-flow>=0.15
   - signac>=1.6
-
