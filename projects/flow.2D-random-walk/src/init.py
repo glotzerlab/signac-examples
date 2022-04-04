@@ -17,7 +17,7 @@ logger.setLevel(logging.ERROR)
 STANDARD_DEVIATIONS = np.linspace(start=0.1, stop=1, num=20)
 NUMBER_REPLICAS = 100
 RUN_STEPS = 5_000
-MAX_SEED = 2 ** 32 - 1
+MAX_SEED = 2**32 - 1
 
 
 def main():

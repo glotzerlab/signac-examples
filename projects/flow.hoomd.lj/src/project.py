@@ -43,7 +43,7 @@ def initialize(job):
         with hoomd.context.SimulationContext():
             # create a simple cubic lattice
             n = int(ceil(pow(job.sp.N, 1.0 / 3)))
-            assert n ** 3 == job.sp.N
+            assert n**3 == job.sp.N
             hoomd.init.create_lattice(unitcell=hoomd.lattice.sc(a=1.0), n=n)
             hoomd.dump.gsd("init.gsd", period=None, group=hoomd.group.all())
 
