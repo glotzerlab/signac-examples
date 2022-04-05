@@ -9,9 +9,9 @@ class Project(FlowProject):
 def get_pressure(crystal_name, density):
     """Pretend function returning a fake pressure value."""
     if crystal_name == "fcc":
-        pressure = 1000 * density ** 2
+        pressure = 1000 * density**2
     else:
-        pressure = 5000 * density ** 3
+        pressure = 5000 * density**3
     return pressure
 
 
