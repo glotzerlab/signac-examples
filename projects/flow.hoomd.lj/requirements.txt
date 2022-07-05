@@ -1,4 +1,4 @@
-hoomd>=2.1.5
+hoomd>=2.1.5,<3
 jupyter
 matplotlib
 numpy
