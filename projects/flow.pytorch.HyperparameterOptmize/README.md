@@ -29,9 +29,9 @@ Conda users can install these from [conda-forge](https://conda-forge.org/):
     ```
     
     In `init.py`, you can define VAE's hyperparameters you would like to try.
-    
+
+- This checks if MNIST dataset has been downloaded yet. If it's not, it will autometically download it and store in `/source/data/MNIST`.
 - This creates the `workspace/`, which holds all of our `jobs`. Each `job` has its own directory, named by the job's unique `id` (something like `87c7fccdea3531da704bbae95e95e914`).\
-- This will also check if MNIST dataset has been downloaded yet. If it's not, it will autometically download it and store in `/source/data/MNIST`.
 - If you look in these directories, you'll see `signac_statepoint.json`. This is a json file that contains the statepoint parameters (hyperparameters of VAE) for that job.
 - NOTE: The job's `id` is generated specifically for the dict containing the statepoint parameters, so do not edit the directory name or `signac_statepoint.json`.
 
