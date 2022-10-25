@@ -1,4 +1,4 @@
-An Example of Using signac with [Pytorch] to train a [Variational Autoencoder] (VAE).
+An Example of Using signac with [Pytorch] to train [Variational Autoencoder] (VAE).
 
 This example project demonstrate how to use signac to optimize the hyperparameters of VAE trained on the popular [MNIST] datasets.
 
