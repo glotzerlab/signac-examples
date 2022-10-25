@@ -26,7 +26,7 @@ Conda users can install these from [conda-forge](https://conda-forge.org/):
 
     ```
     python init.py run
-    ``  
+    ```
     
     In `init.py`, you can define VAE's hyperparameters you would like to try.
     
@@ -35,14 +35,14 @@ Conda users can install these from [conda-forge](https://conda-forge.org/):
 - If you look in these directories, you'll see `signac_statepoint.json`. This is a json file that contains the statepoint parameters (hyperparameters of VAE) for that job.
 - NOTE: The job's `id` is generated specifically for the dict containing the statepoint parameters, so do not edit the directory name or `signac_statepoint.json`.
 
-2. All of the operations we will be performing on our data are defined in `project.py`. An operation is a function with `job` as its only argument that signac-flow recognizes as a part of your workflow.
+2. All of the operations we will be performing on [MNIST] dataset are defined in `project.py`. An operation is a function with `job` as its only argument that signac-flow recognizes as a part of your workflow.
     - You can tell which methods are operations because they will have the `@Project.operation` decorator, which tells signac-flow that this method is to be treated as an operation associated with `Project`.
-    - `operation`s typically have pre- and post-conditions. This is how signac-flow knows when the operation should be run. For example, the `train()` function has no pre-condition because it must be run first, but has `@Project.post(labels.check_train_complete)` as a post-condition. This post-condition means that the operation will *not* be run if `init.gsd` exists in the job directory.
-
+    - `operation`s typically have pre- and post-conditions. This is how signac-flow knows when the operation should be run. For example, the `train()` function has no pre-condition because it must be run first, but has `@Project.post(labels.check_train_complete)` as a post-condition.
+   
 3. All of the functions used in `project.py` are defined in three python scripts: `source/labels.py`, `source/workflow.py`, and `source/vae.py`.
     - `source/labels.py` defines the functions that are used to identify whether an signac project level operation is done or not in `project.py`.
     - `source/workflow.py` defines the functions that used to manage the workflow of training protocols including post-evaluation on the training.
-    - `source/vae.py` defines any functions that relate to the training and post-evaluation of VAE using pytorch, which includes functions for, e.g. download [MNIST] datasets, and plot learning curve etc.
+    - `source/vae.py` defines any functions that relate to the training and post-evaluation of VAE using pytorch, which includes functions for, e.g. download [MNIST] dataset, and plot learning curve, etc.
 
 4. Now let's run the operations:
 
@@ -64,7 +64,7 @@ Conda users can install these from [conda-forge](https://conda-forge.org/):
     python project.py run -o evaluation
     ```
 
-5. For visualizing the post-evaluation, you can launch the [signac-dashbboard]:
+5. For visualizing the post-evaluation, you can launch the [signac-dashbboard](https://github.com/glotzerlab/signac-dashboard):
 
     ```
     python dashborad.py run
