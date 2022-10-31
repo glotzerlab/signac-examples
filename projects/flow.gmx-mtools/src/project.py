@@ -1,5 +1,4 @@
 """Define the project's workflow logic."""
-import flow
 import mbuild as mb
 import signac
 from flow import FlowProject
@@ -23,7 +22,7 @@ def _mdrun_str(op_name):
 
 def gromacs_command(name, gro, sys):
     """Simplify GROMACS operations"""
-    return "cd {{job.ws}} ; {} && {}".format(
+    return "{} && {}".format(
         _grompp_str(project_root_directory, name, gro, sys),
         _mdrun_str(name),
     )
@@ -67,28 +66,25 @@ def initialize(job):
         system.save("init.top", forcefield_name="oplsaa", overwrite=True)
 
 
-@MyProject.operation
 @MyProject.pre(initialized)
 @MyProject.post(minimized)
-@flow.cmd
+@MyProject.operation(cmd=True, with_job=True)
 def em(job):
-    return gromacs_command(name="em", gro="init", sys="init")
+    return gromacs_command(name="em", gro="init", sys="init").format(job)
 
 
-@MyProject.operation
 @MyProject.pre(minimized)
 @MyProject.post(equilibrated)
-@flow.cmd
+@MyProject.operation(cmd=True, with_job=True)
 def equil(job):
-    return gromacs_command(name="equil", gro="em", sys="init")
+    return gromacs_command(name="equil", gro="em", sys="init").format(job)
 
 
-@MyProject.operation
 @MyProject.pre(equilibrated)
 @MyProject.post(sampled)
-@flow.cmd
+@MyProject.operation(cmd=True, with_job=True)
 def sample(job):
-    return gromacs_command(name="sample", gro="equil", sys="init")
+    return gromacs_command(name="sample", gro="equil", sys="init").format(job)
 
 
 if __name__ == "__main__":
