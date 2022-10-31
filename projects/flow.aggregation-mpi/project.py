@@ -1,4 +1,4 @@
-from flow import FlowProject, aggregator, directives
+from flow import FlowProject, aggregator
 
 
 class Project(FlowProject):
@@ -22,9 +22,10 @@ def mpi_task(job, comm):
     print(f"In the mpi_task function, {rank=} of {size=} has {data=}.")
 
 
-@Project.operation
-@directives(nranks=lambda *jobs: RANKS_PER_JOB * len(jobs))
-@aggregator.groupsof(num=JOBS_PER_AGGREGATE)
+@Project.operation(
+    directives={"nranks": lambda *jobs: RANKS_PER_JOB * len(jobs)},
+    aggregator=aggregator.groupsof(num=JOBS_PER_AGGREGATE),
+)
 def do_mpi_task(*jobs):
     from mpi4py import MPI
 
