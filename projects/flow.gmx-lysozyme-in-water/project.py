@@ -1,10 +1,8 @@
-import flow
 import pexpect  # Used to automate interaction with GROMACS interface.
 import signac
 from flow import FlowProject
 
 gmx_exec = "gmx"  # or use gmx_mpi if available
-mpi_exec = "mpirun"
 
 """Define file level constants."""
 
@@ -96,16 +94,10 @@ def _grompp_str(op_name, gro_name, checkpoint_file=None):
     return workspace_command(cmd)
 
 
-def _mdrun_str(op_name, np=1, nt=None, verbose=False):
+def _mdrun_str(op_name, nt=None, verbose=False):
     """Helper function, returns mdrun command string for operation."""
     num_threads = 1 if nt is None else nt
-    num_nodes = np // num_threads
-    cmd = (
-        "OMP_NUM_THREADS={num_threads} {mpi_exec} -n {np} {gmx} "
-        "mdrun -ntomp {num_threads} {verbose} -deffnm {op}"
-    ).format(
-        np=num_nodes,
-        mpi_exec=mpi_exec,
+    cmd = ("{gmx} mdrun -ntomp {num_threads} {verbose} -deffnm {op}").format(
         gmx=gmx_exec,
         num_threads=num_threads,
         op=op_name,
@@ -115,9 +107,8 @@ def _mdrun_str(op_name, np=1, nt=None, verbose=False):
 
 
 # First three steps are simple configuration
-@MyProject.operation
 @MyProject.post.isfile(gro_file)
-@flow.cmd
+@MyProject.operation(cmd=True)
 def pdb2gmx(job):
     return workspace_command(
         "{gmx} pdb2gmx -f {pdb_file} -o {gro_file} -water {water_model} "
@@ -131,10 +122,9 @@ def pdb2gmx(job):
     )
 
 
-@MyProject.operation
 @MyProject.pre.after(pdb2gmx)
 @MyProject.post.isfile(boxed_file)
-@flow.cmd
+@MyProject.operation(cmd=True)
 def editconf(job):
     return workspace_command(
         "{gmx} editconf -f {gro_file} -o {boxed_file} -c -d {edge_spacing} "
@@ -148,10 +138,9 @@ def editconf(job):
     )
 
 
-@MyProject.operation
 @MyProject.pre.isfile(boxed_file)
 @MyProject.post.isfile(solvated_file)
-@flow.cmd
+@MyProject.operation(cmd=True)
 def solvate(job):
     return workspace_command(
         "{gmx} solvate -cp {boxed_file} -cs {solvent_configuration} "
@@ -176,17 +165,16 @@ def solvate(job):
 # automate responding to requested std input
 
 
-@MyProject.operation
 @MyProject.pre.isfile(solvated_file)
 @MyProject.post.isfile(ionization_config)
-@flow.cmd
+@MyProject.operation(cmd=True)
 def grompp_add_ions(job):
-    return _grompp_str("ions", solvated_file)
+    return _grompp_str("ions", solvated_file).format(job)
 
 
-@MyProject.operation
 @MyProject.pre.after(grompp_add_ions)
 @MyProject.post(prepared_for_simulation)
+@MyProject.operation
 def ionize(job):
     """Exploit the pexpect module to run."""
     with job:
@@ -210,73 +198,62 @@ def ionize(job):
 
 
 # Minimization
-@MyProject.operation
 @MyProject.pre(prepared_for_simulation)
 @MyProject.post.isfile(em_op + ".tpr")
-@flow.cmd
+@MyProject.operation(cmd=True)
 def grompp_minim(job):
-    return _grompp_str("minim", ionized_file)
+    return _grompp_str("minim", ionized_file).format(job)
 
 
-@MyProject.operation
 @MyProject.pre.after(grompp_minim)
 @MyProject.post.isfile(em_file)
-@flow.cmd
+@MyProject.operation(cmd=True)
 def minim(job):
-    return _mdrun_str("minim")
+    return _mdrun_str("minim").format(job)
 
 
 # Equilibration: NVT then NPT
-@MyProject.operation
 @MyProject.pre.after(minim)
 @MyProject.post.isfile(nvt_op + ".tpr")
-@flow.cmd
+@MyProject.operation(cmd=True)
 def grompp_nvt(job):
-    return _grompp_str("nvt", em_file)
+    return _grompp_str("nvt", em_file).format(job)
 
 
-@MyProject.operation
 @MyProject.pre.after(grompp_nvt)
 @MyProject.post.isfile(nvt_file)
-@flow.cmd
-@flow.directives(np=16)
+@MyProject.operation(cmd=True, directives={"np": 16})
 def nvt(job):
-    return _mdrun_str("nvt")
+    return _mdrun_str("nvt").format(job)
 
 
-@MyProject.operation
 @MyProject.pre.after(nvt)
 @MyProject.post.isfile(npt_op + ".tpr")
-@flow.cmd
+@MyProject.operation(cmd=True)
 def grompp_npt(job):
-    return _grompp_str("npt", nvt_file)
+    return _grompp_str("npt", nvt_file).format(job)
 
 
-@MyProject.operation
 @MyProject.pre.isfile(npt_op + ".tpr")
 @MyProject.post.isfile(npt_file)
-@flow.cmd
-@flow.directives(np=16)
+@MyProject.operation(cmd=True, directives={"np": 16})
 def npt(job):
-    return _mdrun_str("npt")
+    return _mdrun_str("npt").format(job)
 
 
 # Final run
-@MyProject.operation
 @MyProject.pre.isfile(npt_file)
 @MyProject.post.isfile(production_op + ".tpr")
-@flow.cmd
+@MyProject.operation(cmd=True)
 def grompp_md(job):
-    return _grompp_str("md", npt_file)
+    return _grompp_str("md", npt_file).format(job)
 
 
-@MyProject.operation
 @MyProject.pre.after(grompp_md)
 @MyProject.post(finished)
-@flow.cmd
-@flow.directives(np=16)
+@MyProject.operation(cmd=True, directives={"np": 16})
 def md(job):
-    return _mdrun_str("md")
+    return _mdrun_str("md").format(job)
 
 
 if __name__ == "__main__":
