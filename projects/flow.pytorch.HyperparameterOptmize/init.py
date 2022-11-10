@@ -7,7 +7,7 @@ import os
 import torchvision.transforms as transforms
 from torchvision import datasets
 
-PR = signac.get_project()
+PR = signac.init_project()
 HYPER_PARAMS = {
     "seed": [1],
     "epochs": [10, 20, 30, 40],
