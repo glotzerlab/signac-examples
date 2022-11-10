@@ -14,7 +14,6 @@ from torchvision import datasets
 from torch.utils.data import DataLoader
 from torchvision.utils import save_image
 
-
 class LinearVAE(nn.Module):
     def __init__(self, features_dim, latent_dim, hidden_dim):
         super(LinearVAE, self).__init__()
@@ -74,40 +73,44 @@ class LinearVAE(nn.Module):
         reconstruction = torch.sigmoid(self.dec2(x))
         return reconstruction
 
-
 def load_data(job):
-    torch.manual_seed(job.sp["seed"])
+    torch.manual_seed(job.sp['seed'])
     batch_size = job.sp.get("batch_size", 64)
 
-    transform = transforms.Compose(
-        [
-            transforms.ToTensor(),
-        ]
-    )
+    transform = transforms.Compose([
+        transforms.ToTensor(),
+    ])
     train_data = datasets.MNIST(
-        root=job.fn("../../source/data"),
+        root=job.fn('../../source/data'),
         train=True,
         download=False,
-        transform=transform,
+        transform=transform
     )
     val_data = datasets.MNIST(
-        root=job.fn("../../source/data"),
+        root=job.fn('../../source/data'),
         train=False,
         download=False,
-        transform=transform,
+        transform=transform
     )
     features_dim = train_data[0][0].shape[1] * train_data[0][0].shape[2]
-    job.doc["features_dim"] = features_dim
+    job.doc['features_dim'] = features_dim
 
-    train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
-    val_loader = DataLoader(val_data, batch_size=batch_size, shuffle=False)
+    train_loader = DataLoader(
+        train_data,
+        batch_size=batch_size,
+        shuffle=True
+    )
+    val_loader = DataLoader(
+        val_data,
+        batch_size=batch_size,
+        shuffle=False
+    )
     return train_loader, val_loader
-
 
 def fit(job, train_loader, val_loader, device):
     import time
 
-    torch.manual_seed(job.sp["seed"])
+    torch.manual_seed(job.sp['seed'])
     print(f"Job id: {job.id}")
     start_time = time.time()
     features_dim = job.doc["features_dim"]
@@ -116,20 +119,20 @@ def fit(job, train_loader, val_loader, device):
     epochs = job.sp.get("epochs", 1)
 
     model = LinearVAE(
-        features_dim=features_dim, latent_dim=latent_dim, hidden_dim=hidden_dim
+        features_dim=features_dim,
+        latent_dim=latent_dim,
+        hidden_dim=hidden_dim
     ).to(device)
 
     optimizer = optim.Adam(model.parameters(), lr=job.sp.get("lr", 0.000001))
-    reconstruction_loss = nn.BCELoss(reduction="sum")
+    reconstruction_loss = nn.BCELoss(reduction='sum')
 
     train_loss = []
     val_loss = []
     for epoch in range(epochs):
         print("--------------------------------\n")
         print(f"Current epoch: {epoch+1}/{epochs}\n")
-        train_epoch_loss = training(
-            job, train_loader, model, device, optimizer, reconstruction_loss
-        )
+        train_epoch_loss = training(job, train_loader, model, device, optimizer, reconstruction_loss)
         val_epoch_loss = validate(val_loader, model, device, reconstruction_loss)
         train_loss.append(train_epoch_loss)
         val_loss.append(val_epoch_loss)
@@ -137,10 +140,10 @@ def fit(job, train_loader, val_loader, device):
     with job.data:
         job.data["training/loss"] = np.hstack(train_loss)
         job.data["validation/loss"] = np.hstack(val_loss)
-    # torch.cuda.synchronize()
+    if torch.cuda.is_available():
+        torch.cuda.synchronize()
     end_time = time.time()
     job.doc["elapsed_time"] = end_time - start_time
-
 
 def training(job, dataloader, model, device, optimizer, reconstruction_loss):
     model.train()
@@ -158,13 +161,12 @@ def training(job, dataloader, model, device, optimizer, reconstruction_loss):
         loss.backward()
         optimizer.step()
 
-        torch.save(model.state_dict(), job.fn("model.pth"))
-        torch.save(optimizer.state_dict(), job.fn("optimizer.ptpyth"))
+        torch.save(model.state_dict(), job.fn('model.pth'))
+        torch.save(optimizer.state_dict(), job.fn('optimizer.ptpyth'))
 
     train_loss = running_loss / len(dataloader.dataset)
-    print(f"Training set: Avg. KL-divergence {train_loss:.4f}\n")
+    print(f"Training set: Avg. loss {train_loss:.4f}\n")
     return train_loss
-
 
 def validate(dataloader, model, device, reconstruction_loss):
     model.eval()
@@ -173,51 +175,49 @@ def validate(dataloader, model, device, reconstruction_loss):
         for i, data in enumerate(dataloader):
             feature, label = data
             feature = feature.to(device)
-            feature = feature.view(
-                feature.size(0), -1
-            )  # data.size(0)=batch_size, except the last one.
+            feature = feature.view(feature.size(0), -1)  # data.size(0)=batch_size, except the last one.
             reconstruction, mu, logvar = model(feature)
             bce_loss = reconstruction_loss(reconstruction, feature)
             loss = final_loss(bce_loss, mu, logvar)
             running_loss += loss.item()
 
     val_loss = running_loss / len(dataloader.dataset)
-    print(f"Validation set: Avg. KL-divergence {val_loss:.4f}\n")
+    print(f"Validation set: Avg. loss {val_loss:.4f}\n")
     return val_loss
-
 
 def plot_loss(job):
     import matplotlib.pyplot as plt
 
     with job.data:
-        training_loss = job.data["training/loss"][:]
-        val_loss = job.data["validation/loss"][:]
+        training_loss = job.data['training/loss'][:]
+        val_loss = job.data['validation/loss'][:]
 
-    epochs = np.linspace(1, job.sp["epochs"], job.sp["epochs"])
+    epochs = np.linspace(1, job.sp['epochs'], job.sp['epochs'])
     plt.figure(figsize=(10, 8))
-    plt.plot(epochs, training_loss, "o--", label="Training")
-    plt.plot(epochs, val_loss, "o--", label="Validation")
+    plt.plot(epochs, training_loss, 'o--', label='Training')
+    plt.plot(epochs, val_loss, 'o--', label='Validation')
     plt.legend(fontsize=20)
     plt.xlabel("Epochs", fontsize=25)
-    plt.ylabel("KL-divergence", fontsize=25)
+    plt.ylabel("KL-divergence + Reconstruction loss", fontsize=20)
     plt.title("Loss", fontsize=35)
     plt.savefig(job.fn("Loss.jpg"))
     return
 
-
-def plot_latent(job, data_loader, device):
+def plot_latent(job, data_loader, device, reduce_dim=False):
     import matplotlib as mpl
     import matplotlib.cm as cm
 
-    torch.manual_seed(job.sp["seed"])
+    torch.manual_seed(job.sp['seed'])
     features_dim = job.doc["features_dim"]
     latent_dim = job.sp["latent_dim"]
     hidden_dim = job.sp["hidden_dim"]
 
     model = LinearVAE(
-        features_dim=features_dim, latent_dim=latent_dim, hidden_dim=hidden_dim
+        features_dim=features_dim,
+        latent_dim=latent_dim,
+        hidden_dim=hidden_dim
     ).to(device)
-    model.load_state_dict(torch.load(job.fn("model.pth"), map_location="cpu"))
+    model.load_state_dict(torch.load(job.fn('model.pth'), map_location="cpu"))
 
     x_arr = []
     label_arr = []
@@ -235,18 +235,26 @@ def plot_latent(job, data_loader, device):
 
     c_arr = np.asarray(c_arr)
 
-    z1_arr = []
-    z2_arr = []
+    Z_arr = []
     with torch.no_grad():
         for xi in x_arr:
-            z1, z2 = model.encoder(xi[0].view(1, -1)).detach().numpy()[0][:2]
-            z1_arr.append(z1)
-            z2_arr.append(z2)
+            Z_arr.append(model.encoder(xi[0].view(1, -1)).detach().numpy()[0])
 
-    z1_arr = np.asarray(z1_arr)
-    z2_arr = np.asarray(z2_arr)
+    Z_arr = np.vstack(Z_arr)
 
-    colormap = cm.get_cmap("tab10")
+    if reduce_dim:
+        import umap
+        reducer = umap.UMAP(n_components=2)
+        z_2d = reducer.fit_transform(Z_arr)
+        z1_arr = z_2d[:, 0]
+        z2_arr = z_2d[:, 1]
+        title_name = "Latent space UMAP embedding of val set"
+    else:
+        title_name = "Latent space of val set"
+        z1_arr = Z_arr[:, 0]
+        z2_arr = Z_arr[:, 1]
+
+    colormap = cm.get_cmap('tab10')
     # Normalizer
     norm = mpl.colors.Normalize(vmin=0, vmax=10)
 
@@ -259,21 +267,22 @@ def plot_latent(job, data_loader, device):
     plt.colorbar(sm, ticks=np.linspace(0, 10, 10, endpoint=False), label="Ground truth")
     plt.xlabel(r"$z_1$", fontsize=25)
     plt.ylabel(r"$z_2$", fontsize=25)
-    plt.title("Latent space of validation set", fontsize=35)
+    plt.title(title_name, fontsize=35)
     plt.savefig(job.fn("latent.jpg"))
     return
 
-
 def plot_reconstruction(job, data_loader, demo_idxs, plot_arrangement, device):
-    torch.manual_seed(job.sp["seed"])
+    torch.manual_seed(job.sp['seed'])
     assert len(demo_idxs) == plot_arrangement[0] * plot_arrangement[1]
     features_dim = job.doc["features_dim"]
     latent_dim = job.sp["latent_dim"]
     hidden_dim = job.sp["hidden_dim"]
     model = LinearVAE(
-        features_dim=features_dim, latent_dim=latent_dim, hidden_dim=hidden_dim
+        features_dim=features_dim,
+        latent_dim=latent_dim,
+        hidden_dim=hidden_dim
     ).to(device)
-    model.load_state_dict(torch.load(job.fn("model.pth"), map_location="cpu"))
+    model.load_state_dict(torch.load(job.fn('model.pth'), map_location="cpu"))
 
     fig_orig, ax_orig = plt.subplots(*plot_arrangement, figsize=(14, 10))
     fig_orig.suptitle("Ground Truth", fontsize=35)
@@ -283,21 +292,18 @@ def plot_reconstruction(job, data_loader, demo_idxs, plot_arrangement, device):
 
     for i, (_, ax1, ax2) in enumerate(enumerator):
         feature, _ = data_loader.dataset[i]
-        orig_img = feature.reshape(28, 28).to("cpu").detach().numpy()
-        ax1.imshow(orig_img, alpha=0.8, cmap="gray")
+        orig_img = feature.reshape(28, 28).to('cpu').detach().numpy()
+        ax1.imshow(orig_img, alpha=0.8, cmap='gray')
 
         with torch.no_grad():
             feature = feature.to(device)
-            feature = feature.view(
-                feature.size(0), -1
-            )  # data.size(0)=batch_size, except the last one.
+            feature = feature.view(feature.size(0), -1)  # data.size(0)=batch_size, except the last one.
             reconstruction, _, _ = model(feature)
-            reconstruction = reconstruction.reshape(28, 28).to("cpu").detach().numpy()
-            ax2.imshow(reconstruction, alpha=0.8, cmap="gray")
+            reconstruction = reconstruction.reshape(28, 28).to('cpu').detach().numpy()
+            ax2.imshow(reconstruction, alpha=0.8, cmap='gray')
     fig_orig.savefig(job.fn("digits_orig.jpg"))
     fig_recon.savefig(job.fn("digits_recon.jpg"))
     return
-
 
 def final_loss(bce_loss, mu, logvar):
     """
