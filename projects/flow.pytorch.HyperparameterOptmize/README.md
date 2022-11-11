@@ -10,7 +10,7 @@ This example project demonstrate how to use signac to optimize the hyperparamete
 
 This example use the following python packages:
 
-```conda create --name pytorch python=3.10 matplotlib numpy signac-flow signac-dashboard h5py```
+```conda create --name pytorch python=3.10 matplotlib numpy signac-flow signac-dashboard h5py umap-learn -c conda-forge```
 * [Numpy](https://github.com/numpy/numpy)
 * [matplotlib](https://github.com/matplotlib/matplotlib)
 * [signac](https://github.com/glotzerlab/signac)
