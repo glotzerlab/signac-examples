@@ -32,7 +32,7 @@ Conda users can install these from [conda-forge](https://conda-forge.org/):
     ```
     python init.py
     ```
-    
+
     In `init.py`, you can define VAE's hyperparameters you would like to try.
 
 - This checks if MNIST dataset has been downloaded yet. If it's not, it will automatically download it and store in `/source/data/MNIST`.
@@ -43,7 +43,7 @@ Conda users can install these from [conda-forge](https://conda-forge.org/):
 2. All of the operations we will be performing on [MNIST] dataset are defined in `project.py`. An operation is a function with `job` as its only argument that signac-flow recognizes as a part of your workflow.
     - You can tell which methods are operations because they will have the `@Project.operation` decorator, which tells signac-flow that this method is to be treated as an operation associated with `Project`.
     - `operation`s typically have pre- and post-conditions. This is how signac-flow knows when the operation should be run. For example, the `train()` function has no pre-condition because it must be run first, but has `@Project.post(labels.check_train_complete)` as a post-condition.
-   
+
 3. All of the functions used in `project.py` are defined in three python scripts: `source/labels.py`, `source/workflow.py`, and `source/vae.py`.
     - `source/labels.py` defines the functions that are used to identify whether an signac project level operation is done or not in `project.py`.
     - `source/workflow.py` defines the functions that used to manage the workflow of training protocols including post-evaluation on the training.
@@ -74,7 +74,7 @@ Conda users can install these from [conda-forge](https://conda-forge.org/):
     ```
     python dashborad.py run
     ```
-    
-    And open `http://localhost:8888/` in your web browser. 
+
+    And open `http://localhost:8888/` in your web browser.
 
 **NOTE**: If you want to run this tutorial from scratch, just run `rm -rf workspace/` to delete the workspace.

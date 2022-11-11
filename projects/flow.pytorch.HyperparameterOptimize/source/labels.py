@@ -1,6 +1,6 @@
-from flow import FlowProject
-import signac
 import numpy as np
+import signac
+from flow import FlowProject
 
 
 class Project(FlowProject):

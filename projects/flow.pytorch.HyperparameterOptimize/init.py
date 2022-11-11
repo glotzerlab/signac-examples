@@ -1,11 +1,11 @@
-import signac
 import itertools
-from tqdm import tqdm
-import numpy as np
 import os
 
+import numpy as np
+import signac
 import torchvision.transforms as transforms
 from torchvision import datasets
+from tqdm import tqdm
 
 PR = signac.init_project()
 HYPER_PARAMS = {
