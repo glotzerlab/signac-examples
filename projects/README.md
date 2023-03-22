@@ -9,10 +9,9 @@ Example:
 
 ```bash
 git clone https://github.com/glotzerlab/signac-examples.git
-mkdir my_project
+cp -r signac-examples/projects/flow.minimal/ my_project
 cd my_project
-signac init MyProject
-cp -r ../signac-examples/projects/flow.minimal/* ./
+signac init
 ```
 
 ## Namespaces
@@ -33,37 +32,61 @@ These are namespaces used:
 
 Minimal example for the calculation and storage of a phase diagram for an *ideal gas* with **signac**.
 
+### [flow.2D-random-walk](flow.2D-random-walk/)
+
+A study on 2D Gaussian random walks using **groups** and **aggregation**.
+
+### [flow.aggregation-mpi](flow.aggregation-mpi/)
+
+This is an example of a signac-flow project using aggregation to split MPI communicators.
+
+### [flow.aggregation-plotting](flow.aggregation-plotting/)
+
+An example of plotting data using **aggregation**.
+
+### [flow.gmx-lysozyme-in-water](flow.gmx-lysozyme-in-water/)
+
+This project provides a demonstration of a complete GROMACS workflow using signac and signac-flow.
+The simulation flow follows Justin Lemkul's
+[Lysozyme in Water Tutorial](http://www.bevanlab.biochem.vt.edu/Pages/Personal/justin/gmx-tutorials/lysozyme/),
+illustrating how all key steps can be automated and simplified using signac and signac-flow.
+If you plan to use this to simulate a different system, note that the physics encoded by these
+parameter files may not be appropriate; you should modify the mdp files to model the
+appropriate physics correctly.
+
+### [flow.gmx-mtools](flow.gmx-mtools/)
+
+Template for MoSDeF- and GROMACS-centric project managed with signac
+
+### [flow.hello-world-optimization](flow.hello-world-optimization/)
+
+This is a "hello world" example for an optimization flow project.
+It features the optimization of three mathematical functions, which are stand-ins for more expensive simulations.
+
 ### [flow.hello-world](flow.hello-world/)
 
 This is a hello world example flow project.
 It features a *hello* operation, which prints `Hello {job._id}` to screen and writes the same string to a file.
 
-### [flow.hello-world-optimization](stf.flow.hello-world-optimization/)
-
-This is a minimal example for how to implement an iterative optimization project with signac-flow.
-This project dynamically spawns new jobs as a result of previous results.
-
 ### [flow.minimal](flow.minimal/)
 
 This is a minimal example for a signac-flow project.
 
-### [flow.hoomd.lj](flow.hoomd.lj/)
-
-The example project features the generation of a p-V phase diagram of a simulated Lennard-Jones (LJ) fluid and an ideal gas estimate.
-The LJ fluid is sampled via molecular dynamics using the [HOOMD-blue particle simulation toolkit](https://glotzerlab.engin.umich.edu/hoomd-blue/).
-
 ### [flow.qe-minimal](flow.qe-minimal/)
 
-The example project shows how to setup and execute a DFT calaculation with Quantum-Espresso and signac.
+This is a simple example on how to setup a **signac-flow** project for Density-functional theory (DFT) calculations with [Quantum Espresso](http://www.quantum-espresso.org/).
+Quantum Espresso can be installed with:
 
-### [flow.gmx-lysozyme-in-water](flow.gmx-lysozyme-in-water/)
+### [flow.hoomd.lj](flow.hoomd.lj/)
 
-An example on how to integrate signac with GROMACS, following the tutorial by Justin A. Lmekul.
+An Introductory Walk-through Using signac with HOOMD-blue
 
-### [flow.gmx-mtools](flow.gmx-mtools/)
+### [flow.sklearn.init-ParameterGrid](flow.sklearn.init-ParameterGrid/)
 
-An example on how to integrate signac with GROMACS and mtools.
-**This example is licensed under the MIT-License!**
+This example projects shows how to use signac-flow in combination with scikit-learn.
+The scripts perform a grid search over model hyperparameters for a simple classifier, saving the results of each evaluated parameter set into a signac data space.
+Then, a confusion matrix is plotted for each set of model hyperparameters.
+The script `dashboard.py` can be used with signac-dashboard to visualize these plots.
 
 ## Copyright Notice
 
