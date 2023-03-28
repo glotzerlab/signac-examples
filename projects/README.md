@@ -4,7 +4,7 @@ This is a collection of project examples, designed to demonstrate possible signa
 
 ## Usage
 
-Simply clone or download this repository and copy the scripts related to a specific example into your project root directory.
+Simply clone or download this repository and copy the scripts related to a specific example into your project path.
 Example:
 
 ```bash

@@ -32,7 +32,7 @@ conda env create -f environment.yml --name signac-examples
 The [projects directory](projects/) contains a collection of project examples.
 They are designed as examples and for the fast setup of new projects.
 
-Simply clone or download this repository and copy all scripts into your signac project root directory, *e.g.*:
+Simply clone or download this repository and copy all scripts into your signac project path, *e.g.*:
 
 ```bash
 git clone https://github.com/glotzerlab/signac-examples.git

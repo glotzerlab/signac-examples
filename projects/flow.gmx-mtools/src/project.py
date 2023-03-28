@@ -4,16 +4,16 @@ import mbuild as mb
 import signac
 from flow import FlowProject
 
-project_root_directory = signac.get_project().root_directory()
+project_path = signac.get_project().path
 
 
-def _grompp_str(root, op_name, gro_name, sys_name):
+def _grompp_str(path, op_name, gro_name, sys_name):
     """Helper function, returns grompp command string for operation"""
     cmd = (
-        "gmx grompp -f {root}/src/util/mdp_files/{op}.mdp -c {gro}.gro "
+        "gmx grompp -f {path}/src/util/mdp_files/{op}.mdp -c {gro}.gro "
         "-p {sys}.top -o {op}.tpr"
     )
-    return cmd.format(root=root, op=op_name, gro=gro_name, sys=sys_name)
+    return cmd.format(path=path, op=op_name, gro=gro_name, sys=sys_name)
 
 
 def _mdrun_str(op_name):
@@ -24,7 +24,7 @@ def _mdrun_str(op_name):
 def gromacs_command(name, gro, sys):
     """Simplify GROMACS operations"""
     return "cd {{job.ws}} ; {} && {}".format(
-        _grompp_str(project_root_directory, name, gro, sys),
+        _grompp_str(project_path, name, gro, sys),
         _mdrun_str(name),
     )
 
@@ -92,4 +92,4 @@ def sample(job):
 
 
 if __name__ == "__main__":
-    MyProject.get_project(project_root_directory).main()
+    MyProject.get_project(project_path).main()
