@@ -47,7 +47,7 @@ The LJ fluid is sampled via molecular dynamics using the [HOOMD-blue particle si
 
     which will now run all eligible operations, and you'll see HOOMD be called. When you call `python project.py status -d` now, you'll see that no operations are eligible, and that the labels `estimated`, `sampled`, and `started` are now visible. These labels are defined in `project.py` with the `@MyProject.label` decorator.
 
-4. For more examples of how you can analyze this data, execute `jupyter notebook` within the project's root directory and open the `src/notebook.ipynb` notebook.
+4. For more examples of how you can analyze this data, execute `jupyter notebook` within the project's path and open the `src/notebook.ipynb` notebook.
 
 **NOTE**: If you want to run this tutorial from scratch, just run `rm -rf workspace/` to delete the workspace.
 
