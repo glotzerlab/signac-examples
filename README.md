@@ -1,5 +1,5 @@
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/glotzerlab/signac-examples/master?filepath=notebooks%2F)
-[![nbviewer](https://img.shields.io/badge/render-nbviewer-orange)](http://nbviewer.jupyter.org/github/glotzerlab/signac-examples/blob/master/notebooks/index.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/glotzerlab/signac-examples/main?filepath=notebooks%2F)
+[![nbviewer](https://img.shields.io/badge/render-nbviewer-orange)](http://nbviewer.jupyter.org/github/glotzerlab/signac-examples/blob/main/notebooks/index.ipynb)
 
 # signac - Tutorial and Examples
 
@@ -9,8 +9,8 @@ The [notebooks directory](notebooks/) contains a collection of Jupyter notebooks
 They demonstrate how to implement a basic computational workflow using the [signac framework](https://signac.io).
 The framework assists users in managing simple to complext data spaces for example by simplifying provenance tracking and meta data management.
 
-Use [nbviewer](http://nbviewer.jupyter.org) to view a [static version](http://nbviewer.jupyter.org/github/glotzerlab/signac-examples/blob/master/notebooks/index.ipynb) of these notebooks.
-Or start a [dynamic version](https://mybinder.org/v2/gh/glotzerlab/signac-examples/master?filepath=notebooks%2Findex.ipynb) with the service offered by [mybinder.org](https://mybinder.org/).
+Use [nbviewer](http://nbviewer.jupyter.org) to view a [static version](http://nbviewer.jupyter.org/github/glotzerlab/signac-examples/blob/main/notebooks/index.ipynb) of these notebooks.
+Or start a [dynamic version](https://mybinder.org/v2/gh/glotzerlab/signac-examples/main?filepath=notebooks%2Findex.ipynb) with the service offered by [mybinder.org](https://mybinder.org/).
 
 To run the notebooks locally, clone the repository and then start Jupyter:
 
