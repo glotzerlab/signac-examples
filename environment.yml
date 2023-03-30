@@ -1,8 +1,9 @@
 channels:
   - conda-forge
 dependencies:
+  - gsd
   - h5py
-  - hoomd=2
+  - hoomd=3
   - ipywidgets>=7
   - joblib
   - jupyter
