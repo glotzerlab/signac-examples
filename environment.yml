@@ -3,7 +3,7 @@ channels:
 dependencies:
   - gsd
   - h5py
-  - hoomd=3
+  - hoomd>=3
   - ipywidgets>=7
   - joblib
   - jupyter
@@ -12,11 +12,11 @@ dependencies:
   - mistune
   - nbconvert>=6
   - notebook>=6
-  - numpy>=1.16
-  - pandas>=1
+  - numpy>=1.21
+  - pandas>=2.0
   - pre-commit
-  - python>=3
+  - python>=3.9
   - scikit-learn
-  - signac-dashboard>=0.2
-  - signac-flow>=0.15
-  - signac>=1.6
+  - signac-dashboard>=0.5
+  - signac-flow>=0.25
+  - signac>=2.0
