@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import signac
 
-project = signac.init_project("Optimization")
+project = signac.init_project()
 
 for seed in (0,):
     for func in (

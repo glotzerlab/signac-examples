@@ -10,7 +10,7 @@ MDP_URL = "http://www.mdtutorials.com/gmx/lysozyme/Files/"
 
 
 # Initialize signac project
-project = signac.init_project("flow.gromacs-example-project")
+project = signac.init_project()
 
 
 def download_file(source, destination):

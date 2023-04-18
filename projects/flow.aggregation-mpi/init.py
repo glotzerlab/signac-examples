@@ -2,7 +2,7 @@ import signac
 
 
 def main():
-    project = signac.init_project("AggregationMPI")
+    project = signac.init_project()
     for i in range(8):
         project.open_job({"i": i}).init()
 
