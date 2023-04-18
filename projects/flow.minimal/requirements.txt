@@ -1,2 +1,2 @@
-signac>=1.0.0
-signac-flow>=0.10.0
+signac>=2.0.0
+signac-flow>=0.25.0
