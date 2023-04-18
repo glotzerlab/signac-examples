@@ -116,18 +116,17 @@ std_aggregator = flow.aggregator.groupby("standard_deviation", sort_by="replica"
 
 # Define all aggregate groups
 agg_plot = RandomWalkProject.make_group(
-    "aggregate-plot", group_aggregator=std_aggregator
+    "aggregate_plot", group_aggregator=std_aggregator
 )
 agg_analyze_and_plot = RandomWalkProject.make_group(
-    "post-processing", group_aggregator=std_aggregator
+    "post_processing", group_aggregator=std_aggregator
 )
 
 
 @agg_analyze_and_plot
-@std_aggregator
 @RandomWalkProject.pre(all_simulated)
 @RandomWalkProject.post.true("msd_analyzed")
-@RandomWalkProject.operation
+@RandomWalkProject.operation(aggregator=std_aggregator)
 def compute_mean_squared_displacement(*jobs):
     """Compute and store the mean squared displacement for all std."""
     msd = np.zeros(jobs[0].doc.run_steps + 1)
@@ -140,14 +139,16 @@ def compute_mean_squared_displacement(*jobs):
         job.doc.msd_analyzed = True
 
 
-# Since this uses a separate aggragator to restrict aggregates to the first 5 replicas,
+# Since this uses a separate aggregator to restrict aggregates to the first 5 replicas,
 # we cannot assign this operation to either agg_plot or agg_analyze_and_plot
-@flow.aggregator.groupby(
+first_five_replicas = flow.aggregator.groupby(
     "standard_deviation", select=lambda job: job.sp.replica <= 4, sort_by="replica"
 )
+
+
 @RandomWalkProject.pre(all_simulated)
 @RandomWalkProject.post.true("plotted_walks")
-@RandomWalkProject.operation
+@RandomWalkProject.operation(aggregator=first_five_replicas)
 def plot_walks(*jobs):
     """Plot the first 5 replicas random walks for each standard_deviation."""
     fig, ax = plt.subplots()
@@ -168,10 +169,9 @@ def plot_walks(*jobs):
 
 @agg_analyze_and_plot
 @agg_plot
-@std_aggregator
 @RandomWalkProject.pre(all_simulated)
 @RandomWalkProject.post.true("plotted_histogram")
-@RandomWalkProject.operation
+@RandomWalkProject.operation(aggregator=std_aggregator)
 def plot_histogram(*jobs):
     """Create a 2D histogram of the final positions of random walks per std."""
     final_positions = np.array(
