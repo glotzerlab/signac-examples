@@ -26,5 +26,5 @@ for fn in ("minim.mdp", "ions.mdp", "md.mdp", "npt.mdp", "nvt.mdp"):
 
 # Initialize data space for one protein
 for protein in ["1AKI"]:
-    job = project.open_job(dict(protein=protein))
+    job = project.open_job(dict(protein=protein)).init()
     download_file(PDB_URL + protein + ".pdb", job.fn("protein.pdb"))
