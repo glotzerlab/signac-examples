@@ -11,8 +11,8 @@ def greeted(job):
 
 
 # Add hello world operation
-@Project.operation
 @Project.post(greeted)
+@Project.operation
 def hello(job):
     print(f"Hello {job._id}")
     with job:
