@@ -86,7 +86,7 @@ def compute_squared_displacement(job):
     """Compute the squared displacement for a random walk."""
     with job.data:
         positions = job.data["positions"][:]
-    job.data.squared_displacement = np.sum(positions * positions, axis=1)
+        job.data.squared_displacement = np.sum(positions * positions, axis=1)
 
 
 # This operation happens after computing the msd so it isn't in base.
@@ -135,8 +135,7 @@ def compute_mean_squared_displacement(*jobs):
     msd /= len(jobs)
     # Store msd in only first replica (job.sp.replica == 0)
     jobs[0].data["msd"] = msd
-    for job in jobs:
-        job.doc.msd_analyzed = True
+    jobs[0].doc.msd_analyzed = True
 
 
 # Since this uses a separate aggregator to restrict aggregates to the first 5 replicas,
