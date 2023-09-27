@@ -42,8 +42,8 @@ def create_infile(job, method, ecut):
     return infile.name
 
 
-@Project.operation
 @Project.post(converged)
+@Project.operation
 def vc_relax(job):
     converged = False
     for e_cut in [160, 40, 60, 80, 100, 150, 200, 250, 300, 400, 500]:
@@ -63,9 +63,9 @@ def vc_relax(job):
         raise RuntimeError("Did not converge for ecut values!")
 
 
-@Project.operation
 @Project.pre(converged)
 @Project.post(calculated)
+@Project.operation
 def scf(job):
     infile = create_infile(job, "scf", job.document["ecut"])
     print(job.fn("scf.out"))

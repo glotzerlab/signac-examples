@@ -29,8 +29,8 @@ def sampled(job):
 
 
 # Adding project operations
-@MyProject.operation
 @MyProject.post.isfile("init.gsd")
+@MyProject.operation
 def initialize(job):
     "Initialize the simulation configuration."
     from math import ceil
@@ -48,9 +48,9 @@ def initialize(job):
             hoomd.dump.gsd("init.gsd", period=None, group=hoomd.group.all())
 
 
-@MyProject.operation
 @MyProject.pre.isfile("init.gsd")
 @MyProject.post(sampled)
+@MyProject.operation
 def sample(job):
     "Sample operation."
     import logging
@@ -83,8 +83,8 @@ def sample(job):
                 job.document["sample_step"] = hoomd.get_step()
 
 
-@MyProject.operation
 @MyProject.post(estimated)
+@MyProject.operation
 def estimate(job):
     "Ideal-gas estimate operation."
     sp = job.statepoint()

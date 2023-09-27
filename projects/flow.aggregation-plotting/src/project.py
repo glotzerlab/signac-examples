@@ -15,8 +15,7 @@ def get_pressure(crystal_name, density):
     return pressure
 
 
-@aggregator.groupby("crystal", sort_by="density")
-@Project.operation
+@Project.operation(aggregator=aggregator.groupby("crystal", sort_by="density"))
 def plot_pressure_by_crystal(*jobs):
     """Plot the pressure as a function of density for each group."""
     pressures = {}
@@ -40,8 +39,7 @@ def plot_pressure_by_crystal(*jobs):
     plt.close()
 
 
-@aggregator(sort_by="density")
-@Project.operation
+@Project.operation(aggregator=aggregator(sort_by="density"))
 def plot_pressure_all(*jobs):
     """Plot pressure for all data on the same axes."""
     crystal_pressures = {"fcc": [], "bcc": []}

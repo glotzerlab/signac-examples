@@ -28,14 +28,10 @@ class OptimizationProject(FlowProject):
 
 def get_simulation_sub_jobs(primary_job, simulated=None):
     "Retrieve all simulation jobs belonging to this primary-job."
-    filter = {"func": primary_job.sp.func, "primary": False}
+    filter_ = {"func": primary_job.sp.func, "primary": False}
     if simulated is True or simulated is False:
-        doc_filter = {"y": {"$exists": simulated}}
-    elif simulated is None:
-        doc_filter = None
-    else:
-        raise ValueError(simulated)
-    return primary_job._project.find_jobs(filter, doc_filter)
+        filter_["doc.y"] = {"$exists": simulated}
+    return primary_job._project.find_jobs(filter_)
 
 
 @OptimizationProject.label
@@ -46,9 +42,9 @@ def simulated(job):
         return "y" in job.doc
 
 
-@OptimizationProject.operation
 @OptimizationProject.pre(lambda job: not is_primary(job))
 @OptimizationProject.post(simulated)
+@OptimizationProject.operation
 def simulate(job):
     from time import sleep
 
@@ -101,13 +97,13 @@ def converged(job):
             return False
 
 
-@OptimizationProject.operation
 @OptimizationProject.pre(
     is_primary
 )  # execute this operation only on the "primary" job.
 @OptimizationProject.pre(simulated)
 @OptimizationProject.pre(lambda job: not exhausted(job))
 @OptimizationProject.post(converged)
+@OptimizationProject.operation
 def spawn_new_simulations(job, n=4):
     try:
         # Load the stored random generator state...

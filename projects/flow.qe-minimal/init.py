@@ -1,6 +1,6 @@
 import signac
 
-project = signac.init_project("flow.quantum_espresso-example-project")
+project = signac.init_project()
 
 # For this example, we only initialize a single job.
 project.open_job(
