@@ -36,7 +36,6 @@ def train(job):
 @Project.operation_hooks.on_exception(workflow.store_error_to_doc)
 @Project.post(labels.check_eval_complete)
 def evaluation(job):
-
     import torch
     from source import vae
 
