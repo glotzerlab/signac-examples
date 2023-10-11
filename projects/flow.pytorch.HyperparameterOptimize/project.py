@@ -1,8 +1,7 @@
-import flow
 import numpy as np
 import signac
 from source import labels, workflow
-from source.workflow import Project
+from source.workflow import Project, cpu_directives
 
 PR = signac.get_project()
 TRAIN_WALLTIME = 1
@@ -22,7 +21,6 @@ def train(job):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     train_loader, val_loader = vae.load_data(job)
     vae.fit(job=job, train_loader=train_loader, val_loader=val_loader, device=device)
-    return
 
 
 @workflow.training_group
@@ -52,9 +50,10 @@ def evaluation(job):
         job=job,
         data_loader=val_loader,
         device=device,
-        reduce_dim=True,  # If False, only plot first 2 dimensions of latent space. If True, use UMAP to reduce the latent space dimensions to 2.
+        # If False, only plot first 2 dimensions of latent space. If True, use UMAP to
+        # reduce the latent space dimensions to 2.
+        reduce_dim=True,
     )
-    return
 
 
 if __name__ == "__main__":

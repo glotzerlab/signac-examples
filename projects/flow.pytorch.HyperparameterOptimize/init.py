@@ -1,7 +1,6 @@
 import itertools
 import os
 
-import numpy as np
 import signac
 import torchvision.transforms as transforms
 from torchvision import datasets
@@ -27,13 +26,10 @@ def download_MNIST():
     )
 
     # train and validation data
-    train_data = datasets.MNIST(
-        root="./source/data", train=True, download=True, transform=transform
-    )
-    val_data = datasets.MNIST(
+    datasets.MNIST(root="./source/data", train=True, download=True, transform=transform)
+    datasets.MNIST(
         root="./source/data", train=False, download=True, transform=transform
     )
-    return
 
 
 def generate_workspace(pr, hyper_params):
