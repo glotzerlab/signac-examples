@@ -1,8 +1,5 @@
-import itertools
-
 import matplotlib.pyplot as plt
 import numpy as np
-import signac
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -10,8 +7,6 @@ import torch.optim as optim
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 from torchvision import datasets
-from torchvision.utils import save_image
-from tqdm import tqdm
 
 
 class LinearVAE(nn.Module):
@@ -194,15 +189,14 @@ def plot_loss(job):
         val_loss = job.data["validation/loss"][:]
 
     epochs = np.linspace(1, job.sp["epochs"], job.sp["epochs"])
-    plt.figure(figsize=(10, 8))
-    plt.plot(epochs, training_loss, "o--", label="Training")
-    plt.plot(epochs, val_loss, "o--", label="Validation")
-    plt.legend(fontsize=20)
-    plt.xlabel("Epochs", fontsize=25)
-    plt.ylabel("KL-divergence + Reconstruction loss", fontsize=20)
-    plt.title("Loss", fontsize=35)
-    plt.savefig(job.fn("Loss.jpg"))
-    return
+    fig, ax = plt.subplots(figsize=(10, 8))
+    ax.plot(epochs, training_loss, "o--", label="Training")
+    ax.plot(epochs, val_loss, "o--", label="Validation")
+    ax.legend(fontsize=20)
+    ax.xlabel("Epochs", fontsize=25)
+    ax.ylabel("KL-divergence + Reconstruction loss", fontsize=20)
+    ax.title("Loss", fontsize=35)
+    fig.savefig(job.fn("Loss.jpg"))
 
 
 def plot_latent(job, data_loader, device, reduce_dim=False):
@@ -263,14 +257,15 @@ def plot_latent(job, data_loader, device, reduce_dim=False):
     sm = plt.cm.ScalarMappable(cmap=colormap, norm=norm)
     sm.set_array([])
 
-    plt.figure(figsize=(12, 10))
-    plt.scatter(z1_arr, z2_arr, c=colormap(c_arr), s=5)
-    plt.colorbar(sm, ticks=np.linspace(0, 10, 10, endpoint=False), label="Ground truth")
-    plt.xlabel(r"$z_1$", fontsize=25)
-    plt.ylabel(r"$z_2$", fontsize=25)
-    plt.title(title_name, fontsize=35)
-    plt.savefig(job.fn("latent.jpg"))
-    return
+    fig, ax = plt.subplots(figsize=(12, 10))
+    ax.scatter(z1_arr, z2_arr, c=colormap(c_arr), s=5)
+    plt.colorbar(
+        sm, ax=ax, ticks=np.linspace(0, 10, 10, endpoint=False), label="Ground truth"
+    )
+    ax.xlabel(r"$z_1$", fontsize=25)
+    ax.ylabel(r"$z_2$", fontsize=25)
+    ax.title(title_name, fontsize=35)
+    fig.savefig(job.fn("latent.jpg"))
 
 
 def plot_reconstruction(job, data_loader, demo_idxs, plot_arrangement, device):
@@ -305,7 +300,6 @@ def plot_reconstruction(job, data_loader, demo_idxs, plot_arrangement, device):
             ax2.imshow(reconstruction, alpha=0.8, cmap="gray")
     fig_orig.savefig(job.fn("digits_orig.jpg"))
     fig_recon.savefig(job.fn("digits_recon.jpg"))
-    return
 
 
 def final_loss(bce_loss, mu, logvar):
