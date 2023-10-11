@@ -38,9 +38,7 @@ def download_MNIST():
 
 def generate_workspace(pr, hyper_params):
     for sp in cartesian(**hyper_params):
-        job = pr.open_job(sp)
-        if job not in pr:
-            job.init()
+        pr.open_job(sp).init()
 
 
 def cartesian(**kwargs):

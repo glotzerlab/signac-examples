@@ -9,12 +9,10 @@ class Project(FlowProject):
 
 @Project.label
 def status_label(job):
-    check_list = ["train", "evaluation"]
-    check_results = ""
-    for check_point in check_list:
-        if job.doc.get(f"{check_point}_done") is not None:
-            check_results += f"{check_point}_completed, "
-        return check_results
+    return ", ".join([
+        f"{check_point}_completed" for check_point in ("train", "evaluation")
+        if job.doc.get(check_point + "_done", False)
+    ])
 
 
 def check_train_complete(job):
