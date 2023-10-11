@@ -10,9 +10,7 @@ EVAL_WALLTIME = 0.5
 
 
 @workflow.training_group
-@Project.operation
-# .with_directives(
-#     workflow.cpu_directives(walltime=TRAIN_WALLTIME))
+@Project.operation(directives=cpu_directives(walltime=TRAIN_WALLTIME))
 @Project.operation_hooks.on_success(workflow.store_success_to_doc)
 @Project.operation_hooks.on_exception(workflow.store_error_to_doc)
 @Project.post(labels.check_train_complete)
@@ -28,9 +26,7 @@ def train(job):
 
 
 @workflow.training_group
-@Project.operation
-# with_directives(
-#     workflow.cpu_directives(walltime=EVAL_WALLTIME))
+@Project.operation(directives=cpu_directives(walltime=EVAL_WALLTIME))
 @Project.pre.after(train)
 @Project.operation_hooks.on_success(workflow.store_success_to_doc)
 @Project.operation_hooks.on_exception(workflow.store_error_to_doc)
