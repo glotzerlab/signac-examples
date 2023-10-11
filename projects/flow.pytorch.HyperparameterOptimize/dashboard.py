@@ -10,7 +10,10 @@ from signac_dashboard.modules import (
 
 class MyDashboard(Dashboard):
     def job_title(self, job):
-        return f"Total epochs={job.sp.epochs}, Learning rate={job.sp.lr}, Latent space dimension={job.sp.latent_dim}"
+        return (
+            f"Total epochs={job.sp.epochs}, Learning rate={job.sp.lr}, "
+            f"Latent space dimension={job.sp.latent_dim}"
+        )
 
     def job_sorter(self, job):
         return (-job.sp.lr, job.sp.hidden_dim, job.sp.epochs)
