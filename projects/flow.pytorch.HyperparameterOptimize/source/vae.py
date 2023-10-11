@@ -33,40 +33,37 @@ class LinearVAE(nn.Module):
 
         return sample
 
+    def sample(self, x):
+        return self.reparameterize(*self.encode(x))
+
     def forward(self, x):
-        # encoding
-        x = F.relu(self.enc1(x))
-        x = self.enc2(x).view(-1, self.latent_dim, 2)
-
-        # get mu and log_var
-        mu = x[:, :, 0]  # the first feature values as mean
-        log_var = x[:, :, 1]  # the other feature values as variance
-
-        # get the latent vector through reparameterization
+        mu, log_var = self.encode(x)
         z = self.reparameterize(mu, log_var)
-
-        # decoding
-        x = F.relu(self.dec1(z))
-        reconstruction = torch.sigmoid(self.dec2(x))
+        reconstruction = self.decode(z)
 
         return reconstruction, mu, log_var
 
-    def encoder(self, x):
+    def encode(self, x):
         x = F.relu(self.enc1(x))
         x = self.enc2(x).view(-1, self.latent_dim, 2)
 
-        # get mu and log_var
         mu = x[:, :, 0]  # the first feature values as mean
         log_var = x[:, :, 1]  # the other feature values as variance
+        return mu, log_var
 
-        # get the latent vector through reparameterization
-        z = self.reparameterize(mu, log_var)
-        return z
-
-    def decoder(self, z):
+    def decode(self, z):
         x = F.relu(self.dec1(z))
         reconstruction = torch.sigmoid(self.dec2(x))
         return reconstruction
+
+
+class VAELoss:
+    def __init__(self):
+        self.bce = nn.BCELoss
+
+    def __call__(self, input, reconstruction, mu, logvar):
+        kl_divergence = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
+        return self.bce(reconstruction, input) + kl_divergence
 
 
 def load_data(job):
@@ -114,7 +111,7 @@ def fit(job, train_loader, val_loader, device):
     ).to(device)
 
     optimizer = optim.Adam(model.parameters(), lr=job.sp.get("lr", 0.000001))
-    reconstruction_loss = nn.BCELoss(reduction="sum")
+    loss_compute = VAELoss()
 
     train_loss = []
     val_loss = []
@@ -122,9 +119,9 @@ def fit(job, train_loader, val_loader, device):
         print("--------------------------------\n")
         print(f"Current epoch: {epoch+1}/{epochs}\n")
         train_epoch_loss = training(
-            job, train_loader, model, device, optimizer, reconstruction_loss
+            job, train_loader, model, device, optimizer, loss_compute
         )
-        val_epoch_loss = validate(val_loader, model, device, reconstruction_loss)
+        val_epoch_loss = validate(val_loader, model, device, loss_compute)
         train_loss.append(train_epoch_loss)
         val_loss.append(val_epoch_loss)
 
@@ -137,21 +134,26 @@ def fit(job, train_loader, val_loader, device):
     job.doc["elapsed_time"] = end_time - start_time
 
 
-def training(job, dataloader, model, device, optimizer, reconstruction_loss):
+def get_feature(data, device):
+    feature, label = data
+    return feature.to(device).view(feature.size(0), -1)
+
+
+def step(data, device, model, loss_compute):
+    feature = get_feature(data, device)
+    reconstruction, mu, logvar = model(feature)
+    return loss_compute(feature, reconstruction, mu, logvar)
+
+
+def training(job, dataloader, model, device, optimizer, loss_compute):
     model.train()
     running_loss = 0.0
     for i, data in enumerate(dataloader):
-        feature, label = data
-        feature = feature.to(device)
-        feature = feature.view(feature.size(0), -1)
-
         optimizer.zero_grad()
-        reconstruction, mu, logvar = model(feature)
-        bce_loss = reconstruction_loss(reconstruction, feature)
-        loss = final_loss(bce_loss, mu, logvar)
-        running_loss += loss.item()
+        loss = step(data, device, model, loss_compute)
         loss.backward()
         optimizer.step()
+        running_loss += loss.item()
 
         torch.save(model.state_dict(), job.fn("model.pth"))
         torch.save(optimizer.state_dict(), job.fn("optimizer.ptpyth"))
@@ -161,20 +163,12 @@ def training(job, dataloader, model, device, optimizer, reconstruction_loss):
     return train_loss
 
 
-def validate(dataloader, model, device, reconstruction_loss):
+def validate(dataloader, model, device, loss_compute):
     model.eval()
     running_loss = 0.0
     with torch.no_grad():
         for i, data in enumerate(dataloader):
-            feature, label = data
-            feature = feature.to(device)
-            feature = feature.view(
-                feature.size(0), -1
-            )  # data.size(0)=batch_size, except the last one.
-            reconstruction, mu, logvar = model(feature)
-            bce_loss = reconstruction_loss(reconstruction, feature)
-            loss = final_loss(bce_loss, mu, logvar)
-            running_loss += loss.item()
+            running_loss += step(data, device, model, loss_compute).item()
 
     val_loss = running_loss / len(dataloader.dataset)
     print(f"Validation set: Avg. loss {val_loss:.4f}\n")
@@ -232,7 +226,7 @@ def plot_latent(job, data_loader, device, reduce_dim=False):
     Z_arr = []
     with torch.no_grad():
         for xi in x_arr:
-            Z_arr.append(model.encoder(xi[0].view(1, -1)).detach().numpy()[0])
+            Z_arr.append(model.sample(xi[0].view(1, -1)).detach().numpy()[0])
 
     Z_arr = np.vstack(Z_arr)
 
@@ -300,17 +294,3 @@ def plot_reconstruction(job, data_loader, demo_idxs, plot_arrangement, device):
             ax2.imshow(reconstruction, alpha=0.8, cmap="gray")
     fig_orig.savefig(job.fn("digits_orig.jpg"))
     fig_recon.savefig(job.fn("digits_recon.jpg"))
-
-
-def final_loss(bce_loss, mu, logvar):
-    """
-    This function will add the reconstruction loss (BCELoss) and the
-    KL-Divergence.
-    KL-Divergence = 0.5 * sum(1 + log(sigma^2) - mu^2 - sigma^2)
-    :param bce_loss: recontruction loss
-    :param mu: the mean from the latent vector
-    :param logvar: log variance from the latent vector
-    """
-    BCE = bce_loss
-    KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
-    return BCE + KLD
