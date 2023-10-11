@@ -10,7 +10,7 @@ import signac
 
 
 def main(args):
-    project = signac.init_project("Alkanes")
+    project = signac.init_project()
     for seed in range(args.num_replicas):
         for C_n in [6, 8, 10]:
             statepoint = dict(

@@ -23,7 +23,7 @@ if __name__ == "__main__":
 
     # Initialize the signac project and save the training/testing data into the
     # project's HDF5 data store
-    project = signac.init_project("gridsearch")
+    project = signac.init_project()
     with project.data:
         project.data.X_train = X_train
         project.data.X_test = X_test

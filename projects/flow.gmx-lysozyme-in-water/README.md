@@ -10,9 +10,9 @@ appropriate physics correctly.
 
 # Tested with
 
-  * signac 1.5.0
-  * signac-flow 0.11.0
-  * GROMACS: version 2020.4
+  * signac 2.0.0
+  * signac-flow 0.25.0
+  * GROMACS: version 2022.4
 
 # Usage
 

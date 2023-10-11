@@ -3,6 +3,7 @@
 .bundles
 .ipynb_checkpoints
 .sconsign.dblite
+.signac
 .signac_shell_history
 .signac_sp_cache.json.gz
 *__pycache__

@@ -22,7 +22,7 @@ MAX_SEED = 2**32 - 1
 
 def main():
     """Initialize signac project."""
-    project = signac.init_project("2D Gaussian Random Walk")
+    project = signac.init_project()
     random_number_generator = np.random.default_rng()
     for replica in range(NUMBER_REPLICAS):
         for std in STANDARD_DEVIATIONS:
