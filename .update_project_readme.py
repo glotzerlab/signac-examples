@@ -23,11 +23,7 @@ def generate_project_overview(file):
         file.write(f"### [{project_name}]({os.path.basename(dirname)}/)\n\n")
         with open(fn) as readme:
             files = BlockLexer().parse(readme.read())
-            file.write(_find_descr(files) + "\n")
-            file.write(
-                "\n    flow-clone https://github.com/glotzerlab/"
-                f"signac-examples.git#projects/{project_name}\n\n"
-            )
+            file.write(_find_descr(files) + "\n\n")
 
 
 def parse_readme(readme):

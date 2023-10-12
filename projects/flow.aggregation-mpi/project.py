@@ -22,9 +22,11 @@ def mpi_task(job, comm):
     print(f"In the mpi_task function, {rank=} of {size=} has {data=}.")
 
 
+mpi_aggregator = aggregator.groupsof(num=JOBS_PER_AGGREGATE)
+
 @Project.operation(
+    aggregator=mpi_aggregator,
     directives={"nranks": lambda *jobs: RANKS_PER_JOB * len(jobs)},
-    aggregator=aggregator.groupsof(num=JOBS_PER_AGGREGATE),
 )
 def do_mpi_task(*jobs):
     from mpi4py import MPI

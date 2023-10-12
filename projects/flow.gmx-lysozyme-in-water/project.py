@@ -70,17 +70,6 @@ def finished(job):
 """Definition of helper functions for defining operations."""
 
 
-def workspace_command(cmd):
-    """Simple command to always go to the workspace directory"""
-    return " && ".join(
-        [
-            "cd {job.ws}",
-            cmd if not isinstance(cmd, list) else " && ".join(cmd),
-            "cd ..",
-        ]
-    )
-
-
 def _grompp_str(op_name, gro_name, checkpoint_file=None):
     """Helper function, returns grompp command string for operation."""
     mdp_file = signac.get_project().fn(f"mdp_files/{op_name}.mdp")
@@ -91,7 +80,7 @@ def _grompp_str(op_name, gro_name, checkpoint_file=None):
         gro_file=gro_name,
         checkpoint="" if checkpoint_file is None else ("-t " + checkpoint_file),
     )
-    return workspace_command(cmd)
+    return cmd
 
 
 def _mdrun_str(op_name, nt=None, verbose=False):
@@ -103,14 +92,14 @@ def _mdrun_str(op_name, nt=None, verbose=False):
         op=op_name,
         verbose="-v" if verbose else "",
     )
-    return workspace_command(cmd)
+    return cmd
 
 
 # First three steps are simple configuration
 @MyProject.post.isfile(gro_file)
-@MyProject.operation(cmd=True)
+@MyProject.operation(cmd=True, with_job=True)
 def pdb2gmx(job):
-    return workspace_command(
+    return (
         "{gmx} pdb2gmx -f {pdb_file} -o {gro_file} -water {water_model} "
         "-ff {force_field} -ignh".format(
             gmx=gmx_exec,
@@ -124,9 +113,9 @@ def pdb2gmx(job):
 
 @MyProject.pre.after(pdb2gmx)
 @MyProject.post.isfile(boxed_file)
-@MyProject.operation(cmd=True)
+@MyProject.operation(cmd=True, with_job=True)
 def editconf(job):
-    return workspace_command(
+    return (
         "{gmx} editconf -f {gro_file} -o {boxed_file} -c -d {edge_spacing} "
         "-bt {box_type}".format(
             gmx=gmx_exec,
@@ -140,9 +129,9 @@ def editconf(job):
 
 @MyProject.pre.isfile(boxed_file)
 @MyProject.post.isfile(solvated_file)
-@MyProject.operation(cmd=True)
+@MyProject.operation(cmd=True, with_job=True)
 def solvate(job):
-    return workspace_command(
+    return (
         "{gmx} solvate -cp {boxed_file} -cs {solvent_configuration} "
         "-o {solvated_file} -p".format(
             gmx=gmx_exec,
@@ -167,47 +156,46 @@ def solvate(job):
 
 @MyProject.pre.isfile(solvated_file)
 @MyProject.post.isfile(ionization_config)
-@MyProject.operation(cmd=True)
+@MyProject.operation(cmd=True, with_job=True)
 def grompp_add_ions(job):
     return _grompp_str("ions", solvated_file).format(job)
 
 
 @MyProject.pre.after(grompp_add_ions)
 @MyProject.post(prepared_for_simulation)
-@MyProject.operation
+@MyProject.operation(with_job=True)
 def ionize(job):
     """Exploit the pexpect module to run."""
-    with job:
-        cmd = (
-            "{gmx} genion -s {io_config} -o {ionized_gro} "
-            "-p -pname {pname} -nname {nname} -neutral".format(
-                gmx=gmx_exec,
-                io_config=ionization_config,
-                ionized_gro=ionized_file,
-                pname=pname,
-                nname=nname,
-            )
+    cmd = (
+        "{gmx} genion -s {io_config} -o {ionized_gro} "
+        "-p -pname {pname} -nname {nname} -neutral".format(
+            gmx=gmx_exec,
+            io_config=ionization_config,
+            ionized_gro=ionized_file,
+            pname=pname,
+            nname=nname,
         )
-        child = pexpect.spawn(cmd)
-        child.expect("Select a group:*")
-        child.send("13\n")
-        print(child.before.decode("ascii"))
-        print(child.after.decode("ascii"))
-        child.expect(pexpect.EOF)
-        print(child.before.decode("ascii"))
+    )
+    child = pexpect.spawn(cmd)
+    child.expect("Select a group:*")
+    child.send("13\n")
+    print(child.before.decode("ascii"))
+    print(child.after.decode("ascii"))
+    child.expect(pexpect.EOF)
+    print(child.before.decode("ascii"))
 
 
 # Minimization
 @MyProject.pre(prepared_for_simulation)
 @MyProject.post.isfile(em_op + ".tpr")
-@MyProject.operation(cmd=True)
+@MyProject.operation(cmd=True, with_job=True)
 def grompp_minim(job):
     return _grompp_str("minim", ionized_file).format(job)
 
 
 @MyProject.pre.after(grompp_minim)
 @MyProject.post.isfile(em_file)
-@MyProject.operation(cmd=True)
+@MyProject.operation(cmd=True, with_job=True)
 def minim(job):
     return _mdrun_str("minim").format(job)
 
@@ -215,28 +203,28 @@ def minim(job):
 # Equilibration: NVT then NPT
 @MyProject.pre.after(minim)
 @MyProject.post.isfile(nvt_op + ".tpr")
-@MyProject.operation(cmd=True)
+@MyProject.operation(cmd=True, with_job=True)
 def grompp_nvt(job):
     return _grompp_str("nvt", em_file).format(job)
 
 
 @MyProject.pre.after(grompp_nvt)
 @MyProject.post.isfile(nvt_file)
-@MyProject.operation(cmd=True, directives={"np": 16})
+@MyProject.operation(cmd=True, directives={"np": 16}, with_job=True)
 def nvt(job):
     return _mdrun_str("nvt").format(job)
 
 
 @MyProject.pre.after(nvt)
 @MyProject.post.isfile(npt_op + ".tpr")
-@MyProject.operation(cmd=True)
+@MyProject.operation(cmd=True, with_job=True)
 def grompp_npt(job):
     return _grompp_str("npt", nvt_file).format(job)
 
 
 @MyProject.pre.isfile(npt_op + ".tpr")
 @MyProject.post.isfile(npt_file)
-@MyProject.operation(cmd=True, directives={"np": 16})
+@MyProject.operation(cmd=True, directives={"np": 16}, with_job=True)
 def npt(job):
     return _mdrun_str("npt").format(job)
 
@@ -244,14 +232,14 @@ def npt(job):
 # Final run
 @MyProject.pre.isfile(npt_file)
 @MyProject.post.isfile(production_op + ".tpr")
-@MyProject.operation(cmd=True)
+@MyProject.operation(cmd=True, with_job=True)
 def grompp_md(job):
     return _grompp_str("md", npt_file).format(job)
 
 
 @MyProject.pre.after(grompp_md)
 @MyProject.post(finished)
-@MyProject.operation(cmd=True, directives={"np": 16})
+@MyProject.operation(cmd=True, directives={"np": 16}, with_job=True)
 def md(job):
     return _mdrun_str("md").format(job)
 

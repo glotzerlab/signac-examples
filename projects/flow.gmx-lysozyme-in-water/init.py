@@ -10,7 +10,7 @@ MDP_URL = "http://www.mdtutorials.com/gmx/lysozyme/Files/"
 
 
 # Initialize signac project
-project = signac.init_project("flow.gromacs-example-project")
+project = signac.init_project()
 
 
 def download_file(source, destination):
@@ -26,5 +26,5 @@ for fn in ("minim.mdp", "ions.mdp", "md.mdp", "npt.mdp", "nvt.mdp"):
 
 # Initialize data space for one protein
 for protein in ["1AKI"]:
-    job = project.open_job(dict(protein=protein))
+    job = project.open_job(dict(protein=protein)).init()
     download_file(PDB_URL + protein + ".pdb", job.fn("protein.pdb"))

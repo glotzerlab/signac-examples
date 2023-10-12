@@ -1,5 +1,5 @@
 h5py
 matplotlib
 numpy
-signac>=1.0.0
-signac-flow>=0.15.0
+signac>=2.0.0
+signac-flow>=0.25.0

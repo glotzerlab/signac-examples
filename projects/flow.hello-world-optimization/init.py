@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 import signac
 
-project = signac.init_project("Optimization")
+project = signac.init_project()
 
-for seed in (0,):
+for seed in [0]:
     for func in (
         "(x - 1.0)**2",  # solution: x = 1.0
         "(x - 2.0)**3",  # solution: x = 2.0

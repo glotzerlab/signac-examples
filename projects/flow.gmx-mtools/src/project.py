@@ -3,16 +3,16 @@ import mbuild as mb
 import signac
 from flow import FlowProject
 
-project_root_directory = signac.get_project().root_directory()
+project_path = signac.get_project().path
 
 
-def _grompp_str(root, op_name, gro_name, sys_name):
+def _grompp_str(path, op_name, gro_name, sys_name):
     """Helper function, returns grompp command string for operation"""
     cmd = (
-        "gmx grompp -f {root}/src/util/mdp_files/{op}.mdp -c {gro}.gro "
+        "gmx grompp -f {path}/mdp_files/{op}.mdp -c {gro}.gro "
         "-p {sys}.top -o {op}.tpr"
     )
-    return cmd.format(root=root, op=op_name, gro=gro_name, sys=sys_name)
+    return cmd.format(path=path, op=op_name, gro=gro_name, sys=sys_name)
 
 
 def _mdrun_str(op_name):
@@ -23,7 +23,7 @@ def _mdrun_str(op_name):
 def gromacs_command(name, gro, sys):
     """Simplify GROMACS operations"""
     return "{} && {}".format(
-        _grompp_str(project_root_directory, name, gro, sys),
+        _grompp_str(project_path, name, gro, sys),
         _mdrun_str(name),
     )
 
@@ -52,18 +52,17 @@ def sampled(job):
     return job.isfile("sample.gro")
 
 
-@MyProject.operation
 @MyProject.post(initialized)
+@MyProject.operation(with_job=True)
 def initialize(job):
     """Initialize the simulation."""
-    with job:
-        alkane = mb.recipes.Alkane(job.statepoint()["C_n"])
-        n_alkane = 200
-        # A cleaner packing approach would involve pull #372
-        system_box = mb.Box([4, 4, 4])
-        system = mb.fill_box(compound=alkane, n_compounds=n_alkane, box=system_box)
-        system.save("init.gro", overwrite=True)
-        system.save("init.top", forcefield_name="oplsaa", overwrite=True)
+    alkane = mb.recipes.Alkane(job.statepoint()["C_n"])
+    n_alkane = 200
+    # A cleaner packing approach would involve pull #372
+    system_box = mb.Box([4, 4, 4])
+    system = mb.fill_box(compound=alkane, n_compounds=n_alkane, box=system_box)
+    system.save("init.gro", overwrite=True)
+    system.save("init.top", forcefield_name="oplsaa", overwrite=True)
 
 
 @MyProject.pre(initialized)
@@ -88,4 +87,4 @@ def sample(job):
 
 
 if __name__ == "__main__":
-    MyProject.get_project(project_root_directory).main()
+    MyProject.get_project(project_path).main()

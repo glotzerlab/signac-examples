@@ -26,10 +26,10 @@ In addition, this example tries to showcase a robust workflow similar to those o
     To see all the operations run by the `base` group, look at the `project.py` file.
 
 
-3. From here we can use the `post-processing` group to run aggregate operations that compute the mean squared displacement and create multiple plots.
+3. From here we can use the `post_processing` group to run aggregate operations that compute the mean squared displacement and create multiple plots.
 
     ```
-    python3 src/project.py run -o post-processing
+    python3 src/project.py run -o post_processing
     ```
 
 4. Now we can run the final two operations, `plot_mean_squared_displacement` and `plot_walks`, with

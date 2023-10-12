@@ -8,7 +8,7 @@ import signac
 
 
 def main():
-    project = signac.init_project("Ideal-Gas-Example-Project")
+    project = signac.init_project()
     # sweep over 10 pressures evenly spaced between 0.5 and 5.0
     for p in np.linspace(0.5, 5.0, 10):
         statepoint = dict(
