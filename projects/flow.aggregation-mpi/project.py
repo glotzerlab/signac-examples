@@ -24,6 +24,7 @@ def mpi_task(job, comm):
 
 mpi_aggregator = aggregator.groupsof(num=JOBS_PER_AGGREGATE)
 
+
 @Project.operation(
     aggregator=mpi_aggregator,
     directives={"nranks": lambda *jobs: RANKS_PER_JOB * len(jobs)},
