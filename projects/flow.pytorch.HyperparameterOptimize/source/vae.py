@@ -59,7 +59,7 @@ class LinearVAE(nn.Module):
 
 class VAELoss:
     def __init__(self):
-        self.bce = nn.BCELoss
+        self.bce = nn.BCELoss()
 
     def __call__(self, input, reconstruction, mu, logvar):
         kl_divergence = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
@@ -187,9 +187,9 @@ def plot_loss(job):
     ax.plot(epochs, training_loss, "o--", label="Training")
     ax.plot(epochs, val_loss, "o--", label="Validation")
     ax.legend(fontsize=20)
-    ax.xlabel("Epochs", fontsize=25)
-    ax.ylabel("KL-divergence + Reconstruction loss", fontsize=20)
-    ax.title("Loss", fontsize=35)
+    ax.set_xlabel("Epochs", fontsize=25)
+    ax.set_ylabel("KL-divergence + Reconstruction loss", fontsize=20)
+    ax.set_title("Loss", fontsize=35)
     fig.savefig(job.fn("Loss.jpg"))
 
 
@@ -205,7 +205,7 @@ def plot_latent(job, data_loader, device, reduce_dim=False):
     model = LinearVAE(
         features_dim=features_dim, latent_dim=latent_dim, hidden_dim=hidden_dim
     ).to(device)
-    model.load_state_dict(torch.load(job.fn("model.pth"), map_location="cpu"))
+    model.load_state_dict(torch.load(job.fn("model.pth"), map_location=device))
 
     x_arr = []
     label_arr = []
@@ -226,7 +226,7 @@ def plot_latent(job, data_loader, device, reduce_dim=False):
     Z_arr = []
     with torch.no_grad():
         for xi in x_arr:
-            Z_arr.append(model.sample(xi[0].view(1, -1)).detach().numpy()[0])
+            Z_arr.append(model.sample(xi.to(device)[0].view(1, -1)).detach().cpu().numpy()[0])
 
     Z_arr = np.vstack(Z_arr)
 
@@ -256,9 +256,9 @@ def plot_latent(job, data_loader, device, reduce_dim=False):
     plt.colorbar(
         sm, ax=ax, ticks=np.linspace(0, 10, 10, endpoint=False), label="Ground truth"
     )
-    ax.xlabel(r"$z_1$", fontsize=25)
-    ax.ylabel(r"$z_2$", fontsize=25)
-    ax.title(title_name, fontsize=35)
+    ax.set_xlabel(r"$z_1$", fontsize=25)
+    ax.set_ylabel(r"$z_2$", fontsize=25)
+    ax.set_title(title_name, fontsize=35)
     fig.savefig(job.fn("latent.jpg"))
 
 

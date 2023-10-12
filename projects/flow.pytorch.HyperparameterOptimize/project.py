@@ -46,9 +46,9 @@ EVAL_WALLTIME = 0.5
 
 
 @training_group
-@Project.operation(directives=cpu_directives(walltime=TRAIN_WALLTIME))
 @Project.operation_hooks.on_success(store_success_to_doc)
 @Project.post(check_train_complete)
+@Project.operation(directives=gpu_directives(walltime=TRAIN_WALLTIME))
 def train(job):
     """ """
     import torch
@@ -60,20 +60,20 @@ def train(job):
 
 
 @training_group
-@Project.operation(directives=cpu_directives(walltime=EVAL_WALLTIME))
-@Project.pre.after(train)
 @Project.operation_hooks.on_success(store_success_to_doc)
 @Project.post(check_eval_complete)
+@Project.pre.after(train)
+@Project.operation(directives=gpu_directives(walltime=EVAL_WALLTIME))
 def evaluation(job):
     import torch
     from source import vae
 
-    np.random.seed(job.sp["seed"])
+    rng = np.random.default_rng(job.sp["seed"])
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     train_loader, val_loader = vae.load_data(job)
     vae.plot_loss(job)
 
-    random_idx = np.random.randint(0, len(val_loader.dataset) - 1, 9).tolist()
+    random_idx = rng.integers(0, len(val_loader.dataset) - 1, 9).tolist()
     vae.plot_reconstruction(
         job=job,
         data_loader=val_loader,
