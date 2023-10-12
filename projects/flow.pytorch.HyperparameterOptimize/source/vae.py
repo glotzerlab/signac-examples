@@ -64,8 +64,7 @@ class LinearVAE(nn.Module):
             job.doc["features_dim"], job.sp["latent_dim"], job.sp["hidden_dim"]
         ).to(device)
         if job.isfile("model.pth"):
-            model.load_state_dict(
-                torch.load(job.fn("model.pth"), map_location=device))
+            model.load_state_dict(torch.load(job.fn("model.pth"), map_location=device))
         return model
 
 
@@ -100,7 +99,8 @@ def load_data(job):
         transform=transform,
     )
     job.doc.setdefault(
-        "features_dim", train_data[0][0].shape[1] * train_data[0][0].shape[2])
+        "features_dim", train_data[0][0].shape[1] * train_data[0][0].shape[2]
+    )
 
     train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(val_data, batch_size=batch_size, shuffle=False)
@@ -182,7 +182,6 @@ def validate(dataloader, model, device, loss_compute):
 
 
 def plot_loss(job):
-
     with job.data:
         training_loss = job.data["training/loss"][:]
         val_loss = job.data["validation/loss"][:]
@@ -209,8 +208,10 @@ def plot_latent(job, dataset, device):
         label_arr.append(label)
 
     z_arr = np.vstack(
-        [model.sample(xi.to(device)[0].view(1, -1)).detach().cpu().numpy()[0]
-         for xi in x_arr]
+        [
+            model.sample(xi.to(device)[0].view(1, -1)).detach().cpu().numpy()[0]
+            for xi in x_arr
+        ]
     )
 
     colormap = mpl.cm.get_cmap("tab10")
@@ -239,11 +240,10 @@ def plot_reconstruction(job, dataset, plot_arrangement, device):
     fig_recon, ax_recon = plt.subplots(*plot_arrangement, figsize=(14, 10))
     fig_recon.suptitle("VAE Reconstruction")
 
-
     def plot_image(torch_arr, ax):
         ax.imshow(
-            torch_arr.reshape(28, 28).to("cpu").detach().numpy(),
-            alpha=0.8, cmap="grey")
+            torch_arr.reshape(28, 28).to("cpu").detach().numpy(), alpha=0.8, cmap="grey"
+        )
 
     rng = np.random.default_rng(job.sp["seed"])
     samples = rng.integers(0, len(dataset) - 1, np.product(plot_arrangement))

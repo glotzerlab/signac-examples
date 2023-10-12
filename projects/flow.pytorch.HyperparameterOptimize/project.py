@@ -2,8 +2,8 @@ import numpy as np
 import signac
 import torch
 from flow import FlowProject
-
 from source import vae
+
 
 class Project(FlowProject):
     pass
@@ -60,7 +60,8 @@ def evaluation(job):
     _, val_loader = vae.load_data(job)
     dataset = val_loader.dataset
     vae.plot_reconstruction(
-        job=job, dataset=dataset, plot_arrangement=(3, 3), device=device)
+        job=job, dataset=dataset, plot_arrangement=(3, 3), device=device
+    )
     vae.plot_latent(job=job, dataset=dataset, device=device)
 
 
