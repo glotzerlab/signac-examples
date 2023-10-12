@@ -226,7 +226,9 @@ def plot_latent(job, data_loader, device, reduce_dim=False):
     Z_arr = []
     with torch.no_grad():
         for xi in x_arr:
-            Z_arr.append(model.sample(xi.to(device)[0].view(1, -1)).detach().cpu().numpy()[0])
+            Z_arr.append(
+                model.sample(xi.to(device)[0].view(1, -1)).detach().cpu().numpy()[0]
+            )
 
     Z_arr = np.vstack(Z_arr)
 
