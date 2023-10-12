@@ -1,7 +1,9 @@
 import numpy as np
 import signac
+import torch
 from flow import FlowProject
 
+from source import vae
 
 class Project(FlowProject):
     pass
@@ -18,14 +20,6 @@ def status_label(job):
     )
 
 
-def check_train_complete(job):
-    return job.doc.get("train_done", False)
-
-
-def check_eval_complete(job):
-    return job.doc.get("evaluation_done", False)
-
-
 def gpu_directives(walltime: float = 0.5, n_gpu: int = 1):
     return {"nranks": n_gpu, "ngpu": n_gpu, "walltime": walltime}
 
@@ -40,20 +34,15 @@ def store_success_to_doc(operation_name, job):
 
 training_group = Project.make_group(name="trainings")
 
-PR = signac.get_project()
 TRAIN_WALLTIME = 1
 EVAL_WALLTIME = 0.5
 
 
 @training_group
 @Project.operation_hooks.on_success(store_success_to_doc)
-@Project.post(check_train_complete)
+@Project.post.true("train_done")
 @Project.operation(directives=gpu_directives(walltime=TRAIN_WALLTIME))
 def train(job):
-    """ """
-    import torch
-    from source import vae
-
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     train_loader, val_loader = vae.load_data(job)
     vae.fit(job=job, train_loader=train_loader, val_loader=val_loader, device=device)
@@ -61,34 +50,18 @@ def train(job):
 
 @training_group
 @Project.operation_hooks.on_success(store_success_to_doc)
-@Project.post(check_eval_complete)
+@Project.post.true("evaluation_true")
 @Project.pre.after(train)
 @Project.operation(directives=gpu_directives(walltime=EVAL_WALLTIME))
 def evaluation(job):
-    import torch
-    from source import vae
-
-    rng = np.random.default_rng(job.sp["seed"])
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    train_loader, val_loader = vae.load_data(job)
     vae.plot_loss(job)
 
-    random_idx = rng.integers(0, len(val_loader.dataset) - 1, 9).tolist()
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    _, val_loader = vae.load_data(job)
+    dataset = val_loader.dataset
     vae.plot_reconstruction(
-        job=job,
-        data_loader=val_loader,
-        demo_idxs=random_idx,
-        plot_arrangement=(3, 3),
-        device=device,
-    )
-    vae.plot_latent(
-        job=job,
-        data_loader=val_loader,
-        device=device,
-        # If False, only plot first 2 dimensions of latent space. If True, use UMAP to
-        # reduce the latent space dimensions to 2.
-        reduce_dim=True,
-    )
+        job=job, dataset=dataset, plot_arrangement=(3, 3), device=device)
+    vae.plot_latent(job=job, dataset=dataset, device=device)
 
 
 if __name__ == "__main__":
