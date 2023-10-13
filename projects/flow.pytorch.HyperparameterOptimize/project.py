@@ -50,7 +50,7 @@ def train(job):
 
 @training_group
 @Project.operation_hooks.on_success(store_success_to_doc)
-@Project.post.true("evaluation_true")
+@Project.post.true("evaluation_done")
 @Project.pre.after(train)
 @Project.operation(directives=gpu_directives(walltime=EVAL_WALLTIME))
 def evaluation(job):
