@@ -2,26 +2,21 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.optim as optim
-import torchvision.transforms as transforms
-from torch.utils.data import DataLoader
-from torchvision import datasets
+import torchvision
 
 
-class LinearVAE(nn.Module):
+class LinearVAE(torch.nn.Module):
     def __init__(self, features_dim, latent_dim, hidden_dim):
         super().__init__()
 
         self.latent_dim = latent_dim
         # encoder
-        self.enc1 = nn.Linear(in_features=features_dim, out_features=hidden_dim)
-        self.enc2 = nn.Linear(in_features=hidden_dim, out_features=latent_dim * 2)
+        self.enc1 = torch.nn.Linear(in_features=features_dim, out_features=hidden_dim)
+        self.enc2 = torch.nn.Linear(in_features=hidden_dim, out_features=latent_dim * 2)
 
         # decoder
-        self.dec1 = nn.Linear(in_features=latent_dim, out_features=hidden_dim)
-        self.dec2 = nn.Linear(in_features=hidden_dim, out_features=features_dim)
+        self.dec1 = torch.nn.Linear(in_features=latent_dim, out_features=hidden_dim)
+        self.dec2 = torch.nn.Linear(in_features=hidden_dim, out_features=features_dim)
 
     def reparameterize(self, mu, log_var):
         """
@@ -46,7 +41,7 @@ class LinearVAE(nn.Module):
         return reconstruction, mu, log_var
 
     def encode(self, x):
-        x = F.relu(self.enc1(x))
+        x = torch.nn.functional.relu(self.enc1(x))
         x = self.enc2(x).view(-1, self.latent_dim, 2)
 
         mu = x[:, :, 0]  # the first feature values as mean
@@ -54,7 +49,7 @@ class LinearVAE(nn.Module):
         return mu, log_var
 
     def decode(self, z):
-        x = F.relu(self.dec1(z))
+        x = torch.nn.functional.relu(self.dec1(z))
         reconstruction = torch.sigmoid(self.dec2(x))
         return reconstruction
 
@@ -70,7 +65,7 @@ class LinearVAE(nn.Module):
 
 class VAELoss:
     def __init__(self):
-        self.bce = nn.BCELoss()
+        self.bce = torch.nn.BCELoss()
 
     def __call__(self, input, reconstruction, mu, logvar):
         kl_divergence = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
@@ -81,18 +76,18 @@ def load_data(job):
     torch.manual_seed(job.sp["seed"])
     batch_size = job.sp.get("batch_size", 64)
 
-    transform = transforms.Compose(
+    transform = torchvision.transforms.Compose(
         [
-            transforms.ToTensor(),
+            torchvision.transforms.ToTensor(),
         ]
     )
-    train_data = datasets.MNIST(
+    train_data = torchvision.datasets.MNIST(
         root=job.fn("../../source/data"),
         train=True,
         download=False,
         transform=transform,
     )
-    val_data = datasets.MNIST(
+    val_data = torchvision.datasets.MNIST(
         root=job.fn("../../source/data"),
         train=False,
         download=False,
@@ -102,8 +97,8 @@ def load_data(job):
         "features_dim", train_data[0][0].shape[1] * train_data[0][0].shape[2]
     )
 
-    train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
-    val_loader = DataLoader(val_data, batch_size=batch_size, shuffle=False)
+    train_loader = torch.utils.data.DataLoader(train_data, batch_size=batch_size, shuffle=True)
+    val_loader = torch.utils.data.DataLoader(val_data, batch_size=batch_size, shuffle=False)
     return train_loader, val_loader
 
 
@@ -116,7 +111,7 @@ def fit(job, train_loader, val_loader, device):
     epochs = job.sp.get("epochs", 1)
 
     model = LinearVAE.from_job(job, device)
-    optimizer = optim.Adam(model.parameters(), lr=job.sp.get("lr", 0.000001))
+    optimizer = torch.optim.Adam(model.parameters(), lr=job.sp.get("lr", 0.000001))
     loss_compute = VAELoss()
 
     train_loss = []
