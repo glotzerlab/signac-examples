@@ -97,8 +97,12 @@ def load_data(job):
         "features_dim", train_data[0][0].shape[1] * train_data[0][0].shape[2]
     )
 
-    train_loader = torch.utils.data.DataLoader(train_data, batch_size=batch_size, shuffle=True)
-    val_loader = torch.utils.data.DataLoader(val_data, batch_size=batch_size, shuffle=False)
+    train_loader = torch.utils.data.DataLoader(
+        train_data, batch_size=batch_size, shuffle=True
+    )
+    val_loader = torch.utils.data.DataLoader(
+        val_data, batch_size=batch_size, shuffle=False
+    )
     return train_loader, val_loader
 
 
