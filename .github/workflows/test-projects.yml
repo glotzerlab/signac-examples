@@ -51,4 +51,3 @@ jobs:
     - name: Test project ${{ matrix.project }}
       run: |
         python projects/flow-test.py ${{ matrix.subproject }} -vv --timeout=600 $@
-    - uses: codecov/codecov-action@v3

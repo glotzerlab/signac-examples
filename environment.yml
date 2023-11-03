@@ -11,10 +11,12 @@ dependencies:
   - matplotlib>=3
   - mistune<2  # Needed for .update_project_readme.py
   - nbconvert>=6
+  - nbval
   - notebook>=6
   - numpy>=1.21
   - pandas>=2.0
   - pre-commit
+  - pytest
   - python>=3.9
   - scikit-learn
   - signac-dashboard>=0.5
