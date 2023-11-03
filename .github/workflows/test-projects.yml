@@ -1,4 +1,4 @@
-name: Run Unit Tests
+name: Project Tests
 
 on:
   # trigger on pull requests
@@ -40,7 +40,7 @@ jobs:
         channels: conda-forge
         activate-environment: test
         show-channel-urls: true
-        miniforge-variant: Mambaforge
+        miniforge-version: latest
         use-mamba: true
     - name: Test project ${{ matrix.project }}
       run: |
