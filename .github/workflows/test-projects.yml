@@ -37,7 +37,7 @@ jobs:
       with:
         submodules: "recursive"
     - name: Create Python Environment
-      uses: conda-incubator/setup-miniconda@v2.2
+      uses: conda-incubator/setup-miniconda@v2.2.0
       with:
         python-version: ${{ matrix.config.python }}
         environment-file: environment.yml
