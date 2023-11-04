@@ -1,11 +1,21 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
+
+startgroup () {
+}
 
 export USE_INDEX_CACHE=""
 for PROJECT in `ls -d */`; do
+    if [[ "$CI" ]]; then
+        echo "Testing ::group::${PROJECT}"
+    fi
+
     if [ -e "${PROJECT}/.skipci" ]; then
         echo "Skipping tests for project ${PROJECT}."
+        if [[ "$CI" ]]; then
+            echo "::endgroup::"
+        fi
         continue
     fi
     REQUIREMENTS_FILE="${PROJECT}/requirements.txt"
@@ -19,4 +29,7 @@ for PROJECT in `ls -d */`; do
         export USE_INDEX_CACHE="--use-index-cache"
     fi
     python flow-test.py ${PROJECT} -vv --timeout=600 $@
+    if [[ "$CI" ]]; then
+        echo "::endgroup::"
+    fi
 done
