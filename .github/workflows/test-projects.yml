@@ -51,4 +51,4 @@ jobs:
     - name: Test project ${{ matrix.project }}
       shell: bash -el {0}  # Required for conda activation
       run: |
-        python projects/flow-test.py ${{ matrix.subproject }} -vv --timeout=600 $@
+        python projects/flow-test.py ${{ matrix.project }} -vv --timeout=600 $@
