@@ -40,11 +40,12 @@ jobs:
       with:
         python-version: ${{ matrix.config.python }}
         environment-file: environment.yml
-        channels: conda-forge
         activate-environment: test
+        channels: conda-forge
         show-channel-urls: true
         miniforge-version: latest
         use-mamba: true
     - name: Test notebooks
+      shell: bash -el {0}  # Required for conda activation
       run: |
         python -m pytest -v --nbval --nbval-lax notebooks/
