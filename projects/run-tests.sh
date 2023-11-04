@@ -2,9 +2,6 @@
 
 set -euo pipefail
 
-startgroup () {
-}
-
 export USE_INDEX_CACHE=""
 for PROJECT in `ls -d */`; do
     if [[ "$CI" ]]; then
@@ -25,7 +22,7 @@ for PROJECT in `ls -d */`; do
         cat ${REQUIREMENTS_FILE}
 
         # Re-use the conda index cache after the first time.
-        conda install --yes ${USE_INDEX_CACHE} --file ${REQUIREMENTS_FILE}
+        conda install --yes ${USE_INDEX_CACHE} --file ${REQUIREMENTS_FILE} --quiet
         export USE_INDEX_CACHE="--use-index-cache"
     fi
     python flow-test.py ${PROJECT} -vv --timeout=600 $@
