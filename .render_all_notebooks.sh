@@ -3,7 +3,7 @@
 # Requires many dependencies specified in environment.yml
 
 # Remove existing signac workspaces used by notebooks
-rm -r notebooks/projects
+rm -rf notebooks/projects
 
 # Render all notebooks by executing them and overwriting contents
 jupyter nbconvert --execute --inplace notebooks/*.ipynb

@@ -3,7 +3,7 @@ channels:
 dependencies:
   - gsd
   - h5py
-  - hoomd>=3
+  - hoomd>=4
   - ipywidgets>=7
   - joblib
   - jupyter
