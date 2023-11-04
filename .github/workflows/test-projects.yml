@@ -30,9 +30,6 @@ jobs:
           - python: '3.10'
 #         - python: '3.11'
 #         - python: '3.12'
-        project:
-          - 'flow.minimal'
-          - 'flow.hello-world'
 
     steps:
     - uses: actions/checkout@v3
@@ -48,7 +45,8 @@ jobs:
         show-channel-urls: true
         miniforge-version: latest
         use-mamba: true
-    - name: Test project ${{ matrix.project }}
+    - name: Test projects
       shell: bash -el {0}  # Required for conda activation
       run: |
-        python projects/flow-test.py ${{ matrix.project }} -vv --timeout=600 $@
+        cd projects
+        . run-tests.sh --output
