@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-export USE_INDEX_CACHE=""
 for PROJECT in `ls -d */`; do
     if [[ "$CI" ]]; then
         echo "::group::Testing ${PROJECT}"
@@ -21,9 +20,7 @@ for PROJECT in `ls -d */`; do
         echo "Installing requirements:"
         cat ${REQUIREMENTS_FILE}
 
-        # Re-use the conda index cache after the first time.
-        conda install --yes ${USE_INDEX_CACHE} --file ${REQUIREMENTS_FILE} --quiet
-        export USE_INDEX_CACHE="--use-index-cache"
+        mamba install --yes --file ${REQUIREMENTS_FILE} --quiet
     fi
     python flow-test.py ${PROJECT} -vv --timeout=600 $@
     if [[ "$CI" ]]; then
