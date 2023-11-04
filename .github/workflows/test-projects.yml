@@ -48,6 +48,7 @@ jobs:
         miniforge-version: latest
         use-mamba: true
     - name: Test project ${{ matrix.project }}
+      shell: bash -el {0}  # Required for conda activation
       run: |
         conda activate test
         python projects/flow-test.py ${{ matrix.subproject }} -vv --timeout=600 $@
