@@ -8,9 +8,9 @@ for PROJECT in `ls -d */`; do
         continue
     fi
     if [[ "$CI" ]]; then
-        echo "::group::Testing ${PROJECT}"
+        echo "::group::Executing ${PROJECT}"
     else
-        echo "Testing ${PROJECT}"
+        echo "Executing ${PROJECT}"
     fi
     REQUIREMENTS_FILE="${PROJECT}/requirements.txt"
     if [ -e ${REQUIREMENTS_FILE} ]; then
