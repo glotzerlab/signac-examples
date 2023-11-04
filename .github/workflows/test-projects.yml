@@ -43,6 +43,7 @@ jobs:
       with:
         python-version: ${{ matrix.config.python }}
         environment-file: environment.yml
+        activate-environment: test
         channels: conda-forge
         show-channel-urls: true
         miniforge-version: latest
@@ -50,5 +51,4 @@ jobs:
     - name: Test project ${{ matrix.project }}
       shell: bash -el {0}  # Required for conda activation
       run: |
-        conda activate test
         python projects/flow-test.py ${{ matrix.subproject }} -vv --timeout=600 $@
