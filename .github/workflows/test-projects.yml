@@ -44,10 +44,10 @@ jobs:
         python-version: ${{ matrix.config.python }}
         environment-file: environment.yml
         channels: conda-forge
-        activate-environment: test
         show-channel-urls: true
         miniforge-version: latest
         use-mamba: true
     - name: Test project ${{ matrix.project }}
       run: |
+        conda activate test
         python projects/flow-test.py ${{ matrix.subproject }} -vv --timeout=600 $@
