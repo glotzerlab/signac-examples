@@ -5,7 +5,7 @@ set -euo pipefail
 export USE_INDEX_CACHE=""
 for PROJECT in `ls -d */`; do
     if [[ "$CI" ]]; then
-        echo "Testing ::group::${PROJECT}"
+        echo "::group::Testing ${PROJECT}"
     fi
 
     if [ -e "${PROJECT}/.skipci" ]; then
