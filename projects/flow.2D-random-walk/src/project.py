@@ -147,15 +147,7 @@ first_five_replicas = flow.aggregator.groupby(
 
 @RandomWalkProject.pre(all_simulated)
 @RandomWalkProject.post.true("plotted_walks")
-<<<<<<< HEAD
-@RandomWalkProject.operation(
-    aggregator=flow.aggregator.groupby(
-        "standard_deviation", select=lambda job: job.sp.replica <= 4, sort_by="replica"
-    )
-)
-=======
 @RandomWalkProject.operation(aggregator=first_five_replicas)
->>>>>>> main
 def plot_walks(*jobs):
     """Plot the first 5 replicas random walks for each standard_deviation."""
     fig, ax = plt.subplots()
