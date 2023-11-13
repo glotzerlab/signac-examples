@@ -77,7 +77,7 @@ def run_tests(path, output, timeout):
     except subprocess.TimeoutExpired:
         raise RuntimeWarning("Test failed due to timeout.")
     except FileNotFoundError:
-        logger.info("No test file!")
+        logger.info("No test.sh file, skipping tests.")
 
 
 def main(args):
