@@ -1,5 +1,3 @@
-import numpy as np
-import signac
 import torch
 from flow import FlowProject
 from source import vae
