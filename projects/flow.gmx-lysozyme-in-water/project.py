@@ -239,7 +239,9 @@ def grompp_md(job):
 
 @MyProject.pre.after(grompp_md)
 @MyProject.post(finished)
-@MyProject.operation(cmd=True, directives={"nranks": 4, "omp_num_threads": 4}, with_job=True)
+@MyProject.operation(
+    cmd=True, directives={"nranks": 4, "omp_num_threads": 4}, with_job=True
+)
 def md(job):
     return _mdrun_str("md", nt=4).format(job)
 
