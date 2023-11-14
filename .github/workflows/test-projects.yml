@@ -1,0 +1,46 @@
+name: Project Tests
+
+on:
+  # trigger on pull requests
+  pull_request:
+
+  # trigger on all commits to main
+  push:
+    branches:
+      - 'main'
+
+  # trigger on request
+  workflow_dispatch:
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+        config:
+          - python: '3.12'
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: "recursive"
+    - name: Create Python Environment
+      uses: conda-incubator/setup-miniconda@v2.2.0
+      with:
+        python-version: ${{ matrix.config.python }}
+        environment-file: environment.yml
+        activate-environment: test
+        channels: conda-forge
+        show-channel-urls: true
+        miniforge-version: latest
+        use-mamba: true
+    - name: Test projects
+      shell: bash -el {0}  # Required for conda activation
+      run: |
+        cd projects
+        . run-tests.sh --output
