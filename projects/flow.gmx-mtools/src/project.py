@@ -69,21 +69,21 @@ def initialize(job):
 @MyProject.post(minimized)
 @MyProject.operation(cmd=True, with_job=True)
 def em(job):
-    return gromacs_command(name="em", gro="init", sys="init")
+    return gromacs_command(name="em", gro="init", sys="init").format(job)
 
 
 @MyProject.pre(minimized)
 @MyProject.post(equilibrated)
 @MyProject.operation(cmd=True, with_job=True)
 def equil(job):
-    return gromacs_command(name="equil", gro="em", sys="init")
+    return gromacs_command(name="equil", gro="em", sys="init").format(job)
 
 
 @MyProject.pre(equilibrated)
 @MyProject.post(sampled)
 @MyProject.operation(cmd=True, with_job=True)
 def sample(job):
-    return gromacs_command(name="sample", gro="equil", sys="init")
+    return gromacs_command(name="sample", gro="equil", sys="init").format(job)
 
 
 if __name__ == "__main__":
