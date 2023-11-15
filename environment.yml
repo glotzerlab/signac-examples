@@ -22,6 +22,6 @@ dependencies:
   - signac-dashboard>=0.5
   - signac-flow>=0.25
   - signac>=2.0
-  - torch
+  - pytorch
   - torchvision
   - tqdm
