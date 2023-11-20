@@ -18,5 +18,5 @@ for PROJECT in `ls -d */`; do
         conda install --yes ${USE_INDEX_CACHE} --file ${REQUIREMENTS_FILE}
         export USE_INDEX_CACHE="--use-index-cache"
     fi
-    python flow-test.py ${PROJECT} -vv --timeout=600 $@
+    python flow-test.py ${PROJECT} -v --timeout=600 $@
 done
