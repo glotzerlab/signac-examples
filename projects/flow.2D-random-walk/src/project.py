@@ -125,7 +125,8 @@ agg_analyze_and_plot = RandomWalkProject.make_group(
 
 @agg_analyze_and_plot
 @RandomWalkProject.pre(all_simulated)
-@RandomWalkProject.post.true("msd_analyzed")
+@RandomWalkProject.pre(lambda *jobs: "squared_displacement" in jobs[0].data)
+@RandomWalkProject.post(lambda *jobs: jobs[0].doc.get("msd_analyzed"))
 @RandomWalkProject.operation(aggregator=std_aggregator)
 def compute_mean_squared_displacement(*jobs):
     """Compute and store the mean squared displacement for all std."""
