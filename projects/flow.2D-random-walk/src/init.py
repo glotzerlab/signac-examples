@@ -14,9 +14,9 @@ logger = logging.getLogger()
 logger.setLevel(logging.ERROR)
 
 # The standard deviations to use for generating random walk moves
-STANDARD_DEVIATIONS = np.linspace(start=0.1, stop=1, num=20)
+STANDARD_DEVIATIONS = np.linspace(start=0.1, stop=1, num=5)
 NUMBER_REPLICAS = 100
-RUN_STEPS = 5_000
+RUN_STEPS = 10_000
 MAX_SEED = 2**32 - 1
 
 
