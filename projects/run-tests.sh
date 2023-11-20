@@ -18,7 +18,7 @@ for PROJECT in `ls -d */`; do
         cat ${REQUIREMENTS_FILE}
         mamba install --yes --file ${REQUIREMENTS_FILE} --quiet
     fi
-    python flow-test.py ${PROJECT} -vv --timeout=600 $@
+    python flow-test.py ${PROJECT} -v --timeout=600 $@
     if [[ "$CI" ]]; then
         echo "::endgroup::"
     fi
