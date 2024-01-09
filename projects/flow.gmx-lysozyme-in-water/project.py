@@ -3,7 +3,6 @@ import signac
 from flow import FlowProject
 
 gmx_exec = "gmx"  # or use gmx_mpi if available
-mpi_exec = "mpirun"
 
 """Define file level constants."""
 
@@ -84,16 +83,10 @@ def _grompp_str(op_name, gro_name, checkpoint_file=None):
     return cmd
 
 
-def _mdrun_str(op_name, np=1, nt=None, verbose=False):
+def _mdrun_str(op_name, nt=None, verbose=False):
     """Helper function, returns mdrun command string for operation."""
     num_threads = 1 if nt is None else nt
-    num_nodes = np // num_threads
-    cmd = (
-        "OMP_NUM_THREADS={num_threads} {mpi_exec} -n {np} {gmx} "
-        "mdrun -ntomp {num_threads} {verbose} -deffnm {op}"
-    ).format(
-        np=num_nodes,
-        mpi_exec=mpi_exec,
+    cmd = ("{gmx} mdrun -ntomp {num_threads} {verbose} -deffnm {op}").format(
         gmx=gmx_exec,
         num_threads=num_threads,
         op=op_name,
@@ -165,7 +158,7 @@ def solvate(job):
 @MyProject.post.isfile(ionization_config)
 @MyProject.operation(cmd=True, with_job=True)
 def grompp_add_ions(job):
-    return _grompp_str("ions", solvated_file)
+    return _grompp_str("ions", solvated_file).format(job)
 
 
 @MyProject.pre.after(grompp_add_ions)
@@ -197,14 +190,14 @@ def ionize(job):
 @MyProject.post.isfile(em_op + ".tpr")
 @MyProject.operation(cmd=True, with_job=True)
 def grompp_minim(job):
-    return _grompp_str("minim", ionized_file)
+    return _grompp_str("minim", ionized_file).format(job)
 
 
 @MyProject.pre.after(grompp_minim)
 @MyProject.post.isfile(em_file)
 @MyProject.operation(cmd=True, with_job=True)
 def minim(job):
-    return _mdrun_str("minim")
+    return _mdrun_str("minim").format(job)
 
 
 # Equilibration: NVT then NPT
@@ -212,28 +205,28 @@ def minim(job):
 @MyProject.post.isfile(nvt_op + ".tpr")
 @MyProject.operation(cmd=True, with_job=True)
 def grompp_nvt(job):
-    return _grompp_str("nvt", em_file)
+    return _grompp_str("nvt", em_file).format(job)
 
 
 @MyProject.pre.after(grompp_nvt)
 @MyProject.post.isfile(nvt_file)
 @MyProject.operation(cmd=True, directives={"np": 16}, with_job=True)
 def nvt(job):
-    return _mdrun_str("nvt")
+    return _mdrun_str("nvt").format(job)
 
 
 @MyProject.pre.after(nvt)
 @MyProject.post.isfile(npt_op + ".tpr")
 @MyProject.operation(cmd=True, with_job=True)
 def grompp_npt(job):
-    return _grompp_str("npt", nvt_file)
+    return _grompp_str("npt", nvt_file).format(job)
 
 
 @MyProject.pre.isfile(npt_op + ".tpr")
 @MyProject.post.isfile(npt_file)
 @MyProject.operation(cmd=True, directives={"np": 16}, with_job=True)
 def npt(job):
-    return _mdrun_str("npt")
+    return _mdrun_str("npt").format(job)
 
 
 # Final run
@@ -241,14 +234,16 @@ def npt(job):
 @MyProject.post.isfile(production_op + ".tpr")
 @MyProject.operation(cmd=True, with_job=True)
 def grompp_md(job):
-    return _grompp_str("md", npt_file)
+    return _grompp_str("md", npt_file).format(job)
 
 
 @MyProject.pre.after(grompp_md)
 @MyProject.post(finished)
-@MyProject.operation(cmd=True, directives={"np": 16}, with_job=True)
+@MyProject.operation(
+    cmd=True, directives={"nranks": 4, "omp_num_threads": 4}, with_job=True
+)
 def md(job):
-    return _mdrun_str("md")
+    return _mdrun_str("md", nt=4).format(job)
 
 
 if __name__ == "__main__":
