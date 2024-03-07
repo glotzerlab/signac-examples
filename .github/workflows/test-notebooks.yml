@@ -26,11 +26,11 @@ jobs:
           - python: '3.12'
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: "recursive"
     - name: Create Python Environment
-      uses: conda-incubator/setup-miniconda@v2.2.0
+      uses: conda-incubator/setup-miniconda@v3.0.3
       with:
         python-version: ${{ matrix.config.python }}
         environment-file: environment.yml
