@@ -1,4 +1,5 @@
 """Calculates the density of a system over the length of a trajectory"""
+
 import os
 
 import matplotlib

@@ -1,4 +1,5 @@
 """Define the project's workflow logic."""
+
 import mbuild as mb
 import signac
 from flow import FlowProject
