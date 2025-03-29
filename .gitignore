@@ -6,6 +6,7 @@
 .signac
 .signac_shell_history
 .signac_sp_cache.json.gz
+*__pycache__
 notebooks/projects
 notebooks/static
 signac.rc
