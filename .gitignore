@@ -13,3 +13,6 @@ signac.rc
 signac_data.h5
 signac_project_document.json
 workspace
+# pixi environments
+.pixi/*
+!.pixi/config.toml
