@@ -1,0 +1,33 @@
+[workspace]
+authors = ["Joshua A. Anderson <joaander@umich.edu>"]
+channels = ["conda-forge"]
+name = "signac-examples"
+platforms = ["linux-64", "osx-arm64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+
+gsd = "*"
+h5py = "*"
+hoomd = ">=4"
+ipywidgets = ">=7"
+joblib = "*"
+jupyter = "*"
+jupyterlab = ">=3"
+matplotlib = ">=3"
+mbuild = "*"
+mdtraj = "*"
+mistune = "<2"
+mpi4py = "*"
+nbconvert = ">=6"
+nbval = "*"
+notebook = ">=6"
+numpy = ">=1.21"
+pandas = ">=2.0"
+pytest = "*"
+scikit-learn = "*"
+signac-dashboard = ">=0.5"
+signac-flow = ">=0.25"
+signac = ">=2.0"

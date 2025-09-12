@@ -12,20 +12,20 @@ The framework assists users in managing simple to complext data spaces for examp
 Use [nbviewer](http://nbviewer.jupyter.org) to view a [static version](http://nbviewer.jupyter.org/github/glotzerlab/signac-examples/blob/main/notebooks/index.ipynb) of these notebooks.
 Or start a [dynamic version](https://mybinder.org/v2/gh/glotzerlab/signac-examples/main?filepath=notebooks%2Findex.ipynb) with the service offered by [mybinder.org](https://mybinder.org/).
 
-To run the notebooks locally, clone the repository and then start Jupyter:
+To run the notebooks locally, clone the repository and then start Jupyter using
+[pixi]:
 
 ```bash
 git clone https://github.com/glotzerlab/signac-examples.git
 cd signac-examples/notebooks
-jupyter lab  # or jupyter notebook
+pixi run jupyter lab  # or jupyter notebook
 # Open `index.ipynb` in your Jupyter session
 ```
 
-Note that some notebooks have dependencies beyond Jupyter, signac, and signac-flow, like the HOOMD-blue simulation tutorial. A full conda environment containing these dependencies can be installed with:
+Note that some notebooks have dependencies beyond Jupyter, signac, and signac-flow, like the HOOMD-blue simulation tutorial.
+The environment's [pixi] workspace contains all the needed dependencies.
 
-```bash
-conda env create -f environment.yml --name signac-examples
-```
+[pixi]: https://pixi.sh
 
 ## Example Projects
 

@@ -1,7 +1,0 @@
-h5py
-joblib
-matplotlib
-scikit-learn
-signac>=2.0.0
-signac-dashboard>=0.5.0
-signac-flow>=0.25.0
