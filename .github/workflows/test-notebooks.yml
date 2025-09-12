@@ -28,6 +28,5 @@ jobs:
         cache: false
         activate-environment: true
     - name: Test notebooks
-      shell: bash -el {0}  # Required for conda activation
       run: |
         python -m pytest -v --nbval --nbval-lax notebooks/
