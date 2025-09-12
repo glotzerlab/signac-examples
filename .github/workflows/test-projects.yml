@@ -1,4 +1,4 @@
-name: Project Tests
+name: Test
 
 on:
   pull_request:
@@ -16,6 +16,7 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
+    name: Projects
 
     steps:
     - uses: actions/checkout@v4

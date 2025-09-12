@@ -1,4 +1,4 @@
-name: Notebook Tests
+name: Run
 
 on:
   pull_request:
@@ -16,6 +16,7 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
+    name: Notebooks
 
     steps:
     - uses: actions/checkout@v4
