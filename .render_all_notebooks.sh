@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Requires many dependencies specified in environment.yml
+# Requires many dependencies specified in pixi.toml
 
 # Remove existing signac workspaces used by notebooks
 rm -rf notebooks/projects
