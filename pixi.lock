@@ -192,7 +192,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/scikit-learn-1.9.1-np2py314h9e1d7c2_1.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/scipy-1.18.1-py314h36f0660_1.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/snappy-1.2.2-h34e00bb_2.conda
-      - conda: https://conda.anaconda.org/conda-forge/linux-64/sqlalchemy-2.1.5-py314hfe1a184_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/linux-64/sqlalchemy-2.1.6-py314hfe1a184_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/symengine-0.14.0-h5b94145_3.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/tk-8.6.13-noxft_h1df4ec4_4.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/tornado-6.5.10-py314h89acca1_0.conda
@@ -402,7 +402,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/websocket-client-1.9.2-pyh5ded981_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/werkzeug-3.1.9-pyh5ded981_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/widgetsnbextension-4.0.16-pyhd8ed1ab_0.conda
-      - conda: https://conda.anaconda.org/conda-forge/noarch/zipp-4.1.1-pyh5ded981_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/zipp-4.1.2-pyh5ded981_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/zope.dottedname-7.1-pyhcf101f3_0.conda
       osx-arm64:
       - conda: https://conda.anaconda.org/conda-forge/noarch/_python_abi3_support-1.0-hd8ed1ab_3.conda
@@ -578,7 +578,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/websocket-client-1.9.2-pyh5ded981_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/werkzeug-3.1.9-pyh5ded981_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/widgetsnbextension-4.0.16-pyhd8ed1ab_0.conda
-      - conda: https://conda.anaconda.org/conda-forge/noarch/zipp-4.1.1-pyh5ded981_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/zipp-4.1.2-pyh5ded981_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/zope.dottedname-7.1-pyhcf101f3_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/_openmp_mutex-4.5-8_kmp_llvm.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/argon2-cffi-bindings-26.1.0-py314hcd3153d_2.conda
@@ -720,7 +720,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/scikit-learn-1.9.1-np2py314hf2dd71b_1.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/scipy-1.18.1-py314hd9f3d4e_1.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/snappy-1.2.2-h3951085_2.conda
-      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/sqlalchemy-2.1.5-py314hd98292b_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/sqlalchemy-2.1.6-py314hef190fd_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/symengine-0.14.0-h834fa9d_3.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/tk-8.6.13-hbeba79b_4.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/tornado-6.5.10-py314hcd3153d_0.conda
@@ -3543,9 +3543,9 @@ packages:
     - snappy >=1.2.2,<1.3.0a0
   size: 45695
   timestamp: 1790063285616
-- conda: https://conda.anaconda.org/conda-forge/linux-64/sqlalchemy-2.1.5-py314hfe1a184_0.conda
-  sha256: 240c3c4eec5012477cd72ffae639335d2d26f2f01a6fb203bd91b76e44e3b15d
-  md5: 34b84fba67f8f8f68bdbe6c06f89301c
+- conda: https://conda.anaconda.org/conda-forge/linux-64/sqlalchemy-2.1.6-py314hfe1a184_0.conda
+  sha256: c3254df514cdda8beab4db3c38f56c0234cd46cf5d68e997631d0961520f53f4
+  md5: 99d20c4e7d8cb33008a4308fce9497d0
   depends:
   - python
   - typing_extensions >=4.6.0
@@ -3553,10 +3553,9 @@ packages:
   - libgcc >=15
   - python_abi 3.14.* *_cp314
   license: MIT
-  license_family: MIT
   run_exports: {}
-  size: 4492725
-  timestamp: 1792225856744
+  size: 4497982
+  timestamp: 1792620159479
 - conda: https://conda.anaconda.org/conda-forge/linux-64/symengine-0.14.0-h5b94145_3.conda
   sha256: 8337ef136193a0b58b8e4f0c32f384d8f7b732e1ba48419e9bda0c02079ff706
   md5: 66810146cdfae003ab48da0f3969d26a
@@ -4309,7 +4308,7 @@ packages:
   sha256: ee3bca803cac13760131b6147e2fe60c97e769978e7542d678842b65e285d239
   md5: 94480ec10238da5dd5659ae0b933634b
   depends:
-  - python >=3.11
+  - python >=3.10
   license: ISC
   run_exports: {}
   size: 136752
@@ -6315,17 +6314,17 @@ packages:
   run_exports: {}
   size: 901988
   timestamp: 1787044664327
-- conda: https://conda.anaconda.org/conda-forge/noarch/zipp-4.1.1-pyh5ded981_0.conda
-  sha256: 3aa601ef121f42dcb79400375e72f833ddc68bc6243f3e5535168b2d69cc9c70
-  md5: 6cad4d2cec9b7b64538c225ac91d2e8a
+- conda: https://conda.anaconda.org/conda-forge/noarch/zipp-4.1.2-pyh5ded981_0.conda
+  sha256: 4e5c50cf5ecc00d83a20b987c52d49b78fa96026437ab09b11f4b7c46b7fc061
+  md5: 3a99defa674883e167603f141728de7e
   depends:
   - python >=3.11
   - python
   license: MIT
   license_family: MIT
   run_exports: {}
-  size: 24839
-  timestamp: 1791091060207
+  size: 24791
+  timestamp: 1792622774790
 - conda: https://conda.anaconda.org/conda-forge/noarch/zope.dottedname-7.1-pyhcf101f3_0.conda
   sha256: ba028774c59c0898d15210d4df323c2f2ca338ecf9e6a773075bced0abb9638b
   md5: a4c7535c1b139d1d67d03b9a8a9945ed
@@ -8445,19 +8444,18 @@ packages:
     - snappy >=1.2.2,<1.3.0a0
   size: 40420
   timestamp: 1790063436300
-- conda: https://conda.anaconda.org/conda-forge/osx-arm64/sqlalchemy-2.1.5-py314hd98292b_0.conda
-  sha256: 2622a7977268f9e8daaa911976064d16c80b0e173e8dc82170003e7140e56242
-  md5: 9d7219597bf8614c1590c2f9542ab9bf
+- conda: https://conda.anaconda.org/conda-forge/osx-arm64/sqlalchemy-2.1.6-py314hef190fd_0.conda
+  sha256: df4e356c71900da64c15e6ebd8742ca7a88ab93a80daad0e89da6cbe243614c3
+  md5: 0a31d087b1c774d007c7e775348f77d3
   depends:
   - python
   - typing_extensions >=4.6.0
   - __osx >=11.0
   - python_abi 3.14.* *_cp314
   license: MIT
-  license_family: MIT
   run_exports: {}
-  size: 4432460
-  timestamp: 1792225861153
+  size: 4438491
+  timestamp: 1792620184235
 - conda: https://conda.anaconda.org/conda-forge/osx-arm64/symengine-0.14.0-h834fa9d_3.conda
   sha256: 8c812b9255395a7f81bd58430d59ade37942fbd689aa5035e5d6eaa00672081a
   md5: 5704c1c08249008d559dd91f8ac308b5
